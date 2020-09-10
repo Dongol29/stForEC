@@ -3,3 +3,8 @@
 *
 !/**/
 !*.*
+**/*.dSYM/**
+**/.vscode/**
+**/.DS_Store
+**/*.zip
+test_upload/*

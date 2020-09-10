@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-enum DFAstate {IN,OUT,BAR_1,COMMENT,BAR_3}
+enum DFAstate {IN,OUT,BAR_1,COMMENT,BAR_3};
 
 int main()
 {

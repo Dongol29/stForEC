@@ -44,7 +44,7 @@ int main()
     if(char_count==0) line_count=0; //빈 파일-->line수=0
 
     if(state==COMMENT||state==BAR_3) {
-        pritnf("Error: line %d: unterminated comment\n",comment_line);
+        printf("Error: line %d: unterminated comment\n",comment_line);
         return EXIT_FAILURE;}
     else {
         printf("%d %d %d\n",char_count,word_count,line_count);

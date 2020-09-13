@@ -27,15 +27,21 @@ int main()
                 break;
             case BAR_1:
                 if(c=='/') char_count++;
-                else if(c=='\n') {state=IN; char_count++; line_count++;}
-                else if(c!='\n'&&c!='*') {state=IN; char_count++;}
+                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
+                else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                else if(!isspace(c)&&c!='*') {state=IN; char_count++;}
+                //else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                //else if(c!='\n'&&c!='*') {state=IN; char_count++;}
                 else if(c=='*') {state=COMMENT; word_count--; char_count--; comment_line=line_count;} //COMMENT상태 line 번호 저장
                 //printf("%d ",state);
                 break;
             case BAR_2:
                 if(c=='/') char_count++;
-                else if(c=='\n') {state=IN; char_count++; line_count++;}
-                else if(c!='\n'&&c!='*') {state=IN; char_count++;}
+                //else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                //else if(c!='\n'&&c!='*') {state=IN; char_count++;}
+                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
+                else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                else if(!isspace(c)&&c!='*') {state=IN; char_count++;}
                 else if(c=='*') {state=COMMENT; char_count--; comment_line=line_count;} //COMMENT상태 line 번호 저장
                 //printf("%d ",state);
                 break;

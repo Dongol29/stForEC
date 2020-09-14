@@ -9,7 +9,7 @@ void treat_OUT(char c, enum DFAstate *ptr, int *p_lc, int *p_wc, int *p_cc )
 {
     if(c=='/') { *ptr=BAR_1; (*p_cc)++; (*p_wc)++;}
     else if(!isspace(c)&&c!='/') {*ptr=IN; (*p_cc)++; (*p_wc)++; }
-    else if(isspace(c)&&c!='\n') (*p_wc)++;
+    else if(isspace(c)&&c!='\n') (*p_cc)++;
     else if(c=='\n') {(*p_cc)++; (*p_lc)++;}
 
 }

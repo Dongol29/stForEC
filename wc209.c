@@ -9,11 +9,11 @@ int main()
     int line_count=1,word_count=0,char_count=0,c,comment_line; //line_count는 1로 설정해둠
     enum DFAstate state=OUT;
     while((c=getchar())!=EOF){
-        printf("%c",c);
+        //printf("%c",c);
         switch(state){
             case OUT:
-                if(c=='/') {state=BAR_1; char_count++; word_count++; printf("w");}
-                else if(!isspace(c)&&c!='/') {state=IN; char_count++; word_count++; printf("w");}
+                if(c=='/') {state=BAR_1; char_count++; word_count++; }
+                else if(!isspace(c)&&c!='/') {state=IN; char_count++; word_count++; }
                 else if(isspace(c)&&c!='\n') char_count++;
                 else if(c=='\n') {char_count++; line_count++;}
                 //printf("%d ",state);

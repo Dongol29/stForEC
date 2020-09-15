@@ -1,14 +1,71 @@
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 
-void main()
+enum DFAstate {IN,OUT,BAR_1,BAR_2,COMMENT,BAR_3};
+
+int main()
 {
-    char a=0x12, b=0x34;
-    short c=0x5678;
-    int t;
-    void *p=&t;
-    *(short *)p=c;
-    *(char *)(p+2)=b;
-    *(char *)(p+3)=a;
-    printf("%x",t);
+    int line_count=1,word_count=0,char_count=0,c,comment_line; //line_count는 1로 설정해둠
+    enum DFAstate state=OUT;
+    while((c=getchar())!=EOF){
+        //printf("%c",c);
+        switch(state){
+            case OUT:
+                if(c=='/') {state=BAR_1; char_count++; word_count++; }
+                else if(!isspace(c)&&c!='/') {state=IN; char_count++; word_count++; }
+                else if(isspace(c)&&c!='\n') char_count++;
+                else if(c=='\n') {char_count++; line_count++;}
+                //printf("%d ",state);
+                break;
+            case IN:
+                if(c=='/') {state=BAR_2; char_count++;}
+                else if(!isspace(c)&&c!='/') char_count++;
+                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
+                else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                //printf("%d ",state);
+                break;
+            case BAR_1:
+                if(c=='/') char_count++;
+                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
+                else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                else if(!isspace(c)&&c!='*') {state=IN; char_count++;}
+                //else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                //else if(c!='\n'&&c!='*') {state=IN; char_count++;}
+                else if(c=='*') {state=COMMENT; word_count--; char_count--; comment_line=line_count;} //COMMENT상태 line 번호 저장
+                //printf("%d ",state);
+                break;
+            case BAR_2:
+                if(c=='/') char_count++;
+                //else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                //else if(c!='\n'&&c!='*') {state=IN; char_count++;}
+                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
+                else if(c=='\n') {state=OUT; char_count++; line_count++;}
+                else if(!isspace(c)&&c!='*') {state=IN; char_count++;}
+                else if(c=='*') {state=COMMENT; char_count--; comment_line=line_count;} //COMMENT상태 line 번호 저장
+                //printf("%d ",state);
+                break;
+            case COMMENT:
+                if(c=='\n') {char_count++; line_count++;}
+                else if(c!='\n'&&c!='*') ;
+                else if(c=='*') state=BAR_3;
+                //printf("%d ",state);
+                break;
+            case BAR_3:
+                if(c=='\n') {state=COMMENT; char_count++; line_count++;}   //'\n'같은게 */에(COMMENT가 되는지) 영향 주나??
+                else if(c!='\n'&&c!='*'&&c!='/') state=COMMENT;
+                else if(c=='*') ;
+                else if(c=='/') {state=OUT; char_count++;}
+                //printf("%d ",state);
+                break;
+        }
+    }
+    if(char_count==0) line_count=0; //-->line수=0
+
+    if(state==COMMENT||state==BAR_3) {
+        printf("Error: line %d: unterminated comment\n",comment_line);
+        return EXIT_FAILURE;}
+    else {
+        printf("%d %d %d\n",line_count,word_count,char_count);
+        return EXIT_SUCCESS;}  
 }

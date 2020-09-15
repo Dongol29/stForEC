@@ -8,6 +8,10 @@
 **/.DS_Store
 **/*.zip
 test_upload/*
+# assignment artifacts format is gz and tar. so, it is ignored
 **/*.gz
 **/*.tar
+# no extension files are generally binary files except readme and assignment binaries
 !**/readme
+!**/wc209
+

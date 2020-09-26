@@ -32,13 +32,14 @@ int StrCompare(const char* pcS1, const char* pcS2)
         match, or be greater than s2.
     */
     assert(NULL!=pcS1&&NULL!=pcS2);
-    while(!*pcS1&&!*pcS2){
+    while(1){
+        if(0==*pcS1&&0!=*pcS2) return -1;
+        else if(0!=*pcS1&&0==pcS2) return 1;
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
             continue;
         }
-        printf("hola\n");
-        return (*pcS1>*pcS2)? 1:-1;
+        else return (*pcS1>*pcS2)? 1:-1;
     }
     return 0;
     //return strcmp(pcS1, pcS2);
@@ -46,8 +47,8 @@ int StrCompare(const char* pcS1, const char* pcS2)
 
 void main()
 {
-    char d1[]="dongo";
-    char d2[]="dongo";
+    char d1[]="dongol";
+    char d2[]="dongzdf";
     int data=StrCompare(d1,d2);
     printf("%d\n",data);
 }

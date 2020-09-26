@@ -61,7 +61,9 @@ int StrCompare(const char* pcS1, const char* pcS2)
         match, or be greater than s2.
     */
     assert(NULL!=pcS1&&NULL!=pcS2);
-    while(!*pcS1&&!*pcS2){
+    while(1){
+        if(0==*pcS1&&0!=*pcS2) return -1;
+        else if(0!=*pcS1&&0==pcS2) return 1;
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
             continue;

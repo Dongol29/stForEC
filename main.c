@@ -49,11 +49,32 @@ int StrSearch(const char* pcHaystack, const char *pcNeedle)
     return occur_address-initial_address1;
 }
 
+int StrCompare(const char* pcS1, const char* pcS2)
+{
+    /*
+        The  strcmp() function compares the two strings s1 and s2.  It returns an integer less
+        than, equal to, or greater than zero if s1 is found, respectively, to be less than, to
+        match, or be greater than s2.
+    */
+    assert(NULL!=pcS1&&NULL!=pcS2);
+    while(1){
+        if(0==*pcS1&&0!=*pcS2) return -1;
+        printf("ddsf\n");
+        if(*pcS1==*pcS2){
+            pcS1++; pcS2++;
+            continue;
+        }
+        else return (*pcS1>*pcS2)? 1:-1;
+    }
+    return 0;
+    //return strcmp(pcS1, pcS2);
+}
+
 void main()
 {
     char d1[]="dongol is great";
     char d2[]=" is f";
-
+    
     int data=StrSearch(d1,d2);
     printf("%d\n",data);
 }

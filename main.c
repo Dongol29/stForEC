@@ -1,71 +1,59 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <assert.h>
 
-enum DFAstate {IN,OUT,BAR_1,BAR_2,COMMENT,BAR_3};
-
-int main()
+size_t StrGetLength(const char* pcSrc)
 {
-    int line_count=1,word_count=0,char_count=0,c,comment_line; //line_count는 1로 설정해둠
-    enum DFAstate state=OUT;
-    while((c=getchar())!=EOF){
-        //printf("%c",c);
+  const char *pcEnd;
+  assert(pcSrc); /* NULL address, 0, and FALSE are identical. */
+  pcEnd = pcSrc;
+	
+  while (*pcEnd) /* null character and FALSE are identical. */
+    pcEnd++;
+
+  return (size_t)(pcEnd - pcSrc);
+}
+
+int StrSearch(const char* pcHaystack, const char *pcNeedle)
+{
+    int number=0;
+    int state=0;
+    const char *initial_address1=pcHaystack;
+    const char *initial_address2=pcNeedle;
+
+    const char *occur_address;
+    size_t length=StrGetLength(pcNeedle);
+    printf("%d\n",length);
+    while(1){
+        if(number>length-1) break;      //찾음
+        if(*pcHaystack=='\0'&&number<length) { printf("fail to find\n"); return NULL;}      //못찾음
         switch(state){
-            case OUT:
-                if(c=='/') {state=BAR_1; char_count++; word_count++; }
-                else if(!isspace(c)&&c!='/') {state=IN; char_count++; word_count++; }
-                else if(isspace(c)&&c!='\n') char_count++;
-                else if(c=='\n') {char_count++; line_count++;}
-                //printf("%d ",state);
+            case 0: 
+                if(*pcNeedle==*pcHaystack){ 
+                    state=1; 
+                    occur_address=pcHaystack;
+                    number++; pcNeedle++; pcHaystack++;
+                    }
+                else pcHaystack++; 
                 break;
-            case IN:
-                if(c=='/') {state=BAR_2; char_count++;}
-                else if(!isspace(c)&&c!='/') char_count++;
-                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
-                else if(c=='\n') {state=OUT; char_count++; line_count++;}
-                //printf("%d ",state);
+            case 1:
+                if(*pcNeedle==*pcHaystack) { number++; pcNeedle++; pcHaystack++;}
+                else { state=0; pcNeedle=initial_address2; number=0;}
                 break;
-            case BAR_1:
-                if(c=='/') char_count++;
-                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
-                else if(c=='\n') {state=OUT; char_count++; line_count++;}
-                else if(!isspace(c)&&c!='*') {state=IN; char_count++;}
-                //else if(c=='\n') {state=OUT; char_count++; line_count++;}
-                //else if(c!='\n'&&c!='*') {state=IN; char_count++;}
-                else if(c=='*') {state=COMMENT; word_count--; char_count--; comment_line=line_count;} //COMMENT상태 line 번호 저장
-                //printf("%d ",state);
-                break;
-            case BAR_2:
-                if(c=='/') char_count++;
-                //else if(c=='\n') {state=OUT; char_count++; line_count++;}
-                //else if(c!='\n'&&c!='*') {state=IN; char_count++;}
-                else if(isspace(c)&&c!='\n') {state=OUT; char_count++;}
-                else if(c=='\n') {state=OUT; char_count++; line_count++;}
-                else if(!isspace(c)&&c!='*') {state=IN; char_count++;}
-                else if(c=='*') {state=COMMENT; char_count--; comment_line=line_count;} //COMMENT상태 line 번호 저장
-                //printf("%d ",state);
-                break;
-            case COMMENT:
-                if(c=='\n') {char_count++; line_count++;}
-                else if(c!='\n'&&c!='*') ;
-                else if(c=='*') state=BAR_3;
-                //printf("%d ",state);
-                break;
-            case BAR_3:
-                if(c=='\n') {state=COMMENT; char_count++; line_count++;}   //'\n'같은게 */에(COMMENT가 되는지) 영향 주나??
-                else if(c!='\n'&&c!='*'&&c!='/') state=COMMENT;
-                else if(c=='*') ;
-                else if(c=='/') {state=OUT; char_count++;}
-                //printf("%d ",state);
+            default:
+                assert(0); /*error*/
                 break;
         }
     }
-    if(char_count==0) line_count=0; //-->line수=0
+    return occur_address-initial_address1;
+}
 
-    if(state==COMMENT||state==BAR_3) {
-        printf("Error: line %d: unterminated comment\n",comment_line);
-        return EXIT_FAILURE;}
-    else {
-        printf("%d %d %d\n",line_count,word_count,char_count);
-        return EXIT_SUCCESS;}  
+void main()
+{
+    char d1[]="dongol is great";
+    char d2[]=" is f";
+
+    int data=StrSearch(d1,d2);
+    printf("%d\n",data);
 }

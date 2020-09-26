@@ -48,8 +48,8 @@ int StrCompare(const char* pcS1, const char* pcS2)
 
 void main()
 {
-    char d1[]="\0";
-    char d2[]="\0";
-    int data=StrCompare(d1,d2);
-    printf("%d\n",data);
+    char d1[]="dongol";
+    char d2[]="dongol\029";
+    strcpy(d1,d2);
+    printf("%s\n",d1);
 }

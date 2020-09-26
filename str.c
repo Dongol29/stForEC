@@ -44,7 +44,7 @@ char *StrCopy(char *pcDest, const char* pcSrc)
         pcDest++; pcSrc++;
     }
     *pcDest=0;
-    for(i=0;i<length2-1;i++){
+    for(i=0;i<length2;i++){
         pcDest--;
     }
     return pcDest;

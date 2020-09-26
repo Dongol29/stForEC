@@ -37,7 +37,7 @@ char *StrCopy(char *pcDest, const char* pcSrc)
     size_t length1=sizeof(pcDest);
     size_t length2=StrGetLength(pcSrc);
     //assert(length1>length2); 
-    
+
 
     while(*pcSrc){
         *pcDest=*pcSrc;
@@ -61,7 +61,7 @@ int StrCompare(const char* pcS1, const char* pcS2)
         match, or be greater than s2.
     */
     assert(NULL!=pcS1&&NULL!=pcS2);
-    while(1){
+    while(!*pcS1&&!*pcS2){
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
             continue;

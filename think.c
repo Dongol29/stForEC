@@ -24,11 +24,30 @@ void StrConcat(char *pcDest, const char* pcSrc)
     //return (char *)initial_address;
 }
 
+int StrCompare(const char* pcS1, const char* pcS2)
+{
+    /*
+        The  strcmp() function compares the two strings s1 and s2.  It returns an integer less
+        than, equal to, or greater than zero if s1 is found, respectively, to be less than, to
+        match, or be greater than s2.
+    */
+    assert(NULL!=pcS1&&NULL!=pcS2);
+    while(!*pcS1&&!*pcS2){
+        if(*pcS1==*pcS2){
+            pcS1++; pcS2++;
+            continue;
+        }
+        printf("hola\n");
+        return (*pcS1>*pcS2)? 1:-1;
+    }
+    return 0;
+    //return strcmp(pcS1, pcS2);
+}
+
 void main()
 {
-    char d1[20]="dongol ";
-    char d2[]="donghwi";
-    StrConcat(d1,d2);
-
-    printf("%s\n",d1);
+    char d1[]="dongo";
+    char d2[]="dongo";
+    int data=StrCompare(d1,d2);
+    printf("%d\n",data);
 }

@@ -89,6 +89,8 @@ char *StrSearch(const char* pcHaystack, const char *pcNeedle)
     const char *initial_address=pcNeedle;
     const char *occur_address;
     size_t length=StrGetLength(pcNeedle);
+    
+    if(0==*pcNeedle) return (char *)pcHaystack;
     while(1){
         if(*pcHaystack==0) return NULL;         //못찾음
         if(number>length-1) break;      //찾음

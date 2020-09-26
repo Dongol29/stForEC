@@ -31,7 +31,7 @@ TestStrCopy()
 	 "Test StrCopy\n"
 	 "===========================\n");
 
-  /* Test1: Normal copy */
+  /* Test1: Normal copy  */
   printf("Test1:\n");
   res1 = StrCopy(dest, str1);
   res2 = strcpy(answer, str1);

@@ -33,7 +33,8 @@ int StrCompare(const char* pcS1, const char* pcS2)
     */
     assert(NULL!=pcS1&&NULL!=pcS2);
     while(1){
-        if(0==*pcS1&&0!=*pcS2) return -1;
+        if(0==*pcS1&&0==*pcS2) return 0;
+        else if(0==*pcS1&&0!=*pcS2) return -1;
         else if(0!=*pcS1&&0==pcS2) return 1;
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
@@ -47,8 +48,8 @@ int StrCompare(const char* pcS1, const char* pcS2)
 
 void main()
 {
-    char d1[]="dongol";
-    char d2[]="dongzdf";
+    char d1[]="\0";
+    char d2[]="\0";
     int data=StrCompare(d1,d2);
     printf("%d\n",data);
 }

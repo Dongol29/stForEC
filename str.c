@@ -36,7 +36,8 @@ char *StrCopy(char *pcDest, const char* pcSrc)
     
     size_t length1=sizeof(pcDest);
     size_t length2=StrGetLength(pcSrc);
-    assert(length1>length2); 
+    //assert(length1>length2); 
+    
 
     while(*pcSrc){
         *pcDest=*pcSrc;

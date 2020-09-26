@@ -68,7 +68,7 @@ int StrCompare(const char* pcS1, const char* pcS2)
             pcS1++; pcS2++;
             continue;
         }
-        return (*pcS1>*pcS2)? 1:-1;
+        else return (*pcS1>*pcS2)? 1:-1;
     }
     return 0;
     //return strcmp(pcS1, pcS2);

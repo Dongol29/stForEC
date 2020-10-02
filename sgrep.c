@@ -150,9 +150,8 @@ DoReplace(const char *pcString1, const char *pcString2)
           //StrCopy(p,pcString2);
           //printf("%s\n",buf);
       printf("%s\n",buf);
-      }
+      }}
   return TRUE;
-}
 }
 /*-------------------------------------------------------------------*/
 /* DoDiff()

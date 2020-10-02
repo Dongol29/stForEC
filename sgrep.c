@@ -112,7 +112,7 @@ int
 DoReplace(const char *pcString1, const char *pcString2)
 {
   /* TODO: fill out this function */  
-  int len1,len2;
+  int len1,len2,i;
   char *p;
 
   if((len1=StrGetLength(pcString1)) > MAX_STR_LEN){
@@ -123,16 +123,21 @@ DoReplace(const char *pcString1, const char *pcString2)
       fprintf(stderr, "Error: Can't replace an empty substring\n");
       return FALSE;
   }
-  if((len2=StrGetLength(pcString1)) > MAX_STR_LEN){
+  if((len2=StrGetLength(pcString2)) > MAX_STR_LEN){
       fprintf(stderr,"Error: argument is too long\n" );
       return FALSE;
   }
   
   char buf[MAX_STR_LEN + 2];
+  char store[1023];
+  StrCopy(store,pcString2);
 
   while (fgets(buf, sizeof(buf), stdin)) {
       if(NULL!= (p=StrSearch(buf,pcString1))){
-          StrCopy(p,pcString2);
+          for(i=0;i<len2;i++){
+              p[i]=store[i];
+          }
+          //StrCopy(p,pcString2);
           printf("%s\n",buf);
       }
       else{

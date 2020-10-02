@@ -108,11 +108,9 @@ char *StrCopy(char *pcDest, const char* pcSrc)
 
 void main()
 {   
-    char temp[5];
-    char name[]="sample.txt";
-    FILE *p_file=fopen(name,"rt");
-    char *p=fgets(temp,sizeof(temp),p_file);
-    printf("%p\n",p);
-    printf("%d\n",p>0);
-    fclose(p_file);
+    char data[]="dongol cho";
+    char *ptr=strstr(data,"ng");
+    ptr[0]='k';
+    ptr[1]='k';
+    printf("%s\n",data);
 }

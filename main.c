@@ -108,12 +108,5 @@ char *StrCopy(char *pcDest, const char* pcSrc)
 
 void main()
 {   
-    char data[20]="dongol cho";
-    int length=strlen(data);
-    char *ptr=strstr(data,"ng");
-    for(i=length-1;i>=ptr-data+len1;i--){
-        d
-    }
-    
-    printf("%s\n",data);
+    FILE *p_file=fopen()
 }

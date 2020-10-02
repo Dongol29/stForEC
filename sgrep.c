@@ -194,6 +194,9 @@ DoDiff(const char *file1, const char *file2)
   char *p1,*p2;
   int line_num1=0,line_num2=0;
 
+  printf("%s\n",file1);
+  printf("%s\n",file2);
+
   if((len1=StrGetLength(file1)) > MAX_STR_LEN ){
       fprintf(stderr,"Error: argument is too long\n");
   }
@@ -204,11 +207,11 @@ DoDiff(const char *file1, const char *file2)
   FILE *p_file1=fopen(file1,"rt"),*p_file2=fopen(file2,"rt");
 
   if(NULL==p_file1) {
-      fprintf(stderr,"Error: input line %s is too long\n",file1);
+      fprintf(stderr,"Error: failed to open file %s\n",file1);
       return FALSE;
   }
   if(NULL==p_file2) {
-      fprintf(stderr,"Error: input line %s is too long\n",file2);
+      fprintf(stderr,"Error: failed to open file %s\n",file2);
       return FALSE;
   }
   

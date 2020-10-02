@@ -133,8 +133,8 @@ DoReplace(const char *pcString1, const char *pcString2)
   //StrCopy(store,pcString2);
 
   while (fgets(buf, sizeof(buf), stdin)) {
-      int buf_length=StrGetLength(buf);
       while(NULL!= (p=StrSearch(buf,pcString1))){
+          int buf_length=StrGetLength(buf);
           //int buf_length=StrGetLength(buf);
           if(len1>len2){
               delay=len1-len2;
@@ -150,7 +150,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }
       printf("%s",buf);
-      printf("-------");
+      //printf("-------");
       memset(buf, 0, sizeof(buf));
       }
   return TRUE;

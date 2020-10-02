@@ -108,7 +108,7 @@ char *StrCopy(char *pcDest, const char* pcSrc)
 
 void main()
 {   
-    char data[10]="dongol";
-    data[]={0,};
-    printf("%s\n",data);
+    char data[10]="dongol ";
+    int length=strlen(data);
+    printf("%d\n",length);
 }

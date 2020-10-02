@@ -144,8 +144,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           }
           else if(len2>len1){
               int delay=len2-len1;
-              for(i=buf_length-1;i>=p-buf+len1;i--) {
-                  buf[i+delay]=buf[i];
+              for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+delay]=buf[i];
           }
           for(i=0;i<len2;i++) p[i]=store[i];
           //StrCopy(p,pcString2);

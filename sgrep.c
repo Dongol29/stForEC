@@ -192,11 +192,11 @@ DoDiff(const char *file1, const char *file2)
   FILE *p_file1=fopen(file1,"rt"),*p_file2=fopen(file2,"rt");
 
   if(NULL==p_file1) {
-      fpritnf(stderr,"Error: input line %s is too long\n",file1);
+      fprintf(stderr,"Error: input line %s is too long\n",file1);
       return FALSE;
   }
   if(NULL==p_file2) {
-      fpritnf(stderr,"Error: input line %s is too long\n",file2);
+      fprintf(stderr,"Error: input line %s is too long\n",file2);
       return FALSE;
   }
   
@@ -224,8 +224,8 @@ DoDiff(const char *file1, const char *file2)
       }
       /* 4 */
       if(StrCompare(tmp1,tmp2)){
-          printf("%s@%d:",file1,line_num1,tmp1);
-          printf("%s@%d:",file1,line_num2,tmp2);
+          printf("%s@%d:%s",file1,line_num1,tmp1);
+          printf("%s@%d:%s",file1,line_num2,tmp2);
       }
     }
   return TRUE;

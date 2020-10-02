@@ -151,6 +151,7 @@ DoReplace(const char *pcString1, const char *pcString2)
         }
       printf("%s",buf);
       printf("----------------\n");
+      memset(buf, 0, sizeof(buf));
       }
   return TRUE;
 }
@@ -241,7 +242,7 @@ DoDiff(const char *file1, const char *file2)
       /* 4 */
       if(StrCompare(tmp1,tmp2)){
           printf("%s@%d:%s",file1,line_num1,tmp1);
-          printf("%s@%d:%s",file1,line_num2,tmp2);
+          printf("%s@%d:%s",file2,line_num2,tmp2);
       }
     }
   return TRUE;

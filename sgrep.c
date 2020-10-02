@@ -192,10 +192,7 @@ DoDiff(const char *file1, const char *file2)
   int len1,len2;
   char tmp1[1023],tmp2[1023];
   char *p1,*p2;
-  int line_num1=0,line_num2=0;
-
-  printf("%s\n",file1);
-  printf("%s\n",file2);
+  int line_num1=0,line_num2=0,count;
 
   if((len1=StrGetLength(file1)) > MAX_STR_LEN ){
       fprintf(stderr,"Error: argument is too long\n");
@@ -216,9 +213,13 @@ DoDiff(const char *file1, const char *file2)
   }
   
   while(1){
+      count=0;
       if(NULL!=(p1=fgets(tmp1,sizeof(tmp1),p_file1))) line_num1++;
+      else count++;
       if(NULL!=(p2=fgets(tmp2,sizeof(tmp2),p_file2))) line_num2++;
-      
+      else count++;
+      if(count==2) break;
+
       /* 6 */
       if(line_num1>line_num2){
           fprintf(stderr,"Error: %s ends early at line %d",file2,line_num2);
@@ -229,8 +230,6 @@ DoDiff(const char *file1, const char *file2)
           return FALSE;
       }
       /* 3 */
-      printf("%c",tmp1[1021]);
-      printf("%c",tmp2[1021]);
       if(StrGetLength(tmp1)>1022){
           fprintf(stderr,"Error: input line %s is too long",file1);
           return FALSE;

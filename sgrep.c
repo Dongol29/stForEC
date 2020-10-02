@@ -112,7 +112,7 @@ int
 DoReplace(const char *pcString1, const char *pcString2)
 {
   /* TODO: fill out this function */  
-  int len1,len2,i;
+  int len1,len2,i,delay;
   char *p;
 
   if((len1=StrGetLength(pcString1)) > MAX_STR_LEN){
@@ -133,24 +133,24 @@ DoReplace(const char *pcString1, const char *pcString2)
   StrCopy(store,pcString2);
 
   while (fgets(buf, sizeof(buf), stdin)) {
+      int buf_length=StrGetLength(buf);
       while(NULL!= (p=StrSearch(buf,pcString1))){
-          int buf_length=StrGetLength(buf);
+          //int buf_length=StrGetLength(buf);
           if(len1>len2){
-              int delay=len1-len2;
+              delay=len1-len2;
               for(i=p-buf+len1;i<buf_length;i++){
                   char tmp=buf[i];
                   buf[i]=0;
                   buf[i-delay]=tmp; }
           }
           else if(len2>len1){
-              int delay=len2-len1;
+              delay=len2-len1;
               for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+delay]=buf[i];
           }
           for(i=0;i<len2;i++) p[i]=store[i];
-          //StrCopy(p,pcString2);
-          //printf("%s\n",buf);
+        }
       printf("%s\n",buf);
-      }}
+      }
   return TRUE;
 }
 /*-------------------------------------------------------------------*/

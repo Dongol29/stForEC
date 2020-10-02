@@ -241,7 +241,8 @@ DoDiff(const char *file1, const char *file2)
           return FALSE;
       }
       /* 4 */
-      if(StrCompare(tmp1,tmp2)){
+      int result=StrCompare(tmp1,tmp2);
+      if(result&&result!=10&&result!=-10){
           printf("%s@%d:%s",file1,line_num1,tmp1);
           printf("%s@%d:%s",file2,line_num2,tmp2);
       }

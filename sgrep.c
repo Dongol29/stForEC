@@ -133,6 +133,10 @@ DoReplace(const char *pcString1, const char *pcString2)
   //StrCopy(store,pcString2);
 
   while (fgets(buf, sizeof(buf), stdin)) {
+      if(StrGetLength(buf)>1022){
+          fprintf(stderr,"Error: input line is too long\n");
+          return FALSE;
+      }
       while(NULL!= (p=StrSearch(buf,pcString1))){
           int buf_length=StrGetLength(buf);
           //int buf_length=StrGetLength(buf);

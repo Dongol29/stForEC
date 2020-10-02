@@ -191,7 +191,7 @@ DoDiff(const char *file1, const char *file2)
 {
   /* TODO: fill out this function */  
   int len1,len2;
-  char tmp1[1023],tmp2[1023];
+  char tmp1[1024],tmp2[1024];
   char *p1,*p2;
   int line_num1=0,line_num2=0,count;
 
@@ -221,7 +221,6 @@ DoDiff(const char *file1, const char *file2)
       else count++;
       if(count==2) break;
       
-      printf("%d %d\n",line_num1,line_num2);
       /* 6 */
       if(line_num1>line_num2){
           fprintf(stderr,"Error: %s ends early at line %d\n",file2,line_num2);
@@ -232,9 +231,8 @@ DoDiff(const char *file1, const char *file2)
           return FALSE;
       }
       /* 3 */
-      int lenn=StrGetLength(tmp1);
-      printf("%d\n",lenn);
-      if(lenn>1022){
+    
+      if(StrGetLength(tmp1)>1022){
           fprintf(stderr,"Error: input line %s is too long\n",file1);
           return FALSE;
       }

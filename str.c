@@ -34,9 +34,9 @@ char *StrCopy(char *pcDest, const char* pcSrc)
     int i;
     assert(NULL!=pcDest&&NULL!=pcSrc);
     
-    size_t length1=sizeof(pcDest);
+    //size_t length1=sizeof(pcDest);
     size_t length2=StrGetLength(pcSrc);
-    //assert(length1>length2); 
+    //if(length1<=length2) fprintf(stderr, "Illegal instruction: 4");
 
 
     while(*pcSrc){

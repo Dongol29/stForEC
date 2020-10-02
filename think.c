@@ -48,12 +48,12 @@ int StrCompare(const char* pcS1, const char* pcS2)
 
 void main()
 {
-    char *d1="hi";
-    char d2[]="";
-    char *p=d2;
-    //strstr(d1,d2);
-    printf("%d\n",0==*d2);
-    //char *p=strstr(d1,d2);
-    //if(NULL==p) printf("not found\n"); 
-    //else { printf("%p\n",p); printf("%d\n",d1==p);}
+    char temp[64];
+    FILE *p=fopen("tissoft.txt","rt");
+    if(NULL!=p){
+        while(NULL!=fgets(temp,sizeof(temp),p)){
+            printf("%s",temp);
+        }
+    }
+    fclose(p);
 }

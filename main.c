@@ -15,19 +15,25 @@ size_t StrGetLength(const char* pcSrc)
   return (size_t)(pcEnd - pcSrc);
 }
 
-int StrSearch(const char* pcHaystack, const char *pcNeedle)
+char *StrSearch(const char* pcHaystack, const char *pcNeedle)
 {
+    /* 
+        The terminating null bytes ('\0') are not compared.
+        These functions return a pointer to the beginning of the substring,  or  NULL  if  the
+        substring is not found.
+        return haystack when needle is empty.
+    */ 
+    assert(NULL!=pcHaystack&&NULL!=pcNeedle);
     int number=0;
     int state=0;
-    const char *initial_address1=pcHaystack;
-    const char *initial_address2=pcNeedle;
-
+    const char *initial_address=pcNeedle;
     const char *occur_address;
     size_t length=StrGetLength(pcNeedle);
-    printf("%d\n",length);
+    
+    if(0==*pcNeedle) return (char *)pcHaystack;
     while(1){
+        if(*pcHaystack==0) return NULL;         //못찾음
         if(number>length-1) break;      //찾음
-        if(*pcHaystack=='\0'&&number<length) { printf("fail to find\n"); return NULL;}      //못찾음
         switch(state){
             case 0: 
                 if(*pcNeedle==*pcHaystack){ 
@@ -39,14 +45,17 @@ int StrSearch(const char* pcHaystack, const char *pcNeedle)
                 break;
             case 1:
                 if(*pcNeedle==*pcHaystack) { number++; pcNeedle++; pcHaystack++;}
-                else { state=0; pcNeedle=initial_address2; number=0;}
+                else { state=0; pcNeedle=initial_address; number=0;}
                 break;
             default:
                 assert(0); /*error*/
                 break;
         }
     }
-    return occur_address-initial_address1;
+    return (char *)occur_address;
+
+
+    //return strstr(pcHaystack, pcNeedle);
 }
 
 int StrCompare(const char* pcS1, const char* pcS2)
@@ -70,11 +79,40 @@ int StrCompare(const char* pcS1, const char* pcS2)
     //return strcmp(pcS1, pcS2);
 }
 
-void main()
+char *StrCopy(char *pcDest, const char* pcSrc)
 {
-    char d1[]="dongol is great";
-    char d2[]=" is f";
+  /*
+    If  the  programmer  knows that the size of dest is greater 
+    than the length of src, then strcpy() can be used.
+    the  program  first  needs  to  check that there's enough space.  
+  */
+    int i;
+    assert(NULL!=pcDest&&NULL!=pcSrc);
     
-    int data=StrSearch(d1,d2);
-    printf("%d\n",data);
+    size_t length2=StrGetLength(pcSrc);
+
+    //assert(length1>length2);
+
+    while(*pcSrc){
+        *pcDest=*pcSrc;
+        pcDest++; pcSrc++;
+    }
+    *pcDest=0;
+    for(i=0;i<length2;i++){
+        pcDest--;
+    }
+    return pcDest;
+  
+  //return strcpy(pcDest, pcSrc);
+}
+
+void main()
+{   
+    char temp[5];
+    char name[]="sample.txt";
+    FILE *p_file=fopen(name,"rt");
+    char *p=fgets(temp,sizeof(temp),p_file);
+    printf("%p\n",p);
+    printf("%d\n",p>0);
+    fclose(p_file);
 }

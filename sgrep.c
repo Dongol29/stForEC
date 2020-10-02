@@ -224,20 +224,22 @@ DoDiff(const char *file1, const char *file2)
       printf("%d %d\n",line_num1,line_num2);
       /* 6 */
       if(line_num1>line_num2){
-          fprintf(stderr,"Error: %s ends early at line %d",file2,line_num2);
+          fprintf(stderr,"Error: %s ends early at line %d\n",file2,line_num2);
           return FALSE;
       }
       if(line_num2>line_num1){
-          fprintf(stderr,"Error: %s ends early at line %d",file1,line_num1);
+          fprintf(stderr,"Error: %s ends early at line %d\n",file1,line_num1);
           return FALSE;
       }
       /* 3 */
-      if(StrGetLength(tmp1)>1022){
-          fprintf(stderr,"Error: input line %s is too long",file1);
+      int lenn=StrGetLength(tmp1);
+      printf("%d\n",lenn);
+      if(lenn>1022){
+          fprintf(stderr,"Error: input line %s is too long\n",file1);
           return FALSE;
       }
       if(StrGetLength(tmp2)>1022){
-          fprintf(stderr,"Error: input line %s is too long",file2);
+          fprintf(stderr,"Error: input line %s is too long\n",file2);
           return FALSE;
       }
       /* 4 */

@@ -136,10 +136,16 @@ DoReplace(const char *pcString1, const char *pcString2)
       if(NULL!= (p=StrSearch(buf,pcString1))){
           int buf_length=StrGetLength(buf);
           if(len1>len2){
-              for(i=p-buf+len1;i<buf_length;i++) buf[i-1]=buf[i];
+              int delay=len1-len2;
+              for(i=p-buf+len1;i<buf_length;i++){
+                  char tmp=buf[i];
+                  buf[i]=0;
+                  buf[i-delay]=tmp; }
           }
           else if(len2>len1){
-              for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+1]=buf[i];
+              int delay=len2-len1;
+              for(i=buf_length-1;i>=p-buf+len1;i--) {
+                  buf[i+delay]=buf[i];
           }
           for(i=0;i<len2;i++) p[i]=store[i];
           //StrCopy(p,pcString2);

@@ -231,11 +231,11 @@ DoDiff(const char *file1, const char *file2)
       /* 3 */
       printf("%c",tmp1[1021]);
       printf("%c",tmp2[1021]);
-      if(tmp1[1021]!='\n'){
+      if(StrGetLength(tmp1)>1022){
           fprintf(stderr,"Error: input line %s is too long",file1);
           return FALSE;
       }
-      if(tmp2[1021]!='\n'){
+      if(StrGetLength(tmp2)>1022){
           fprintf(stderr,"Error: input line %s is too long",file2);
           return FALSE;
       }

@@ -63,13 +63,13 @@ int StrCompare(const char* pcS1, const char* pcS2)
     assert(NULL!=pcS1&&NULL!=pcS2);
     while(1){
         if(0==*pcS1&&0==*pcS2) return 0;
-        else if(0==*pcS1&&0!=*pcS2) return -1;
-        else if(0!=*pcS1&&0==pcS2) return 1;
+        else if(0==*pcS1&&0!=*pcS2) return *pcS2-*pcS1;
+        else if(0!=*pcS1&&0==pcS2) return *pcS1-*pcS2;
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
             continue;
         }
-        else return (*pcS1>*pcS2)? 1:-1;
+        else return (*pcS1>*pcS2)? *pcS1-*pcS2:*pcS2-*pcS1;
     }
     return 0;
     //return strcmp(pcS1, pcS2);

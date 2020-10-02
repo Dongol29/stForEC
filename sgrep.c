@@ -220,7 +220,8 @@ DoDiff(const char *file1, const char *file2)
       if(NULL!=(p2=fgets(tmp2,sizeof(tmp2),p_file2))) line_num2++;
       else count++;
       if(count==2) break;
-
+      
+      printf("%d %d\n",line_num1,line_num2);
       /* 6 */
       if(line_num1>line_num2){
           fprintf(stderr,"Error: %s ends early at line %d",file2,line_num2);

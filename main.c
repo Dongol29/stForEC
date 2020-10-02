@@ -112,7 +112,7 @@ void main()
     int length=strlen(data);
     char *ptr=strstr(data,"ng");
     for(i=length-1;i>=ptr-data+len1;i--){
-        data[i+1]=data[i]
+        d
     }
     
     printf("%s\n",data);

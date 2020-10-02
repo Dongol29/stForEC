@@ -149,10 +149,10 @@ DoReplace(const char *pcString1, const char *pcString2)
           for(i=0;i<len2;i++) p[i]=store[i];
           //StrCopy(p,pcString2);
           //printf("%s\n",buf);
-        }
       printf("%s\n",buf);
       }
   return TRUE;
+}
 }
 /*-------------------------------------------------------------------*/
 /* DoDiff()

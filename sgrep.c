@@ -150,7 +150,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }
       printf("%s",buf);
-
+      printf("-------");
       memset(buf, 0, sizeof(buf));
       }
   return TRUE;

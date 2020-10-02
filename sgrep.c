@@ -149,7 +149,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           }
           for(i=0;i<len2;i++) p[i]=store[i];
         }
-      printf("%s\n",buf);
+      printf("%s",buf);
       }
   return TRUE;
 }

@@ -15,6 +15,36 @@ size_t StrGetLength(const char* pcSrc)
   return (size_t)(pcEnd - pcSrc);
 }
 
+char *StrCopy(char *pcDest, const char* pcSrc)
+{
+  /*
+    If  the  programmer  knows that the size of dest is greater 
+    than the length of src, then strcpy() can be used.
+    the  program  first  needs  to  check that there's enough space.  
+  */
+    int i;
+    assert(NULL!=pcDest&&NULL!=pcSrc);
+    
+    //size_t length1=sizeof(pcDest);
+    
+    size_t length2=StrGetLength(pcSrc);
+    //if(length1<=length2) fprintf(stderr, "Illegal instruction: 4");
+    //assert(length1>length2);
+
+    while(*pcSrc){
+        *pcDest=*pcSrc;
+        pcDest++; pcSrc++;
+    }
+    *pcDest=0;
+    for(i=0;i<length2;i++){
+        pcDest--;
+    }
+    return pcDest;
+  
+  //return strcpy(pcDest, pcSrc);
+}
+
+
 char *StrSearch(const char* pcHaystack, const char *pcNeedle)
 {
     /* 
@@ -79,35 +109,14 @@ int StrCompare(const char* pcS1, const char* pcS2)
     //return strcmp(pcS1, pcS2);
 }
 
-char *StrCopy(char *pcDest, const char* pcSrc)
+size_t hola(char p[])
 {
-  /*
-    If  the  programmer  knows that the size of dest is greater 
-    than the length of src, then strcpy() can be used.
-    the  program  first  needs  to  check that there's enough space.  
-  */
-    int i;
-    assert(NULL!=pcDest&&NULL!=pcSrc);
-    
-    size_t length2=StrGetLength(pcSrc);
-
-    //assert(length1>length2);
-
-    while(*pcSrc){
-        *pcDest=*pcSrc;
-        pcDest++; pcSrc++;
-    }
-    *pcDest=0;
-    for(i=0;i<length2;i++){
-        pcDest--;
-    }
-    return pcDest;
-  
-  //return strcpy(pcDest, pcSrc);
+    return sizeof(p);
 }
 
 void main()
 {   
-    int a=1,b=1,c=2;
-    if(a&&b&&c) printf("hola\n");
+    char data[]="";
+    char *p=StrSearch(data,"ng");
+    if(NULL==p) printf("hola\n");
 }

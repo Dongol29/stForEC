@@ -1,3 +1,5 @@
+/* 20190617 조동올, assignment 2, str.c */
+
 #include <assert.h> /* to use assert() */
 #include <stdio.h>
 #include "str.h"
@@ -27,44 +29,48 @@ size_t StrGetLength(const char* pcSrc)
 char *StrCopy(char *pcDest, const char* pcSrc)
 {
   /*
-    If  the  programmer  knows that the size of dest is greater 
-    than the length of src, then strcpy() can be used.
-    the  program  first  needs  to  check that there's enough space.  
+     This function copies the string pointed to by pcSrc, including the
+    terminating null byte ('\0'), to the buffer pointed to by pcDest. 
+     The strings may not overlap, and the destination string dest must 
+    be large enough to receive the copy.
+     Return value is a pointer to the starting destination of buffer.
+     Assert that each parameter is not NULL.
   */
-    int i;
     assert(NULL!=pcDest&&NULL!=pcSrc);
-    
-    //size_t length1=sizeof(pcDest);
-    size_t length2=StrGetLength(pcSrc);
-    //if(length1<=length2) fprintf(stderr, "Illegal instruction: 4");
 
+    int i;
+    size_t length2=StrGetLength(pcSrc);
 
     while(*pcSrc){
         *pcDest=*pcSrc;
         pcDest++; pcSrc++;
     }
     *pcDest=0;
+
     for(i=0;i<length2;i++){
         pcDest--;
     }
     return pcDest;
   
-  //return strcpy(pcDest, pcSrc);
 }
 
 /*------------------------------------------------------------------------*/
 int StrCompare(const char* pcS1, const char* pcS2)
 {
     /*
-        The  strcmp() function compares the two strings s1 and s2.  It returns an integer less
-        than, equal to, or greater than zero if s1 is found, respectively, to be less than, to
-        match, or be greater than s2.
+       This function compares the two strings pointed to by 
+      pcS1 and pcS2.  
+       The return value is an integer less than, equal to, or greater
+      than zero if string 1 is found, respectively, to be less than, 
+      to match, or be greater than string 2.
+       Assert that each parameter is not NULL.
     */
     assert(NULL!=pcS1&&NULL!=pcS2);
+
     while(1){
         if(0==*pcS1&&0==*pcS2) return 0;
-        else if(0==*pcS1&&0!=*pcS2) return *pcS1-*pcS2;
-        else if(0!=*pcS1&&0==pcS2) return *pcS1-*pcS2;
+        else if(0==*pcS1&&0!=*pcS2) return -256;  
+        else if(0!=*pcS1&&0==pcS2) return 256;
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
             continue;
@@ -72,18 +78,21 @@ int StrCompare(const char* pcS1, const char* pcS2)
         else return (*pcS1>*pcS2)? *pcS1-*pcS2:*pcS1-*pcS2;
     }
     return 0;
-    //return strcmp(pcS1, pcS2);
 }
 /*------------------------------------------------------------------------*/
 char *StrSearch(const char* pcHaystack, const char *pcNeedle)
 {
     /* 
-        The terminating null bytes ('\0') are not compared.
-        These functions return a pointer to the beginning of the substring,  or  NULL  if  the
-        substring is not found.
-        return haystack when needle is empty.
+       This function finds the first occurrence of the substring 
+      pointed to by pcNeedle in the string pointed to by pcHaystack.
+       The terminating null bytes ('\0') are not compared.
+       Returns a pointer to the beginning of the substring,  or  
+      NULL  if  the substring is not found. 
+       Returns haystack when needle(substring) is empty.
+       Assert that each parameter is not NULL.
     */ 
     assert(NULL!=pcHaystack&&NULL!=pcNeedle);
+
     int number=0;
     int state=0;
     const char *initial_address=pcNeedle;
@@ -92,8 +101,8 @@ char *StrSearch(const char* pcHaystack, const char *pcNeedle)
     
     if(0==*pcNeedle) return (char *)pcHaystack;
     while(1){
-        if(*pcHaystack==0) return NULL;         //못찾음
-        if(number>length-1) break;      //찾음
+        if(*pcHaystack==0) return NULL;        /* not found */
+        if(number>length-1) break;             /* found */
         switch(state){
             case 0: 
                 if(*pcNeedle==*pcHaystack){ 
@@ -113,20 +122,22 @@ char *StrSearch(const char* pcHaystack, const char *pcNeedle)
         }
     }
     return (char *)occur_address;
-
-
-    //return strstr(pcHaystack, pcNeedle);
 }
 /*------------------------------------------------------------------------*/
 char *StrConcat(char *pcDest, const char* pcSrc)
 {
     /*
-        overwriting theterminating null byte ('\0') at the end of dest
-        adds  a  terminating  null byte.
-        string must have enough space for the result.
-        return a pointer to the resulting string dest.
+       This function  appends  the src string to the dest string, 
+      overwriting the terminating null byte ('\0') at the end of dest,
+      and then adds  a  terminating  null byte. 
+       Each string is pointed to by pcDest and pcSrc.
+       The  strings may not overlap, and the dest string must have 
+      enough space for the result.
+       Returns a pointer to the resulting string dest.
+       Assert that each parameter is not NULL.
     */
     assert(NULL!=pcDest&&NULL!=pcSrc);
+
     const char *initial_address=pcDest;
 
     while(*pcDest) pcDest++;

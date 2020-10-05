@@ -155,7 +155,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }
       printf("%s",buf);
-      
+
       memset(buf, 0, sizeof(buf));      /* reset buf */
     }
 
@@ -219,7 +219,7 @@ int
 DoDiff(const char *file1, const char *file2)
 {
   /* TODO: fill out this function */  
-  int len1,len2,line_num1=0,line_num2=0,count;
+  int len1,len2,line_num1=0,line_num2=0,count,state=0;
   char tmp1[1024],tmp2[1024];
   char *p1,*p2;
 
@@ -251,7 +251,7 @@ DoDiff(const char *file1, const char *file2)
       if(NULL!=(p2=fgets(tmp2,sizeof(tmp2),p_file2))) line_num2++;
       else count++;
 
-      if(count==2) ;    /* both file ends at same line number */
+      if(count==2) state=1;    /* both file ends at same line number */
       /* 6 */
       else{
         if(line_num1>line_num2){
@@ -278,6 +278,7 @@ DoDiff(const char *file1, const char *file2)
           printf("%s@%d:%s",file1,line_num1,tmp1);
           printf("%s@%d:%s",file2,line_num2,tmp2);
       }
+      if(state==1) break;
     }
   return TRUE;
 }

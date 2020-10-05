@@ -132,7 +132,7 @@ DoReplace(const char *pcString1, const char *pcString2)
   }
   
   /* 2,3 */
-  char buf[MAX_STR_LEN + 2];
+  char buf[MAX_STR_LEN + 2]={0,};
 
   while (fgets(buf, sizeof(buf), stdin)) {
       if(StrGetLength(buf)>1022){

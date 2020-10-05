@@ -181,7 +181,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }
     printf("%s",buf);
-    
+
   return TRUE;
 }
 /*-------------------------------------------------------------------*/
@@ -250,18 +250,19 @@ DoDiff(const char *file1, const char *file2)
       else count++;
       if(NULL!=(p2=fgets(tmp2,sizeof(tmp2),p_file2))) line_num2++;
       else count++;
-      if(count==2) break;    /* both file ends at same line number */
-      
+
+      if(count==2) ;    /* both file ends at same line number */
       /* 6 */
-      if(line_num1>line_num2){
-          fprintf(stderr,"Error: %s ends early at line %d\n",file2,line_num2);
-          return FALSE;
+      else{
+        if(line_num1>line_num2){
+            fprintf(stderr,"Error: %s ends early at line %d\n",file2,line_num2);
+            return FALSE;
+        }
+        if(line_num2>line_num1){
+            fprintf(stderr,"Error: %s ends early at line %d\n",file1,line_num1);
+            return FALSE;
+        }
       }
-      if(line_num2>line_num1){
-          fprintf(stderr,"Error: %s ends early at line %d\n",file1,line_num1);
-          return FALSE;
-      }
-      
       /* 3 */
       if(StrGetLength(tmp1)>1022){
           fprintf(stderr,"Error: input line %s is too long\n",file1);

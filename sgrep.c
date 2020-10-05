@@ -150,7 +150,7 @@ DoReplace(const char *pcString1, const char *pcString2)
           }
           else if(len2>len1){
               move=len2-len1;
-              for(i=buf_length-1-move;i>=p-buf+len1;i--) buf[i+move]=buf[i];
+              for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+move]=buf[i];
           }
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }

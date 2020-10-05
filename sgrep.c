@@ -158,6 +158,30 @@ DoReplace(const char *pcString1, const char *pcString2)
    
       memset(buf, 0, sizeof(buf));      /* reset buf */
       }
+
+    /* for last line */
+    fgets(buf, sizeof(buf), stdin);     
+
+    if(StrGetLength(buf)>1022){
+          fprintf(stderr,"Error: input line is too long\n");
+          return FALSE; }
+    while(NULL!= (p=StrSearch(buf,pcString1))){
+          buf_length=StrGetLength(buf);
+          if(len1>len2){
+              move=len1-len2;
+              for(i=p-buf+len1;i<buf_length;i++){
+                  char tmp=buf[i];
+                  buf[i]=0;
+                  buf[i-move]=tmp; }
+          }
+          else if(len2>len1){
+              move=len2-len1;
+              for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+move]=buf[i];
+          }
+          for(i=0;i<len2;i++) p[i]=pcString2[i];
+        }
+    printf("%s",buf);
+    
   return TRUE;
 }
 /*-------------------------------------------------------------------*/

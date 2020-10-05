@@ -48,12 +48,6 @@ int StrCompare(const char* pcS1, const char* pcS2)
 
 void main()
 {
-    char temp[64];
-    FILE *p=fopen("tissoft.txt","rt");
-    if(NULL!=p){
-        while(NULL!=fgets(temp,sizeof(temp),p)){
-            printf("%s",temp);
-        }
-    }
-    fclose(p);
+    char ch=getchar();
+    printf("%d\n",ch==97);
 }

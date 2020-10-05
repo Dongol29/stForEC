@@ -45,9 +45,22 @@ int StrCompare(const char* pcS1, const char* pcS2)
     return 0;
     //return strcmp(pcS1, pcS2);
 }
+size_t StrGetLength(const char* pcSrc)
+{
+  const char *pcEnd;
+  assert(pcSrc); /* NULL address, 0, and FALSE are identical. */
+  pcEnd = pcSrc;
+	
+  while (*pcEnd) /* null character and FALSE are identical. */
+    pcEnd++;
+
+  return (size_t)(pcEnd - pcSrc);
+}
 
 void main()
 {
-    char ch=getchar();
-    printf("%d\n",ch==97);
+    char data[]="dongol";
+    char *p=data;
+    size_t a=StrGetLength(p);
+    printf("%zu\n",a);
 }

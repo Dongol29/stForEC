@@ -116,7 +116,7 @@ DoReplace(const char *pcString1, const char *pcString2)
   char *p;
 
   /* task 1 */
-  if((len1=StrGetLength(pcString1)) > 10){
+  if((len1=StrGetLength(pcString1)) > MAX_STR_LEN){
       fprintf(stderr,"Error: argument is too long\n" );
       return FALSE;
   }
@@ -227,7 +227,7 @@ DoDiff(const char *file1, const char *file2)
   char *p1,*p2;
 
   /* task 1 */
-  if((len1=StrGetLength(file1)) > MAX_STR_LEN ){
+  if((len1=StrGetLength(file1)) > 10 ){
       fprintf(stderr,"Error: argument is too long\n");
   }
   if((len2=StrGetLength(file1)) > MAX_STR_LEN ){

@@ -227,7 +227,7 @@ DoDiff(const char *file1, const char *file2)
   char *p1,*p2;
 
   /* task 1 */
-  if((len1=StrGetLength(file1)) > 10 ){
+  if((len1=StrGetLength(file1)) > MAX_STR_LEN ){
       fprintf(stderr,"Error: argument is too long\n");
   }
   if((len2=StrGetLength(file1)) > MAX_STR_LEN ){
@@ -276,7 +276,10 @@ DoDiff(const char *file1, const char *file2)
       }
       /* task 4,5 */
       int result=StrCompare(tmp1,tmp2);
-      if(result&&result!=256&&result!=256){
+        /* sgrep_sol does not judge that two lines are different
+          if the difference is whether newline character('\n')
+          exists or not */
+      if(result&&result!=256&&result!=-256){
           printf("%s@%d:%s",file1,line_num1,tmp1);
           printf("%s@%d:%s",file2,line_num2,tmp2);
       }

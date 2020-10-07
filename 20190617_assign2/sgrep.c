@@ -78,14 +78,13 @@ DoFind(const char *pcSearch)
   }
 
    
-  /* Read the line by line from stdin, Note that this is an example */
   while (fgets(buf, sizeof(buf), stdin)) {
     /* check input line length */
     if ((len2 = StrGetLength(buf)) > MAX_STR_LEN) {
       fprintf(stderr, "Error: input line is too long\n");
       return FALSE;
     }
-    /* TODO: fill out this function */
+
     if(NULL!=StrSearch(buf,pcSearch)) printf("%s",buf);
   }
 
@@ -113,11 +112,10 @@ DoFind(const char *pcSearch)
 int
 DoReplace(const char *pcString1, const char *pcString2)
 {
-  /* TODO: fill out this function */  
   int len1,len2,i,move,buf_length;
   char *p;
 
-  /* 1 */
+  /* task 1 */
   if((len1=StrGetLength(pcString1)) > MAX_STR_LEN){
       fprintf(stderr,"Error: argument is too long\n" );
       return FALSE;
@@ -131,17 +129,20 @@ DoReplace(const char *pcString1, const char *pcString2)
       return FALSE;
   }
   
-  /* 2,3 */
-  char buf[MAX_STR_LEN + 2]={0,};
+  /* task 2,3 */
+  char buf[MAX_STR_LEN + 2]={0,}; // initialize buf
 
   while (fgets(buf, sizeof(buf), stdin)) {
+      /* task 2 */
       if(StrGetLength(buf)>1022){
           fprintf(stderr,"Error: input line is too long\n");
           return FALSE;
       }
       while(NULL!= (p=StrSearch(buf,pcString1))){
           buf_length=StrGetLength(buf);
+
           if(len1>len2){
+            /* Move the values assigned to the buf forward */
               move=len1-len2;
               for(i=p-buf+len1;i<buf_length;i++){
                   char tmp=buf[i];
@@ -149,18 +150,20 @@ DoReplace(const char *pcString1, const char *pcString2)
                   buf[i-move]=tmp; }
           }
           else if(len2>len1){
+            /* Move the values assigned to the buf backward */
               move=len2-len1;
               for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+move]=buf[i];
           }
+          /* insert string2 from index where string1 was */
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }
       printf("%s",buf);
 
-      memset(buf, 0, sizeof(buf));      /* reset buf */
+      memset(buf, 0, sizeof(buf));    // reset buf
     }
 
     /* for last line */
-    fgets(buf, sizeof(buf), stdin);     
+    //fgets(buf, sizeof(buf), stdin);     
 
     if(StrGetLength(buf)>1022){
           fprintf(stderr,"Error: input line is too long\n");

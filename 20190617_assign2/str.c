@@ -45,8 +45,9 @@ char *StrCopy(char *pcDest, const char* pcSrc)
         *pcDest=*pcSrc;
         pcDest++; pcSrc++;
     }
-    *pcDest=0;
+    *pcDest=0;           /* append NULL byte */
 
+    /* To make psDest indicate starting destination */
     for(i=0;i<length2;i++){
         pcDest--;
     }
@@ -64,20 +65,21 @@ int StrCompare(const char* pcS1, const char* pcS2)
       than zero if string 1 is found, respectively, to be less than, 
       to match, or be greater than string 2.
        Assert that each parameter is not NULL.
+       Case 2 and 3 should be distinguished to work properly in sgrep.c
     */
     assert(NULL!=pcS1&&NULL!=pcS2);
 
     while(1){
-        if(0==*pcS1&&0==*pcS2) return 0;
-        else if(0==*pcS1&&0!=*pcS2) return -256;  
-        else if(0!=*pcS1&&0==pcS2) return 256;
+        if(0==*pcS1&&0==*pcS2) return 0;   //case1
+        else if(0==*pcS1&&0!=*pcS2) return -256;  //case2
+        else if(0!=*pcS1&&0==pcS2) return 256;    //case2
         if(*pcS1==*pcS2){
             pcS1++; pcS2++;
             continue;
         }
-        else return (*pcS1>*pcS2)? *pcS1-*pcS2:*pcS1-*pcS2;
+        else return (*pcS1>*pcS2)? *pcS1-*pcS2:*pcS1-*pcS2; //case3
     }
-    return 0;
+    return 0;  //case4
 }
 /*------------------------------------------------------------------------*/
 char *StrSearch(const char* pcHaystack, const char *pcNeedle)
@@ -95,16 +97,20 @@ char *StrSearch(const char* pcHaystack, const char *pcNeedle)
 
     int number=0;
     int state=0;
+
+    /* When it turns out that the string is different from what we want
+      to find, pcNeedle should point out its initial address. */
     const char *initial_address=pcNeedle;
     const char *occur_address;
+
     size_t length=StrGetLength(pcNeedle);
     
-    if(0==*pcNeedle) return (char *)pcHaystack;
+    if(0==*pcNeedle) return (char *)pcHaystack;  // empty string2
     while(1){
         if(*pcHaystack==0) return NULL;        /* not found */
         if(number>length-1) break;             /* found */
         switch(state){
-            case 0: 
+            case 0:     //initial state
                 if(*pcNeedle==*pcHaystack){ 
                     state=1; 
                     occur_address=pcHaystack;
@@ -112,7 +118,7 @@ char *StrSearch(const char* pcHaystack, const char *pcNeedle)
                     }
                 else pcHaystack++; 
                 break;
-            case 1:
+            case 1:     
                 if(*pcNeedle==*pcHaystack) { number++; pcNeedle++; pcHaystack++;}
                 else { state=0; pcNeedle=initial_address; number=0;}
                 break;
@@ -146,6 +152,6 @@ char *StrConcat(char *pcDest, const char* pcSrc)
         *pcDest=*pcSrc;
         pcDest++; pcSrc++;
     }
-    *pcDest=0;
+    *pcDest=0;  // append NULL byte
     return (char *)initial_address;
 }

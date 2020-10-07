@@ -59,8 +59,6 @@ size_t StrGetLength(const char* pcSrc)
 
 void main()
 {
-    char data[]="dongol";
-    char *p=data;
-    size_t a=StrGetLength(p);
-    printf("%zu\n",a);
+   if(1&&1&&0) ;
+   else printf("hola\n");
 }

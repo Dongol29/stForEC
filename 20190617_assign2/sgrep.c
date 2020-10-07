@@ -116,7 +116,7 @@ DoReplace(const char *pcString1, const char *pcString2)
   char *p;
 
   /* task 1 */
-  if((len1=StrGetLength(pcString1)) > MAX_STR_LEN){
+  if((len1=StrGetLength(pcString1)) > 10){
       fprintf(stderr,"Error: argument is too long\n" );
       return FALSE;
   }
@@ -162,15 +162,14 @@ DoReplace(const char *pcString1, const char *pcString2)
       memset(buf, 0, sizeof(buf));    // reset buf
     }
 
-    /* for last line */
-    //fgets(buf, sizeof(buf), stdin);     
-
+    /* command below 'while loop' does not operate in last line */     
     if(StrGetLength(buf)>1022){
           fprintf(stderr,"Error: input line is too long\n");
           return FALSE; }
     while(NULL!= (p=StrSearch(buf,pcString1))){
           buf_length=StrGetLength(buf);
           if(len1>len2){
+            /* Move the values assigned to the buf forward */
               move=len1-len2;
               for(i=p-buf+len1;i<buf_length;i++){
                   char tmp=buf[i];
@@ -178,9 +177,11 @@ DoReplace(const char *pcString1, const char *pcString2)
                   buf[i-move]=tmp; }
           }
           else if(len2>len1){
+            /* Move the values assigned to the buf backward */
               move=len2-len1;
               for(i=buf_length-1;i>=p-buf+len1;i--) buf[i+move]=buf[i];
           }
+          /* insert string2 from index where string1 was */
           for(i=0;i<len2;i++) p[i]=pcString2[i];
         }
     printf("%s",buf);
@@ -220,13 +221,12 @@ DoReplace(const char *pcString1, const char *pcString2)
 /*-------------------------------------------------------------------*/
 int
 DoDiff(const char *file1, const char *file2)
-{
-  /* TODO: fill out this function */  
+{  
   int len1,len2,line_num1=0,line_num2=0,count,state=0;
   char tmp1[1024],tmp2[1024];
   char *p1,*p2;
 
-  /* 1 */
+  /* task 1 */
   if((len1=StrGetLength(file1)) > MAX_STR_LEN ){
       fprintf(stderr,"Error: argument is too long\n");
   }
@@ -234,9 +234,8 @@ DoDiff(const char *file1, const char *file2)
       fprintf(stderr,"Error: argument is too long\n");
   }
 
-  /* 2 */
+  /* task 2 */
   FILE *p_file1=fopen(file1,"rt"),*p_file2=fopen(file2,"rt");
-
   if(NULL==p_file1) {
       fprintf(stderr,"Error: failed to open file %s\n",file1);
       return FALSE;
@@ -255,7 +254,7 @@ DoDiff(const char *file1, const char *file2)
       else count++;
 
       if(count==2) state=1;    /* both file ends at same line number */
-      /* 6 */
+      /* task 6 */
       else{
         if(line_num1>line_num2){
             fprintf(stderr,"Error: %s ends early at line %d\n",file2,line_num2);
@@ -266,7 +265,7 @@ DoDiff(const char *file1, const char *file2)
             return FALSE;
         }
       }
-      /* 3 */
+      /* task 3 */
       if(StrGetLength(tmp1)>1022){
           fprintf(stderr,"Error: input line %s is too long\n",file1);
           return FALSE;
@@ -275,7 +274,7 @@ DoDiff(const char *file1, const char *file2)
           fprintf(stderr,"Error: input line %s is too long\n",file2);
           return FALSE;
       }
-      /* 4,5 */
+      /* task 4,5 */
       int result=StrCompare(tmp1,tmp2);
       if(result&&result!=256&&result!=256){
           printf("%s@%d:%s",file1,line_num1,tmp1);

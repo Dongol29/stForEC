@@ -59,6 +59,7 @@ size_t StrGetLength(const char* pcSrc)
 
 void main()
 {
-   if(1&&1&&0) ;
-   else printf("hola\n");
+    char *p;
+    size_t i=sizeof(p);
+    printf("%zu\n",i);
 }

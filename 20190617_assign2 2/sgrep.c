@@ -238,12 +238,10 @@ DoDiff(const char *file1, const char *file2)
   FILE *p_file1=fopen(file1,"rt"),*p_file2=fopen(file2,"rt");
   if(NULL==p_file1) {
       fprintf(stderr,"Error: failed to open file %s\n",file1);
-      fclose(p_file1); fclose(p_file2);
       return FALSE;
   }
   if(NULL==p_file2) {
       fprintf(stderr,"Error: failed to open file %s\n",file2);
-      fclose(p_file1); fclose(p_file2);
       return FALSE;
   }
   
@@ -260,24 +258,20 @@ DoDiff(const char *file1, const char *file2)
       else{
         if(line_num1>line_num2){
             fprintf(stderr,"Error: %s ends early at line %d\n",file2,line_num2);
-            fclose(p_file1); fclose(p_file2);
             return FALSE;
         }
         if(line_num2>line_num1){
             fprintf(stderr,"Error: %s ends early at line %d\n",file1,line_num1);
-            fclose(p_file1); fclose(p_file2);
             return FALSE;
         }
       }
       /* task 3 */
       if(StrGetLength(tmp1)>1022){
           fprintf(stderr,"Error: input line %s is too long\n",file1);
-          fclose(p_file1); fclose(p_file2);
           return FALSE;
       }
       if(StrGetLength(tmp2)>1022){
           fprintf(stderr,"Error: input line %s is too long\n",file2);
-          fclose(p_file1); fclose(p_file2);
           return FALSE;
       }
       /* task 4,5 */
@@ -291,8 +285,6 @@ DoDiff(const char *file1, const char *file2)
       }
       if(state==1) break;
     }
-  fclose(p_file1); fclose(p_file2);
-  
   return TRUE;
 }
 /*-------------------------------------------------------------------*/

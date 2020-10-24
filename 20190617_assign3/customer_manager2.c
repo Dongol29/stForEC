@@ -179,7 +179,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   
   int h1=hash(id),count=0;
   char *name;
-  int name_hash=0;
+  int name_hash;
   USERINFO *p,*q;
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -217,13 +217,12 @@ UnregisterCustomerByID(DB_T d, const char *id)
   free(pf1->id_next);
   free(pf1);
   
-  int h2=hash(name);
   p=(USERINFO *)malloc(sizeof(USERINFO));
-  p->name_next=d->name_bucket[h2&(d->curBuckSize-1)];
+  p->name_next=d->name_bucket[name_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;
 
   for(;p!=NULL;p=p->name_next){
-    if(h2==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
+    if(name_hash==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
       free(p->name_next->name);
       q=p->name_next;
@@ -248,7 +247,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   
   int h1=hash(name),count=0;
   char *id;
-  int id_hash=0;
+  int id_hash;
   USERINFO *p,*q;
   
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -285,13 +284,12 @@ UnregisterCustomerByName(DB_T d, const char *name)
   free(pf1->name_next);
   free(pf1);
   
-  int h2=hash(id);
   p=(USERINFO *)malloc(sizeof(USERINFO));
-  p->id_next=d->id_bucket[h2&(d->curBuckSize-1)];
+  p->id_next=d->id_bucket[id_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;
 
   for(;p!=NULL;p=p->id_next){
-    if(h2==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
+    if(id_hash==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
       free(p->id_next->id);
       q=p->id_next;

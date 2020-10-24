@@ -8,6 +8,7 @@
 Uncomment and use the following code if you want*/
 
 #define UNIT_ARRAY_SIZE 64
+#define NDEBUG
 
 typedef struct UserInfo {
   char *name;                // customer name

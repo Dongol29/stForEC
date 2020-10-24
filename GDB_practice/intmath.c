@@ -12,7 +12,7 @@
 int IntMath_gcd(int iFirst, int iSecond)
 {
    int iTemp;
-
+   
    assert(iFirst > 0);
    assert(iSecond > 0);
 

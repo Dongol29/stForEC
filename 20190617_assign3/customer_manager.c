@@ -84,8 +84,12 @@ RegisterCustomer(DB_T d, const char *id,
   for(i=0;i<d->curArrSize;i++){
     if((d->pArray[i]).name==NULL) {
       /* 3 */  
-      (d->pArray[i]).name=strdup(name);
-      (d->pArray[i]).id=strdup(id);
+      //(d->pArray[i]).name=strdup(name);
+      (d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
+      strcpy((d->pArray[i]).name,name);
+      (d->pArray[i]).id=(char *)malloc(strlen(id)+1);
+      strcpy((d->pArray[i]).id,id);
+      //(d->pArray[i]).id=strdup(id);
       (d->pArray[i]).purchase=purchase;
       //d->count++;
 
@@ -98,12 +102,12 @@ RegisterCustomer(DB_T d, const char *id,
   memset(d->pArray+64*(d->time),0,UNIT_ARRAY_SIZE*sizeof(USERINFO)); 
   d->curArrSize=UNIT_ARRAY_SIZE*(d->time+1);
   /*이 때 i==d->curArraysize*/
-  //(d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
-  //strcpy((d->pArray[i]).name,name);
-  (d->pArray[i]).name=strdup(name);
-  //(d->pArray[i]).id=(char *)malloc(strlen(id)+1);
-  //strcpy((d->pArray[i]).id,id);
-  d->pArray[i].id=strdup(id);
+  (d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
+  strcpy((d->pArray[i]).name,name);
+  //(d->pArray[i]).name=strdup(name);
+  (d->pArray[i]).id=(char *)malloc(strlen(id)+1);
+  strcpy((d->pArray[i]).id,id);
+  //d->pArray[i].id=strdup(id);
   d->pArray[i].purchase=purchase;
 
   return 0;

@@ -84,12 +84,12 @@ RegisterCustomer(DB_T d, const char *id,
   for(i=0;i<d->curArrSize;i++){
     if((d->pArray[i]).name==NULL) {
       /* 3 */  
-      //(d->pArray[i]).name=strdup(name);
-      (d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
-      strcpy((d->pArray[i]).name,name);
-      (d->pArray[i]).id=(char *)malloc(strlen(id)+1);
-      strcpy((d->pArray[i]).id,id);
-      //(d->pArray[i]).id=strdup(id);
+      (d->pArray[i]).name=strdup(name);
+      //(d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
+      //strcpy((d->pArray[i]).name,name);
+      //(d->pArray[i]).id=(char *)malloc(strlen(id)+1);
+      //strcpy((d->pArray[i]).id,id);
+      (d->pArray[i]).id=strdup(id);
       (d->pArray[i]).purchase=purchase;
       //d->count++;
 
@@ -98,16 +98,16 @@ RegisterCustomer(DB_T d, const char *id,
   }
   // 다 차있어서-->추가못한상태
   d->time++; //첫 추가 시 time=1
-  d->pArray=(USERINFO *)realloc(d->pArray,sizeof(USERINFO)*64*(d->time+1));
+  d->pArray=(USERINFO *)realloc(d->pArray,sizeof(USERINFO)*UNIT_ARRAY_SIZE*(d->time+1));
   memset(d->pArray+64*(d->time),0,UNIT_ARRAY_SIZE*sizeof(USERINFO)); 
   d->curArrSize=UNIT_ARRAY_SIZE*(d->time+1);
   /*이 때 i==d->curArraysize*/
-  (d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
-  strcpy((d->pArray[i]).name,name);
-  //(d->pArray[i]).name=strdup(name);
-  (d->pArray[i]).id=(char *)malloc(strlen(id)+1);
-  strcpy((d->pArray[i]).id,id);
-  //d->pArray[i].id=strdup(id);
+  //(d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
+  //strcpy((d->pArray[i]).name,name);
+  (d->pArray[i]).name=strdup(name);
+  //(d->pArray[i]).id=(char *)malloc(strlen(id)+1);
+  //strcpy((d->pArray[i]).id,id);
+  d->pArray[i].id=strdup(id);
   d->pArray[i].purchase=purchase;
 
   return 0;
@@ -125,7 +125,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   for(i=0;i<d->curArrSize;i++){
     if(strcmp((d->pArray[i]).id,id)==0){
       free(d->pArray[i].name);
-      free((d->pArray[i]).id);
+      free(d->pArray[i].id);
 
       d->pArray[i].name=NULL;  //struct로 이루어진 array
     }

@@ -68,7 +68,6 @@ int
 RegisterCustomer(DB_T d, const char *id,
 		 const char *name, const int purchase)
 {
-  USERINFO *p;
   /* 1. parameter validation 2. array에서 empty element 찾고 store data
      2-1. copy를 저장 3. full->realloc으로 expand(64)*/
   if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); //1,2

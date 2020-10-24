@@ -179,7 +179,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   
   int h1=hash(id),count=0;
   char *name;
-  int name_hash;
+  int name_hash=0;
   USERINFO *p,*q;
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -248,14 +248,14 @@ UnregisterCustomerByName(DB_T d, const char *name)
   
   int h1=hash(name),count=0;
   char *id;
-  int id_hash;
+  int id_hash=0;
   USERINFO *p,*q;
   
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
   USERINFO *pf0=p;
   for(;p!=NULL;p=p->next){
-    if(h1==p->next->id_hash&&strcmp(id,p->next->id)==0){
+    if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;
       q=p->next;
       p->next=p->next->next;

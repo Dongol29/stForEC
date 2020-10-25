@@ -191,14 +191,18 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf0=p;
   printf("1\n");
   for(;p!=NULL;p=p->next){
-    if(h1==p->next->id_hash&&strcmp(id,p->next->id)==0){
+    printf("2\n");
+    if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
+      printf("3\n");
       count++;
       q=p->next;
+      printf("4\n");
       p->next=p->next->next;
+      printf("5\n");
       free(q);
     }
   }
-  printf("2\n");
+  
   free(p);
   free(pf0->next);
   free(pf0);

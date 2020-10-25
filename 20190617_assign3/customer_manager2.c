@@ -209,7 +209,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->id_next=d->id_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;
-  printf("3\n");
+  
   for(;p!=NULL;p=p->id_next){
     if(h1==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
@@ -219,7 +219,9 @@ UnregisterCustomerByID(DB_T d, const char *id)
       q=p->id_next;
       p->id_next=p->id_next->id_next;
       free(q);
+      n=2;
     }
+    if(n==2) break;
   }
   free(p);
   free(pf1->id_next);

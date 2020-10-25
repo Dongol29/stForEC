@@ -76,7 +76,8 @@ RegisterCustomer(DB_T d, const char *id,
 
   int i;
   for(i=0;i<d->curArrSize;i++){
-    printf("hola00\n");
+    printf("%s\n",d->pArray[i].id);
+    printf("%s\n",d->pArray[i].name);
     if(!strcmp((d->pArray[i]).id,id)||!strcmp((d->pArray[i]).name,name)){
         printf("hola1\n");
         return (-1);

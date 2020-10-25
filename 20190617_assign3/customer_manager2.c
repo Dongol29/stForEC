@@ -129,18 +129,21 @@ RegisterCustomer(DB_T d, const char *id,
   /*중복된 거 없다는 게 확인됨*/
   printf("3\n");
   p->id=strdup(id);
+  printf("4\n");
   p->name=strdup(name);
   p->purchase=purchase;
   p->id_hash=h_id_O;
   p->name_hash=h_name_O;
-
+  printf("5\n");
   p->id_next=d->id_bucket[h_id_O&(d->curBuckSize-1)];
+  printf("6\n");
   d->id_bucket[h_id_O&(d->curBuckSize-1)]=p;
-
+  printf("7\n");
   p->name_next=d->name_bucket[h_name_O&(d->curBuckSize-1)];   //
   d->id_bucket[h_name_O&(d->curBuckSize-1)]=p;
-
+  printf("8\n");
   p->next=d->first;
+  printf("9\n");
   d->first=p;
   
   d->count++;

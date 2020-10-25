@@ -71,33 +71,26 @@ RegisterCustomer(DB_T d, const char *id,
 {
   /* 1. parameter validation 2. array에서 empty element 찾고 store data
      2-1. copy를 저장 3. full->realloc으로 expand(64)*/
-  printf("hola0\n");
   if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); //1,2
 
   int i;
   for(i=0;i<d->curArrSize;i++){
-    printf("%s\n",d->pArray[i].id);
-    printf("%s\n",d->pArray[i].name);
-    if(!strcmp((d->pArray[i]).id,id)||!strcmp((d->pArray[i]).name,name)){
-        printf("hola1\n");
+    if(d->pArray[i].name!=NULL){
+      if(!strcmp((d->pArray[i]).id,id)||!strcmp((d->pArray[i]).name,name)){
         return (-1);
-    }
-    printf("hoho\n");
+    }}
   } 
 
   /* empty 판별-by checking each name */
   for(i=0;i<d->curArrSize;i++){
     if((d->pArray[i]).name==NULL) {
-      printf("hola2\n");
       /* 3 */  
       (d->pArray[i]).name=strdup(name);
       //(d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
       //strcpy((d->pArray[i]).name,name);
       //(d->pArray[i]).id=(char *)malloc(strlen(id)+1);
       //strcpy((d->pArray[i]).id,id);
-      printf("hola3\n");
       (d->pArray[i]).id=strdup(id);
-      printf("hola4\n");
       (d->pArray[i]).purchase=purchase;
       //d->count++;
 
@@ -105,7 +98,6 @@ RegisterCustomer(DB_T d, const char *id,
     }
   }
   // 다 차있어서-->추가못한상태
-  printf("hola5\n");
   d->time++; //첫 추가 시 time=1
   d->pArray=(USERINFO *)realloc(d->pArray,sizeof(USERINFO)*UNIT_ARRAY_SIZE*(d->time+1));
   memset(d->pArray+64*(d->time),0,UNIT_ARRAY_SIZE*sizeof(USERINFO)); 

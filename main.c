@@ -6,6 +6,7 @@
 
 void main()
 {
-    int a=0;
-    printf("%d\n",a==NULL);
+    char *p=NULL;
+    char *f="fdi";
+    printf("%d\n",strcmp(p,f));
 }

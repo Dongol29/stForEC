@@ -106,13 +106,18 @@ RegisterCustomer(DB_T d, const char *id,
 
   int h_id_O=hash(id);    //나누기 안 한 해시 id결과값
 
+  printf("1\n");
   for(p=d->id_bucket[h_id_O&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
+    printf("2\n");
     if(p->id!=NULL){
+      printf("3\n");
       if(h_id_O==p->id_hash&&strcmp(p->id,id)==0){
           fprintf(stderr,"Same id exists\n");
           return (-1);
-      }}
-  } 
+      }
+      printf("3\n");
+    }
+  }       
 
   int h_name_O=hash(name); //origin값
 

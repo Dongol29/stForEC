@@ -482,7 +482,6 @@ int
 main(int argc,const char *argv[])
 {
 	int res[5], i;
-    argc=2;
 
 	/* ./testclient -c : run all the correctness tests */
 	if (argc == 2 && strcmp("-c", argv[1]) == 0) {

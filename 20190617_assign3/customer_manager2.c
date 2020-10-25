@@ -183,24 +183,22 @@ UnregisterCustomerByID(DB_T d, const char *id)
   
   int h1=hash(id),count=0;
   char *name;
-  int name_hash;
+  int name_hash,n=0;
   USERINFO *p,*q;
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
   USERINFO *pf0=p;
-  printf("1\n");
+
   for(;p!=NULL;p=p->next){
-    printf("2\n");
     if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
-      printf("3\n");
       count++;
       q=p->next;
-      printf("4\n");
       p->next=p->next->next;
-      printf("5\n");
       free(q);
+      n=1;
     }
+    if(n==1) break;
   }
   
   free(p);

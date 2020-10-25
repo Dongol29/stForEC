@@ -143,9 +143,10 @@ RegisterCustomer(DB_T d, const char *id,
   } 
   /*중복된 거 없다는 게 확인됨*/
   printf("3\n");
-  p->id=strdup(id);
-  //p->id=(char *)malloc(strlen(id)+1); 
-  //strcpy(p->id,id);
+  //p->id=strdup(id);
+  p->id=(char *)malloc(strlen(id)+1); 
+  printf("haha\n");
+  strcpy(p->id,id);
   printf("4\n");
   p->name=strdup(name);
   p->purchase=purchase;

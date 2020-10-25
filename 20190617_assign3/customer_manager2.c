@@ -112,11 +112,11 @@ RegisterCustomer(DB_T d, const char *id,
 {
   if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); //1,2
 
-  USERINFO *p=(USERINFO *)malloc(sizeof(USERINFO));
-  if(NULL==p){
+  USERINFO *p;
+  /*if(NULL==p){
       fprintf(stderr,"Can't allocate a memory for p\n");
       return (-1);
-  }
+  }*/
 
   int h_id_O=hash(id);    //나누기 안 한 해시 id결과값
 

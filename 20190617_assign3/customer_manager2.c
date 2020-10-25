@@ -203,8 +203,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
     jump++;
   }
   
-  if(jump>0) free(p);
-  free(pf0->next);
+  if(jump>0) { free(p); free(pf0->next);} 
   free(pf0);
   
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -226,8 +225,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
     if(n==2) break;
     jump++;
   }
-  if(jump>0) free(p);
-  free(pf1->id_next);
+  if(jump>0){ free(p); free(pf1->id_next); }
   free(pf1);
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -249,8 +247,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
     jump++;
   }
   printf("8\n");
-  if(jump>0) free(p);
-  free(pf2->name_next);
+  if(jump>0) { free(p); free(pf2->name_next);}
   free(pf2);
   
   if(count==3)  return 0;

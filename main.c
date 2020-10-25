@@ -6,7 +6,9 @@
 
 void main()
 {
-    char *p=NULL;
-    char *f="fdi";
-    printf("%d\n",strcmp(p,f));
+    char *t=(char *)malloc(sizeof(char));
+    *t='a';
+    char *s=t;
+    free(t);
+    printf("%c\n",*s);
 }

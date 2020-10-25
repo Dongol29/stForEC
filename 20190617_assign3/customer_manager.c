@@ -71,10 +71,12 @@ RegisterCustomer(DB_T d, const char *id,
 {
   /* 1. parameter validation 2. array에서 empty element 찾고 store data
      2-1. copy를 저장 3. full->realloc으로 expand(64)*/
+  printf("hola0\n");
   if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); //1,2
 
   int i;
   for(i=0;i<d->curArrSize;i++){
+    printf("hola00\n");
     if(!strcmp((d->pArray[i]).id,id)||!strcmp((d->pArray[i]).name,name)){
         printf("hola1\n");
         return (-1);

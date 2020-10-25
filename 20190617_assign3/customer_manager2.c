@@ -124,6 +124,7 @@ RegisterCustomer(DB_T d, const char *id,
   for(p=d->id_bucket[h_id_O&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
     printf("k\n");
     if(p->id!=NULL){
+      printf("hol\n");
       if(h_id_O==p->id_hash&&strcmp(p->id,id)==0){
           fprintf(stderr,"Same id exists\n");
           return (-1);
@@ -142,7 +143,7 @@ RegisterCustomer(DB_T d, const char *id,
   } 
   /*중복된 거 없다는 게 확인됨*/
   printf("3\n");
-  //p->id=strdup(id);
+  p->id=strdup(id);
   printf("4\n");
   p->name=strdup(name);
   p->purchase=purchase;

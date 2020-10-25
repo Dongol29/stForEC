@@ -62,14 +62,7 @@ CreateCustomerDB(void)
     free(d);
     return NULL;
   }
-  for(i=0;i<UNIT_BUCKET_SIZE;i++){
-    if((d->id_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO)))==NULL){
-      fprintf(stderr, "Can't allocate a memory for USERINFO\n");
-      free(d);
-      return NULL;}
-  }
-
-
+  
   d->name_bucket=(USERINFO **)calloc(d->curBuckSize,sizeof(USERINFO *));  
   if (d->id_bucket == NULL) {
     fprintf(stderr, "Can't allocate a memory for name_bucket of size %d\n",
@@ -77,12 +70,7 @@ CreateCustomerDB(void)
     free(d);
     return NULL;
   }
-  for(i=0;i<UNIT_BUCKET_SIZE;i++){
-    if((d->name_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO)))==NULL){
-      fprintf(stderr, "Can't allocate a memory for USERINFO\n");
-      free(d);
-      return NULL;}
-  }
+  
 
   d->first=NULL;
 
@@ -122,7 +110,6 @@ RegisterCustomer(DB_T d, const char *id,
 
   printf("1\n");
   p=d->id_bucket[h_id_O&(d->curBuckSize-1)];
-  printf("%d\n",p==NULL);
   for(;p!=NULL;p=p->id_next){
     printf("k\n");
     if(p->id!=NULL){
@@ -145,9 +132,9 @@ RegisterCustomer(DB_T d, const char *id,
   } 
   /*중복된 거 없다는 게 확인됨*/
   printf("3\n");
-  //p->id=strdup(id);
-  p->id=(char *)malloc(strlen(id)+1); 
-  printf("haha\n");
+  p->id=strdup(id);
+  //p->id=(char *)malloc(strlen(id)+1); 
+  //printf("haha\n");
   strcpy(p->id,id);
   printf("4\n");
   p->name=strdup(name);

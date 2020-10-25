@@ -63,7 +63,7 @@ CreateCustomerDB(void)
     return NULL;
   }
   for(i=0;i<UNIT_BUCKET_SIZE;i++){
-    if((d->id_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO))==NULL){
+    if((d->id_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO)))==NULL){
       fprintf(stderr, "Can't allocate a memory for USERINFO\n");
       free(d);
       return NULL;}
@@ -78,7 +78,7 @@ CreateCustomerDB(void)
     return NULL;
   }
   for(i=0;i<UNIT_BUCKET_SIZE;i++){
-    if((d->name_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO))==NULL){
+    if((d->name_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO)))==NULL){
       fprintf(stderr, "Can't allocate a memory for USERINFO\n");
       free(d);
       return NULL;}

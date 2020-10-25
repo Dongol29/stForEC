@@ -130,6 +130,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
         free(d->pArray[i].id);
 
         d->pArray[i].name=NULL;  //struct로 이루어진 array
+        return 0;
     }}
   }
   return (-1); // 존재x
@@ -149,6 +150,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
         free((d->pArray[i]).id);
 
         d->pArray[i].name=NULL;  //struct로 이루어진 array
+        return 0;
     }}
   }
   return (-1);
@@ -161,9 +163,10 @@ GetPurchaseByID(DB_T d, const char* id)
   if(NULL==d||NULL==id) return (-1);
 
   for(i=0;i<d->curArrSize;i++){
-    if(strcmp((d->pArray[i]).id,id)==0){
-      return d->pArray[i].purchase;
-    }
+    if(d->pArray[i].name!=NULL){
+      if(strcmp((d->pArray[i]).id,id)==0){
+        return d->pArray[i].purchase;
+    }}
   }
   return (-1);
 }

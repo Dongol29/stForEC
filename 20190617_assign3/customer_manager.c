@@ -179,9 +179,10 @@ GetPurchaseByName(DB_T d, const char* name)
   if(NULL==d||NULL==name) return (-1);
 
   for(i=0;i<d->curArrSize;i++){
-    if(strcmp((d->pArray[i]).name,name)==0){
-      return d->pArray[i].purchase;
-    }
+    if(d->pArray[i].name!=NULL){
+      if(strcmp((d->pArray[i]).name,name)==0){
+        return d->pArray[i].purchase;
+    }}
   }
   return (-1);
 }

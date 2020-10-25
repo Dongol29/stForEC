@@ -110,15 +110,13 @@ RegisterCustomer(DB_T d, const char *id,
   for(p=d->id_bucket[h_id_O&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
     printf("2\n");
     if(p->id!=NULL){
-      printf("3\n");
       if(h_id_O==p->id_hash&&strcmp(p->id,id)==0){
           fprintf(stderr,"Same id exists\n");
           return (-1);
       }
-      printf("3\n");
     }
   }       
-
+  printf("2\n");
   int h_name_O=hash(name); //origin값
 
   for(p=d->name_bucket[h_name_O&(d->curBuckSize-1)];p!=NULL;p=p->name_next){
@@ -129,7 +127,7 @@ RegisterCustomer(DB_T d, const char *id,
       }}
   } 
   /*중복된 거 없다는 게 확인됨*/
-
+  printf("3\n");
   p->id=strdup(id);
   p->name=strdup(name);
   p->purchase=purchase;

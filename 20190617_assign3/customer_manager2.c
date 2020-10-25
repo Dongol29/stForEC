@@ -46,6 +46,7 @@ CreateCustomerDB(void)
 {
   /* Uncomment and use the following implementation if you want*/
   DB_T d;
+  int i;
 
   d = (DB_T) calloc(1, sizeof(struct DB));
   if (d == NULL) {
@@ -61,6 +62,13 @@ CreateCustomerDB(void)
     free(d);
     return NULL;
   }
+  for(i=0;i<UNIT_BUCKET_SIZE;i++){
+    if((d->id_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO))==NULL){
+      fprintf(stderr, "Can't allocate a memory for USERINFO\n");
+      free(d);
+      return NULL;}
+  }
+
 
   d->name_bucket=(USERINFO **)calloc(d->curBuckSize,sizeof(USERINFO *));  
   if (d->id_bucket == NULL) {
@@ -68,6 +76,12 @@ CreateCustomerDB(void)
 	    d->curBuckSize);
     free(d);
     return NULL;
+  }
+  for(i=0;i<UNIT_BUCKET_SIZE;i++){
+    if((d->name_bucket[i]=(USERINFO *)calloc(1,sizeof(USERINFO))==NULL){
+      fprintf(stderr, "Can't allocate a memory for USERINFO\n");
+      free(d);
+      return NULL;}
   }
 
   d->first=NULL;

@@ -46,7 +46,6 @@ CreateCustomerDB(void)
 {
   /* Uncomment and use the following implementation if you want*/
   DB_T d;
-  int i;
 
   d = (DB_T) calloc(1, sizeof(struct DB));
   if (d == NULL) {

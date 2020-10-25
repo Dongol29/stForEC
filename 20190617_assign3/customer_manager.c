@@ -81,6 +81,7 @@ RegisterCustomer(DB_T d, const char *id,
         printf("hola1\n");
         return (-1);
     }
+    printf("hoho\n");
   } 
 
   /* empty 판별-by checking each name */

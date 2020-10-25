@@ -124,12 +124,13 @@ UnregisterCustomerByID(DB_T d, const char *id)
   if(NULL==d||NULL==id) return (-1);
 
   for(i=0;i<d->curArrSize;i++){
-    if(strcmp((d->pArray[i]).id,id)==0){
-      free(d->pArray[i].name);
-      free(d->pArray[i].id);
+    if(d->pArray[i].name!=NULL){
+      if(strcmp((d->pArray[i]).id,id)==0){
+        free(d->pArray[i].name);
+        free(d->pArray[i].id);
 
-      d->pArray[i].name=NULL;  //struct로 이루어진 array
-    }
+        d->pArray[i].name=NULL;  //struct로 이루어진 array
+    }}
   }
   return (-1); // 존재x
 }

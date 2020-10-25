@@ -122,7 +122,7 @@ RegisterCustomer(DB_T d, const char *id,
 
   printf("1\n");
   for(p=d->id_bucket[h_id_O&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
-    printf("2\n");
+    printf("k\n");
     if(p->id!=NULL){
       if(h_id_O==p->id_hash&&strcmp(p->id,id)==0){
           fprintf(stderr,"Same id exists\n");

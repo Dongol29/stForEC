@@ -121,7 +121,9 @@ RegisterCustomer(DB_T d, const char *id,
   int h_id_O=hash(id);    //나누기 안 한 해시 id결과값
 
   printf("1\n");
-  for(p=d->id_bucket[h_id_O&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
+  p=d->id_bucket[h_id_O&(d->curBuckSize-1)];
+  printf("%d\n",p==NULL);
+  for(;p!=NULL;p=p->id_next){
     printf("k\n");
     if(p->id!=NULL){
       printf("hoal\n");

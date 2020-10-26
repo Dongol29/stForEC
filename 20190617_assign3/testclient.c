@@ -213,7 +213,7 @@ CorrectnessTest2() {
 	result += TestUnregisterCustomerByName(d, "name2", -1);
 	result += TestUnregisterCustomerByID(d, "id1", -1);
 	result += TestRegisterCustomer(d, "id3", "name3", 10, 0);
-	//result += TestRegisterCustomer(d, "id3", "name3", 10, -1);
+	result += TestRegisterCustomer(d, "id3", "name3", 10, -1);
 	result += TestUnregisterCustomerByID(d, "id3", 0);
 	result += TestUnregisterCustomerByID(d, "id3", -1);
 

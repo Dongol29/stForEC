@@ -266,6 +266,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
 
   
   for(;p->next!=NULL;p=p->next){
+    printf("ha\n");
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;
       p->next=p->next->next;

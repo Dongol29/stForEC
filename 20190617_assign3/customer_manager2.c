@@ -202,7 +202,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
     jump++;
   }
   
-  if(jump>0) { free(p); free(pf0->next);} 
+  if(jump>0) free(p); 
+  free(pf0->next);
   free(pf0);
   
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -217,6 +218,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
       name=p->id_next->name;
       name_hash=p->id_next->name_hash;
       q=p->id_next;
+      p->id_next=NULL; //가져갔으니까
       p->id_next=p->id_next->id_next;
       free(q);
       n=2;
@@ -224,7 +226,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
     if(n==2) break;
     jump++;
   }
-  if(jump>0){ free(p); free(pf1->id_next); }
+  if(jump>0) free(p); 
+  free(pf1->id_next); 
   free(pf1);
 
 
@@ -232,7 +235,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->name_next=d->name_bucket[name_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;
-  
+
   printf("6\n");
   for(;p!=NULL;p=p->name_next){
     printf("7\n");
@@ -240,6 +243,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
       count++;
       free(p->name_next->name);
       q=p->name_next;
+      p->name_next=NULL;
       p->name_next=p->name_next->name_next;
       free(q);
       n=3;
@@ -248,7 +252,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
     jump++;
   }
   printf("8\n");
-  if(jump>0) { free(p); free(pf2->name_next);}
+  if(jump>0) free(p); 
+  free(pf2->name_next);
   free(pf2);
   
   if(count==3)  return 0;

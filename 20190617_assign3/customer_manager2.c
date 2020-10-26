@@ -139,6 +139,8 @@ RegisterCustomer(DB_T d, const char *id,
   d->name_bucket[h_name_O&(d->curBuckSize-1)]=p;
 
   p->next=d->first;
+  printf("%d\n",p->next==NULL);
+
   d->first=p;
   
   d->count++;
@@ -200,7 +202,10 @@ UnregisterCustomerByID(DB_T d, const char *id)
     }
     if(n==1) break;
   }
-  if(n==0) return (-1);
+  if(n==0) {
+    fprintf(stderr,"NO such id exists\n");
+    return (-1);
+  }
   free(pf0);
   
 

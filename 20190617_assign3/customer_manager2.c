@@ -190,13 +190,17 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p->next=d->first;
   USERINFO *pf0=p;
 
-  for(;p!=NULL;p=p->next){
+  for(;p->next!=NULL;p=p->next){
     if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
       count++;
       p->next=p->next->next;
       n=1;
     }
     if(n==1) break;
+  }
+  if(n==0){
+    fprintf(stderr,"No such item exists\n");
+    return (-1);
   }
   free(pf0);
   
@@ -205,7 +209,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p->id_next=d->id_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;
 
-  for(;p!=NULL;p=p->id_next){
+  for(;p->next!=NULL;p=p->id_next){
     if(h1==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
       free(p->id_next->id);
@@ -223,7 +227,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p->name_next=d->name_bucket[name_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;
 
-  for(;p!=NULL;p=p->name_next){
+  for(;p->next!=NULL;p=p->name_next){
     if(name_hash==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
       free(p->name_next->name);
@@ -266,6 +270,10 @@ UnregisterCustomerByName(DB_T d, const char *name)
       n=1;
     }
     if(n==1) break;
+  }
+  if(n==0){
+    fprintf(stderr,"No such item exists\n");
+    return (-1);
   }
   free(pf0);
   

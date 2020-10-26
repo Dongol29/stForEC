@@ -190,11 +190,12 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p->next=d->first;
   USERINFO *pf0=p;
 
-  printf("%d\n",p->next==NULL);
+  
   for(;p->next!=NULL;p=p->next){
     if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
       count++;
-      p->next=p->next->next;
+      p->next=p->next->next;  
+      printf("%d\n",p->next==NULL);
       n=1;
     }
     if(n==1) break;

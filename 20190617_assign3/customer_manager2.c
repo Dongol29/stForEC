@@ -198,10 +198,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
     }
     if(n==1) break;
   }
-  if(n==0){
-    fprintf(stderr,"No such item exists\n");
-    return (-1);
-  }
+  if(n==0) return (-1);
   free(pf0);
   
 
@@ -260,21 +257,16 @@ UnregisterCustomerByName(DB_T d, const char *name)
   p->next=d->first;
   USERINFO *pf0=p;
 
-  printf("a\n");
   for(;p->next!=NULL;p=p->next){
-    printf("b\n");
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
-      printf("c\n");
       count++;
       p->next=p->next->next;
       n=1;
     }
     if(n==1) break;
   }
-  if(n==0){
-    fprintf(stderr,"No such item exists\n");
-    return (-1);
-  }
+  if(n==0) return (-1);
+
   free(pf0);
   
   printf("1\n");

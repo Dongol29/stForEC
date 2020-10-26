@@ -70,7 +70,6 @@ CreateCustomerDB(void)
     return NULL;
   }
   
-
   d->first=NULL;
 
   return d;
@@ -181,6 +180,13 @@ UnregisterCustomerByID(DB_T d, const char *id)
   /*1. deallocate 2. name=NULL */
   if(NULL==d||NULL==id) return (-1);
   
+
+  USERINFO *k;
+  for(k=d->first;k!=NULL;k=k->next){
+    printf("%d",k==NULL);
+  }
+
+
   int h1=hash(id),count=0;
   char *name;
   int name_hash,n=0;

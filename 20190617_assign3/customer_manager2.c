@@ -265,7 +265,8 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(n==1) break;
   }
   free(pf0);
-
+  
+  printf("1\n");
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->name_next=d->name_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;
@@ -282,6 +283,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(n==2) break;
   }
   free(pf1);
+  printf("2\n");
   
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->id_next=d->id_bucket[id_hash&(d->curBuckSize-1)];
@@ -298,6 +300,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     }
     if(n==3) break;
   }
+  printf("3\n");
   free(pf2);
   
   if(count==3)  return 0;

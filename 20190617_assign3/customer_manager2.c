@@ -137,7 +137,7 @@ RegisterCustomer(DB_T d, const char *id,
   d->id_bucket[h_id_O&(d->curBuckSize-1)]=p;
 
   p->name_next=d->name_bucket[h_name_O&(d->curBuckSize-1)];   //
-  d->id_bucket[h_name_O&(d->curBuckSize-1)]=p;
+  d->name_bucket[h_name_O&(d->curBuckSize-1)]=p;
 
   p->next=d->first;
   d->first=p;

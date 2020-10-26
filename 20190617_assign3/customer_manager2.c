@@ -259,11 +259,12 @@ UnregisterCustomerByName(DB_T d, const char *name)
   p->next=d->first;
   USERINFO *pf0=p;
 
-  printf("%d\n",p->next==NULL);
+  
   for(;p->next!=NULL;p=p->next){
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;
       p->next=p->next->next;
+      printf("%d\n",p->next==NULL);
       n=1;
     }
     if(n==1) break;

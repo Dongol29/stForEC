@@ -6,9 +6,7 @@
 
 void main()
 {
-    char *t=(char *)malloc(sizeof(char));
-    *t='a';
-    char *s=t;
+    int a=1;
+    char *t=&a;
     free(t);
-    printf("%c\n",*s);
 }

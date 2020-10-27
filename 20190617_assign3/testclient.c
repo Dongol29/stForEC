@@ -208,9 +208,9 @@ CorrectnessTest2() {
 
 	result += TestRegisterCustomer(d, "id1", "name1", 10, 0);
 	result += TestRegisterCustomer(d, "id2", "name2", 10, 0);
-	//result += TestRegisterCustomer(d, "id3", "name3", 10, 0); //
+	result += TestRegisterCustomer(d, "id3", "name3", 10, 0); //
 	result += TestUnregisterCustomerByID(d, "id2", 0);
-	//result += TestUnregisterCustomerByName(d, "name3", 0);//
+	result += TestUnregisterCustomerByName(d, "name3", 0);//
 	result += TestUnregisterCustomerByName(d, "name1", 0);
 	result += TestUnregisterCustomerByName(d, "name2", -1);
 	result += TestUnregisterCustomerByID(d, "id1", -1);
@@ -218,6 +218,20 @@ CorrectnessTest2() {
 	result += TestRegisterCustomer(d, "id3", "name3", 10, -1);
 	result += TestUnregisterCustomerByID(d, "id3", 0);
 	result += TestUnregisterCustomerByID(d, "id3", -1);
+	result += TestRegisterCustomer(d, "id4", "name4", 10, 0);
+	result += TestRegisterCustomer(d, "id5", "name5", 10, 0);
+	result += TestRegisterCustomer(d, "id6", "name6", 10, 0);
+	result += TestRegisterCustomer(d, "id7", "name7", 10, 0);
+	result += TestRegisterCustomer(d, "id8", "name8", 10, 0);
+	result += TestRegisterCustomer(d, "id9", "name9", 10, 0);
+	result += TestRegisterCustomer(d, "id10", "name10", 10, 0);
+	result += TestUnregisterCustomerByName(d, "name5", 0);
+	result += TestUnregisterCustomerByName(d, "name7", 0);
+	result += TestUnregisterCustomerByName(d, "name8", 0);
+	result += TestUnregisterCustomerByName(d, "name10", 0);
+	result += TestUnregisterCustomerByName(d, "name4", 0);
+	result += TestUnregisterCustomerByName(d, "name6", 0);
+	result += TestUnregisterCustomerByName(d, "name9", 0);
 
 	DestroyCustomerDB(d);
 

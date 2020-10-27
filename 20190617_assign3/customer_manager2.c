@@ -139,7 +139,6 @@ RegisterCustomer(DB_T d, const char *id,
   d->name_bucket[h_name_O&(d->curBuckSize-1)]=p;
 
   p->next=d->first;
-  printf("%d\n",p->next==NULL);
   d->first=p;
   
   d->count++;
@@ -297,7 +296,6 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;
       p->next=p->next->next;
-      printf("%d\n",d->first==NULL);
       n=1;
     }
     if(n==1) break;

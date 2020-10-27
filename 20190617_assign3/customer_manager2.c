@@ -140,7 +140,6 @@ RegisterCustomer(DB_T d, const char *id,
 
   p->next=d->first;
   printf("%d\n",p->next==NULL);
-
   d->first=p;
   
   d->count++;
@@ -263,6 +262,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
+  printf("%d\n",p->next->next==NULL);
   USERINFO *pf0=p;
 
   

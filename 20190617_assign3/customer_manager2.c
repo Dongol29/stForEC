@@ -163,12 +163,19 @@ RegisterCustomer(DB_T d, const char *id,
         ptr->id_next=NULL;
         ptr->name_next=NULL; //기존 두 해시 테이블의 연결 삭제
         
+       /* ptr->id_next=d->id_bucket[ptr->id_hash&(d->curBuckSize-1)];
+        d->id_bucket[ptr->id_hash&(d->curBuckSize-1)]=ptr;
+
+        ptr->name_next=d->name_bucket[ptr->name_hash&(d->curBuckSize-1)];
+        d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;  */ //새로 할당
+
+      }
+      for(ptr=d->first;ptr!=NULL;ptr=ptr->next){
         ptr->id_next=d->id_bucket[ptr->id_hash&(d->curBuckSize-1)];
         d->id_bucket[ptr->id_hash&(d->curBuckSize-1)]=ptr;
 
         ptr->name_next=d->name_bucket[ptr->name_hash&(d->curBuckSize-1)];
         d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;   //새로 할당
-
       }
       
       if(pow(2,20)==d->curBuckSize) d->max_size=1;

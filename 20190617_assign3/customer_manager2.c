@@ -197,7 +197,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
     if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
       count++;
       p->next=p->next->next;  
-      printf("%d\n",p->next==NULL);
+      printf("%d\n",p->next->next==NULL);
+      printf("%s\n",p->next->name);
       n=1;
     }
     if(n==1) break;

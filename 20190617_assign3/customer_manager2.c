@@ -192,10 +192,11 @@ UnregisterCustomerByID(DB_T d, const char *id)
   
   if(d->first&&d->first->id_hash==h1&&strcmp(d->first->id,id)==0){
     name_hash=d->first->name_hash;
+    free(d->first->id);
     d->first=d->first->next;
 
     //name_hash=d->id_bucket[h1&(d->curBuckSize-1)]->name_hash;
-    free(d->id_bucket[h1&(d->curBuckSize-1)]->id);   
+    //free(d->id_bucket[h1&(d->curBuckSize-1)]->id);   
     d->id_bucket[h1&(d->curBuckSize-1)]=
                     d->id_bucket[h1&(d->curBuckSize-1)]->id_next;
 
@@ -279,10 +280,11 @@ UnregisterCustomerByName(DB_T d, const char *name)
 
   if(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
     id_hash=d->first->id_hash;
+    free(d->first->name);
     d->first=d->first->next;
 
     //id_hash=d->name_bucket[h1&(d->curBuckSize-1)]->id_hash;
-    free(d->name_bucket[h1&(d->curBuckSize-1)]->name);   
+    //free(d->name_bucket[h1&(d->curBuckSize-1)]->name);   
     d->name_bucket[h1&(d->curBuckSize-1)]=
                     d->name_bucket[h1&(d->curBuckSize-1)]->name_next;
 

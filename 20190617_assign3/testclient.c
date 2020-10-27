@@ -233,7 +233,7 @@ CorrectnessTest2() {
 	result += TestUnregisterCustomerByName(d, "name6", 0);
 	result += TestUnregisterCustomerByName(d, "name9", 0);
 	result += TestUnregisterCustomerByName(d, "name4", 0);
-	result += TestUnregisterCustomerByName(d, "name11", 0);
+	result += TestUnregisterCustomerByName(d, "name9", 0);
 
 	DestroyCustomerDB(d);
 

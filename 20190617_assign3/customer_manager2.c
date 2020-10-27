@@ -140,8 +140,8 @@ RegisterCustomer(DB_T d, const char *id,
 
   p->next=d->first;
   d->first=p;
-  
   d->count++;
+
   /* 75%이상 찼으면 expansion 후 재할당*/
   if(d->count>=0.75*d->curBuckSize&&d->max_size==0){  
       d->curBuckSize*=2;
@@ -156,6 +156,9 @@ RegisterCustomer(DB_T d, const char *id,
       /*재할당*/
       USERINFO *ptr;
       for(ptr=d->first;ptr!=NULL;ptr=ptr->next){
+
+        d->id_bucket[ptr->id_hash&(d->curBuckSize/2-1)]=NULL;
+        d->name_bucket[ptr->name_hash&(d->curBuckSize/2-1)]=NULL;
 
         ptr->id_next=NULL;
         ptr->name_next=NULL; //기존 두 해시 테이블의 연결 삭제

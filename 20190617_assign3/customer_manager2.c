@@ -190,16 +190,16 @@ UnregisterCustomerByID(DB_T d, const char *id)
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
   USERINFO *pf0=p;
-  USERINFO **pp;
-
+  
+  while(d->first&&d->first->id_hash==h1&&strcmp(d->first->id,id)==0){
+    d->first=d->first->next;
+  }
   
   for(;p->next!=NULL;p=p->next){
     printf("ha\n");
     if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
-      pp=&(p->next);
       count++;
-      //p->next=p->next->next;  
-      *pp=p->next->next;
+      p->next=p->next->next;  
       //printf("%d\n",p->next->next==NULL);
       //printf("%s\n",d->first->name);
       n=1;
@@ -220,12 +220,10 @@ UnregisterCustomerByID(DB_T d, const char *id)
   for(;p->id_next!=NULL;p=p->id_next){
     if(h1==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
-      pp=&(p->id_next);
       free(p->id_next->id);
       name=p->id_next->name;
       name_hash=p->id_next->name_hash;
-      //p->id_next=p->id_next->id_next;
-      *pp=p->id_next->id_next;
+      p->id_next=p->id_next->id_next;
       n=2;
     }
     if(n==2) break;
@@ -240,11 +238,9 @@ UnregisterCustomerByID(DB_T d, const char *id)
   for(;p->name_next!=NULL;p=p->name_next){
     if(name_hash==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
-      pp=&(p->name_next);
       free(p->name_next->name);
       q=p->name_next;
-      //p->name_next=p->name_next->name_next;
-      *pp=p->name_next->name_next;
+      p->name_next=p->name_next->name_next;
       free(q);
       n=3;
     }
@@ -278,9 +274,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     printf("ha\n");
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;
-      pp=&(p->next);
-      //p->next=p->next->next;
-      *pp=p->next->next;
+      p->next=p->next->next;
       printf("%d\n",d->first==NULL);
       n=1;
     }
@@ -297,12 +291,10 @@ UnregisterCustomerByName(DB_T d, const char *name)
   for(;p->name_next!=NULL;p=p->name_next){
     if(h1==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
-      pp=&(p->name_next);
       free(p->name_next->name);
       id=p->name_next->id;
       id_hash=p->name_next->id_hash;
-      //p->name_next=p->name_next->name_next;
-      *pp=p->name_next->name_next;
+      p->name_next=p->name_next->name_next;
       n=2;
     }
     if(n==2) break;
@@ -316,11 +308,9 @@ UnregisterCustomerByName(DB_T d, const char *name)
   for(;p->id_next!=NULL;p=p->id_next){
     if(id_hash==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
-      pp=&(p->id_next);
       free(p->id_next->id);
       q=p->id_next;
-      //p->id_next=p->id_next->id_next;
-      *pp=p->id_next->id_next;
+      p->id_next=p->id_next->id_next;
       free(q);
       n=3;
     }

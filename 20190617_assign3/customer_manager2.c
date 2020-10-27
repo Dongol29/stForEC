@@ -157,25 +157,18 @@ RegisterCustomer(DB_T d, const char *id,
       USERINFO *ptr;
       for(ptr=d->first;ptr!=NULL;ptr=ptr->next){
 
-        d->id_bucket[ptr->id_hash&(d->curBuckSize/2-1)]=NULL;
-        d->name_bucket[ptr->name_hash&(d->curBuckSize/2-1)]=NULL;
+        //d->id_bucket[ptr->id_hash&(d->curBuckSize/2-1)]=NULL;
+        //d->name_bucket[ptr->name_hash&(d->curBuckSize/2-1)]=NULL;
 
         ptr->id_next=NULL;
         ptr->name_next=NULL; //기존 두 해시 테이블의 연결 삭제
         
-       /* ptr->id_next=d->id_bucket[ptr->id_hash&(d->curBuckSize-1)];
-        d->id_bucket[ptr->id_hash&(d->curBuckSize-1)]=ptr;
-
-        ptr->name_next=d->name_bucket[ptr->name_hash&(d->curBuckSize-1)];
-        d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;  */ //새로 할당
-
-      }
-      for(ptr=d->first;ptr!=NULL;ptr=ptr->next){
         ptr->id_next=d->id_bucket[ptr->id_hash&(d->curBuckSize-1)];
         d->id_bucket[ptr->id_hash&(d->curBuckSize-1)]=ptr;
 
         ptr->name_next=d->name_bucket[ptr->name_hash&(d->curBuckSize-1)];
-        d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;   //새로 할당
+        d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;  //새로 할당
+
       }
       
       if(pow(2,20)==d->curBuckSize) d->max_size=1;
@@ -218,6 +211,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf0=p;
   
   for(;p->next!=NULL;p=p->next){
+    printf("sibal\n");
     if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
       count++;
       p->next=p->next->next;  

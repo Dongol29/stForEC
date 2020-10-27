@@ -283,7 +283,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   p->name_next=d->name_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;
 
-  for(;p->id_next!=NULL;p=p->name_next){
+  for(;p->name_next!=NULL;p=p->name_next){
     if(h1==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
       free(p->name_next->name);
@@ -300,7 +300,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   p->id_next=d->id_bucket[id_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;
 
-  for(;p->name_next!=NULL;p=p->id_next){
+  for(;p->id_next!=NULL;p=p->id_next){
     if(id_hash==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
       free(p->id_next->id);

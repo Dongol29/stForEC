@@ -274,8 +274,6 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf0=p;
   USERINFO **pp;
 
-
-  
   for(;p->next!=NULL;p=p->next){
     printf("ha\n");
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
@@ -283,7 +281,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
       pp=&(p->next);
       //p->next=p->next->next;
       *pp=p->next->next;
-      //printf("%d\n",d->first==NULL);
+      printf("%d\n",d->first==NULL);
       n=1;
     }
     if(n==1) break;

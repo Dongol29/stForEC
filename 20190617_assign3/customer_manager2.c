@@ -188,7 +188,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *p,*q;
 
   
-  while(d->first&&d->first->id_hash==h1&&strcmp(d->first->id,id)==0){
+  if(d->first&&d->first->id_hash==h1&&strcmp(d->first->id,id)==0){
     d->first=d->first->next;
 
     name_hash=d->id_bucket[h1&(d->curBuckSize-1)]->name_hash;
@@ -199,7 +199,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
     free(d->name_bucket[name_hash&(d->curBuckSize-1)]->name);  
     d->name_bucket[name_hash&(d->curBuckSize-1)]=
                     d->name_bucket[name_hash&(d->curBuckSize-1)]->name_next;             
-
+    return 0;
   }
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -275,19 +275,21 @@ UnregisterCustomerByName(DB_T d, const char *name)
   int id_hash,n=0;
   USERINFO *p,*q;
 
-  while(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
+  if(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
     d->first=d->first->next;
 
     id_hash=d->name_bucket[h1&(d->curBuckSize-1)]->id_hash;
     free(d->name_bucket[h1&(d->curBuckSize-1)]->name);   
     d->name_bucket[h1&(d->curBuckSize-1)]=
                     d->name_bucket[h1&(d->curBuckSize-1)]->name_next;
-                    
+
     free(d->id_bucket[id_hash&(d->curBuckSize-1)]->id);  
     d->id_bucket[id_hash&(d->curBuckSize-1)]=
                     d->id_bucket[id_hash&(d->curBuckSize-1)]->id_next;             
 
+    return 0;
   }
+
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
   USERINFO *pf0=p;

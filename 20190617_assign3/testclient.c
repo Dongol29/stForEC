@@ -483,7 +483,7 @@ PerformanceTest(int num) {
 	/* run test */
 	for (i = 0; i < num; i++) {
 		sprintf(name, "name%d", i);
-		assert(UnregisterCustomerByName(d, name) == 0);
+		assert(UnregisterCustomerByID(d, id) == 0); //name->id
 	}
 	/* stop timer and calulate elapsed time*/
 	gettimeofday(&end, NULL);

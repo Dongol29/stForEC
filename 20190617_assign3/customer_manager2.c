@@ -264,7 +264,9 @@ UnregisterCustomerByName(DB_T d, const char *name)
   int id_hash,n=0;
   USERINFO *p,*q;
 
-
+  while(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
+    d->first=d->first->next;
+  }
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
   USERINFO *pf0=p;

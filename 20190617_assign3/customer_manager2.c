@@ -301,7 +301,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf0=p;
 
   for(;p->next!=NULL;p=p->next){
-    printf("sibal\n");
+    printf("1");
 
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;

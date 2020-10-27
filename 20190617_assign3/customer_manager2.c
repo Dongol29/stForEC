@@ -240,7 +240,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   for(;p->name_next!=NULL;p=p->name_next){
     if(name_hash==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
-      *pp=&(p->name_next);
+      pp=&(p->name_next);
       free(p->name_next->name);
       q=p->name_next;
       //p->name_next=p->name_next->name_next;

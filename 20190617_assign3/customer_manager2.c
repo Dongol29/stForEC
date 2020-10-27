@@ -262,7 +262,6 @@ UnregisterCustomerByName(DB_T d, const char *name)
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
-  printf("%d\n",p->next->next==NULL);
   USERINFO *pf0=p;
 
   
@@ -271,7 +270,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
       count++;
       p->next=p->next->next;
-      printf("%d\n",p->next==NULL);
+      printf("%d\n",d->first==NULL);
       n=1;
     }
     if(n==1) break;

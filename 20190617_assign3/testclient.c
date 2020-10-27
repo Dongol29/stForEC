@@ -484,6 +484,7 @@ PerformanceTest(int num) {
 	for (i = 0; i < num-2; i++) { //-1
 		sprintf(name, "name%d", i);
 		assert(UnregisterCustomerByName(d, name) == 0); //name->id
+		printf("%d",i+1);
 	}
 	/* stop timer and calulate elapsed time*/
 	gettimeofday(&end, NULL);

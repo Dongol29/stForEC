@@ -318,7 +318,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   if(n==0) return (-1);
 
   free(pf0);
-  
+
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->name_next=d->name_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;
@@ -359,7 +359,8 @@ UnregisterCustomerByName(DB_T d, const char *name)
   free(pf2);
   if(count==3)  return 0;
 
-  assert(0);
+  printf("hola");
+  //assert(0);
 }
 /*--------------------------------------------------------------------*/
 int

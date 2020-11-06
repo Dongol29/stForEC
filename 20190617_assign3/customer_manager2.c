@@ -336,7 +336,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(n==2) break;
   }
   free(pf1);
-  
+  printf("3");
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->id_next=d->id_bucket[id_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;

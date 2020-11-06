@@ -327,6 +327,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(h1==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
       free(p->name_next->name);
+      p->name_next->name=NULL;
       id=p->name_next->id;
       id_hash=p->name_next->id_hash;
       p->name_next=p->name_next->name_next;
@@ -341,11 +342,11 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf2=p;
   
   for(;p->id_next!=NULL;p=p->id_next){
-    printf("k");
     if(id_hash==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
       printf("s");
       free(p->id_next->id);
+      p->id_next->id=NULL;
       printf("t");
       q=p->id_next;
       p->id_next=p->id_next->id_next;

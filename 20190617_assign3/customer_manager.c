@@ -100,6 +100,10 @@ RegisterCustomer(DB_T d, const char *id,
   // 다 차있어서-->추가못한상태
   d->time++; //첫 추가 시 time=1
   d->pArray=(USERINFO *)realloc(d->pArray,sizeof(USERINFO)*UNIT_ARRAY_SIZE*(d->time+1));
+  if(d->pArray==NULL) {
+    fprintf(stderr,"Allocation error in realloc\n");
+    return (-1);
+  }
   memset(d->pArray+64*(d->time),0,UNIT_ARRAY_SIZE*sizeof(USERINFO)); 
   d->curArrSize=UNIT_ARRAY_SIZE*(d->time+1);
   /*이 때 i==d->curArraysize*/

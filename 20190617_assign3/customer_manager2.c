@@ -143,6 +143,7 @@ RegisterCustomer(DB_T d, const char *id,
   d->count++;
 
   /* 75%이상 찼으면 expansion 후 재할당*/
+  #ifdef TEST_FEATURE_X
   if(d->count>=0.75*d->curBuckSize&&d->max_size==0){  
       d->curBuckSize*=2;
 
@@ -173,6 +174,8 @@ RegisterCustomer(DB_T d, const char *id,
       
       if(pow(2,20)==d->curBuckSize) d->max_size=1;
   }
+  #endif
+  
   return 0;
   
 }

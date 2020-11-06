@@ -308,20 +308,18 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf0=p;
 
   for(;p->next!=NULL;p=p->next){
-    printf("1");
     if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
-      printf("2");
       count++;
       p->next=p->next->next;
       n=1;
-      printf("3");
     }
     if(n==1) break;
   }
   if(n==0) return (-1);
 
+  printf("1");
   free(pf0);
-  
+  printf("2");
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->name_next=d->name_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;

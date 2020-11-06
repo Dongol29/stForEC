@@ -285,8 +285,10 @@ UnregisterCustomerByName(DB_T d, const char *name)
 
   if(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
     id_hash=d->first->id_hash;
+    printf("1");
     free(d->first->name);
     free(d->first->id);
+    printf("2");
     d->first=d->first->next;
 
     //id_hash=d->name_bucket[h1&(d->curBuckSize-1)]->id_hash;

@@ -360,6 +360,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   if(count==3)  return 0;
 
   printf("hola");
+  return (-1);
   //assert(0);
 }
 /*--------------------------------------------------------------------*/

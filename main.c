@@ -8,6 +8,6 @@ void main()
 {
     char *p=(char *)malloc(sizeof(char));
     strcpy(p,"c");
-    char *q=NULL;
+    char *q=p;
     strcmp(p,q);
 }

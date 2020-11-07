@@ -143,8 +143,8 @@ RegisterCustomer(DB_T d, const char *id,
   d->count++;
 
   /* 75%이상 찼으면 expansion 후 재할당*/
-  #ifdef TEST_FEATURE_X
-  if(d->count>=0.75*d->curBuckSize&&d->max_size==0){  
+  //#ifdef TEST_FEATURE_X
+  if(d->max_size==0&&d->count>=0.75*d->curBuckSize){  
       d->curBuckSize*=2;
 
       d->id_bucket=(USERINFO **)realloc(d->id_bucket,
@@ -174,7 +174,7 @@ RegisterCustomer(DB_T d, const char *id,
       
       if(pow(2,20)==d->curBuckSize) d->max_size=1;
   }
-  #endif
+  //#endif
 
   return 0;
   
@@ -196,7 +196,9 @@ UnregisterCustomerByID(DB_T d, const char *id)
   if(d->first&&d->first->id_hash==h1&&strcmp(d->first->id,id)==0){
     name_hash=d->first->name_hash;
     free(d->first->id);
+    d->first->id=NULL;
     free(d->first->name);
+    d->first->name=NULL;
     d->first=d->first->next;
 
     //name_hash=d->id_bucket[h1&(d->curBuckSize-1)]->name_hash;
@@ -215,8 +217,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf0=p;
   
   for(;p->next!=NULL;p=p->next){
-    printf("sibal\n");
-    if(p->next->id_hash==h1&&strcmp(id,p->next->id)==0){
+    if(p->next->id_hash==h1&&strcmp(p->next->id,id)==0){
       count++;
       p->next=p->next->next;  
       //printf("%d\n",p->next->next==NULL);
@@ -237,9 +238,11 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf1=p;
 
   for(;p->id_next!=NULL;p=p->id_next){
-    if(h1==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
+    if(p->id_next->id_hash==h1&&strcmp(p->id_next->id,id)==0){
       count++;
       free(p->id_next->id);
+      p->id_next->id=NULL;
+
       name=p->id_next->name;
       name_hash=p->id_next->name_hash;
       p->id_next=p->id_next->id_next;
@@ -258,6 +261,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
     if(name_hash==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
       free(p->name_next->name);
+      p->name_next->name=NULL;
+
       q=p->name_next;
       p->name_next=p->name_next->name_next;
       free(q);
@@ -285,10 +290,10 @@ UnregisterCustomerByName(DB_T d, const char *name)
 
   if(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
     id_hash=d->first->id_hash;
-    printf("a");
     free(d->first->name);
+    d->first->name=NULL;
     free(d->first->id);
-    printf("b");
+    d->first->id=NULL;
     d->first=d->first->next;
 
     //id_hash=d->name_bucket[h1&(d->curBuckSize-1)]->id_hash;
@@ -308,15 +313,17 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf0=p;
 
   for(;p->next!=NULL;p=p->next){
-    if(h1==p->next->name_hash&&strcmp(name,p->next->name)==0){
+    if(p->next->name_hash==h1&&strcmp(p->next->name,name)==0){
       count++;
       p->next=p->next->next;
       n=1;
     }
     if(n==1) break;
   }
-  if(n==0) return (-1);
-
+  if(n==0) {
+    fprintf(stderr,"NO such name exists\n");
+    return (-1);
+  }
   free(pf0);
 
   p=(USERINFO *)malloc(sizeof(USERINFO));
@@ -324,10 +331,11 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf1=p;
 
   for(;p->name_next!=NULL;p=p->name_next){
-    if(h1==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
+    if(p->name_next->name_hash==h1&&strcmp(p->name_next->name,name)==0){
       count++;
       free(p->name_next->name);
       p->name_next->name=NULL;
+      
       id=p->name_next->id;
       id_hash=p->name_next->id_hash;
       p->name_next=p->name_next->name_next;
@@ -358,11 +366,12 @@ UnregisterCustomerByName(DB_T d, const char *name)
     if(n==3) break;
   }
   free(pf2);
+
   if(count==3)  return 0;
 
-  printf("hola");
-  return (-1);
-  //assert(0);
+  //printf("hola");
+  //return (-1);
+  assert(0);
 }
 /*--------------------------------------------------------------------*/
 int

@@ -355,7 +355,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf2=p;
   
   for(;p->id_next!=NULL;p=p->id_next){
-    if(p->id_next->id!=NULL&&p->id_next->id_hash);
+    if(p->id_next->id!=NULL&&id);
     if(id_hash==p->id_next->id_hash){
       if(strcmp(id,p->id_next->id)==0){
       count++;

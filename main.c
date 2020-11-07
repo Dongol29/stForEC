@@ -6,7 +6,8 @@
 
 void main()
 {
-    char *p=NULL;
-    char *a="hila";
-    strcmp(p,a);
+    char *p=(char *)malloc(sizeof(char));
+    strcpy(p,"c");
+    char *q=NULL;
+    strcmp(p,q);
 }

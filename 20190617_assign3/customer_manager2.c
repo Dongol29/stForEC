@@ -291,6 +291,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   int id_hash,n=0;
   USERINFO *p,*q;
 
+  printf("h");
   if(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
     id_hash=d->first->id_hash;
     free(d->first->name);

@@ -217,6 +217,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf0=p;
   
   for(;p->next!=NULL;p=p->next){
+    if(p->next->id!=NULL);
     if(p->next->id_hash==h1&&strcmp(p->next->id,id)==0){
       count++;
       p->next=p->next->next;  
@@ -238,6 +239,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf1=p;
 
   for(;p->id_next!=NULL;p=p->id_next){
+    if(p->id_next->id!=NULL);
     if(p->id_next->id_hash==h1&&strcmp(p->id_next->id,id)==0){
       count++;
       free(p->id_next->id);
@@ -258,6 +260,7 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf2=p;
 
   for(;p->name_next!=NULL;p=p->name_next){
+    if(p->name_next->name!=NULL);
     if(name_hash==p->name_next->name_hash&&strcmp(name,p->name_next->name)==0){
       count++;
       free(p->name_next->name);
@@ -313,6 +316,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf0=p;
 
   for(;p->next!=NULL;p=p->next){
+    if(p->next->name!=NULL);
     if(p->next->name_hash==h1&&strcmp(p->next->name,name)==0){
       count++;
       p->next=p->next->next;
@@ -331,6 +335,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf1=p;
 
   for(;p->name_next!=NULL;p=p->name_next){
+    if(p->name_next->name!=NULL);
     if(p->name_next->name_hash==h1&&strcmp(p->name_next->name,name)==0){
       count++;
       free(p->name_next->name);
@@ -350,17 +355,15 @@ UnregisterCustomerByName(DB_T d, const char *name)
   USERINFO *pf2=p;
   
   for(;p->id_next!=NULL;p=p->id_next){
+    if(p->id_next->id!=NULL);
     if(id_hash==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
-      printf("s");
       free(p->id_next->id);
       p->id_next->id=NULL;
-      printf("t");
+
       q=p->id_next;
       p->id_next=p->id_next->id_next;
-      printf("p");
       free(q);
-      printf("b");
       n=3;
     }
     if(n==3) break;

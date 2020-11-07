@@ -6,7 +6,7 @@
 
 void main()
 {
-    int a=1;
-    char *t=&a;
-    free(t);
+    char *p=NULL;
+    char *a="hila";
+    strcmp(p,a);
 }

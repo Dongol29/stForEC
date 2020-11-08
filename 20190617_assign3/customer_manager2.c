@@ -111,7 +111,7 @@ RegisterCustomer(DB_T d, const char *id,
   if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); 
 
   USERINFO *p;
-  int id_hash=hash(id);    //undivided hash value: 
+  int id_hash=hash(id);    //undivided hash value
 
   for(p=d->id_bucket[id_hash&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
       if(id_hash==p->id_hash&&strcmp(p->id,id)==0){

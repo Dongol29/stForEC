@@ -6,9 +6,7 @@
 #include <string.h>
 #include "customer_manager.h"
 
-
 #define UNIT_ARRAY_SIZE 64
-#define NDEBUG
 
 typedef struct UserInfo {
   char *name;                // customer name

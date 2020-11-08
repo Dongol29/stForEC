@@ -273,7 +273,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
   
   if(count==3)  return 0;
 
-  assert(0);
+  fprintf(stderr,"reaches end of the function\n");
+  return (-1);
 }
 
 int
@@ -369,7 +370,8 @@ UnregisterCustomerByName(DB_T d, const char *name)
 
   if(count==3)  return 0;
 
-  assert(0);
+  fprintf(stderr,"reaches end of the function\n");
+  return (-1);
 }
 
 int

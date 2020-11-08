@@ -18,8 +18,8 @@ I implemented hash table expansion.
  
 I'd like to be provided more test cases, txt files.
 
-It is impossible because there is no way to calculate array(pcDest) size by parameter. If we enter command like "size_t len=sizeof(pcDest)", the value assigned in len is the size of pointer. 
-
-I used pointer notation in part 1 for extra credit.   
+I used strdup, so I add D_GNU_SOURCE after gcc209
+: gcc209 -DNDEBUG -D_GNU_SOURCE -o testclient1 testclient.c customer_manager1.c
+  gcc209 -DNDEBUG -D_GNU_SOURCE -o testclient2 testclient.c customer_manager2.c
 
 Thank you.

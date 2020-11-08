@@ -1,0 +1,25 @@
+조동올 20190617 Assignment 3
+
+I have learned how to use git and the way to build linux virtual machine using AWS from my father. My laptop, the virtual machine, and eelab5 are connected through git.
+
+Using array
+-pros: Simple. Only have to manage one array instead of two hash tables. No need to re-set 
+      elements when expand array.
+-cons: Frequent registration and unregistration of a user item creates many empty elements
+      scattered array, which makes linear operations slow.
+
+Using hash table
+-pros: Faster linear operations by storing key-value pairs which have same hash function  
+      result in the same linked list.
+-cons: Need to re-set elements when expand hash table. Need to design reasonable hash 
+      function.
+
+I implemented hash table expansion. 
+ 
+I'd like to be provided more test cases, txt files.
+
+I used strdup, so I add D_GNU_SOURCE after gcc209
+: gcc209 -DNDEBUG -D_GNU_SOURCE -o testclient1 testclient.c customer_manager1.c
+  gcc209 -DNDEBUG -D_GNU_SOURCE -o testclient2 testclient.c customer_manager2.c
+
+Thank you.

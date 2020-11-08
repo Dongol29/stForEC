@@ -1,11 +1,11 @@
+/* 20190617 조동올, assignment 3, customer_manager1.c */
+
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "customer_manager.h"
 
-/*----------------------------------------------------------------------
-Uncomment and use the following code if you want*/
 
 #define UNIT_ARRAY_SIZE 64
 #define NDEBUG
@@ -20,17 +20,17 @@ struct DB {
   struct UserInfo *pArray;   // pointer to the array
   int curArrSize;            // current array size (max # of elements)
   int numItems;              // # of stored items, needed to determine
-	//int count;		     // # whether the array should be expanded  count: element 추가 시마다
-	int time;   // # or not      time: expand 횟수
+	int time;                  // number of expansions
 };
 
-/*----------------------------------------------------------------------*/
-
-/*--------------------------------------------------------------------*/
 DB_T
 CreateCustomerDB(void)
 {
-  /* Uncomment and use the following implementation if you want*/
+  /*
+     create and return a db structure
+     return NULL if fails to allocate the memory 
+  */
+
   DB_T d;
 
   d = (DB_T) calloc(1, sizeof(struct DB));
@@ -49,10 +49,12 @@ CreateCustomerDB(void)
   }
   return d;
 }
-/*--------------------------------------------------------------------*/
+
 void
 DestroyCustomerDB(DB_T d)
 {
+  /* destory db and its associated memory */
+
   int i;
   if(NULL!=d){
     for(i=0;i<d->curArrSize;i++){
@@ -64,14 +66,16 @@ DestroyCustomerDB(DB_T d)
     free(d);
   }
 }
-/*--------------------------------------------------------------------*/
+
 int
 RegisterCustomer(DB_T d, const char *id,
 		 const char *name, const int purchase)
 {
-  /* 1. parameter validation 2. array에서 empty element 찾고 store data
-     2-1. copy를 저장 3. full->realloc으로 expand(64)*/
-  if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); //1,2
+  /* 
+    register a customer with (name, id, purchase)
+    on success, return 0. Otherwise, return (-1) 
+  */
+  if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); 
 
   int i;
   for(i=0;i<d->curArrSize;i++){
@@ -81,24 +85,18 @@ RegisterCustomer(DB_T d, const char *id,
     }}
   } 
 
-  /* empty 판별-by checking each name */
+  /* Find which element is empty by checking each element's name */
   for(i=0;i<d->curArrSize;i++){
     if((d->pArray[i]).name==NULL) {
-      /* 3 */  
       (d->pArray[i]).name=strdup(name);
-      //(d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
-      //strcpy((d->pArray[i]).name,name);
-      //(d->pArray[i]).id=(char *)malloc(strlen(id)+1);
-      //strcpy((d->pArray[i]).id,id);
       (d->pArray[i]).id=strdup(id);
       (d->pArray[i]).purchase=purchase;
-      //d->count++;
-
-      return 0; //추가성공
+      return 0; 
     }
   }
-  // 다 차있어서-->추가못한상태
-  d->time++; //첫 추가 시 time=1
+  
+  /* Need expansion */
+  d->time++;  
   d->pArray=(USERINFO *)realloc(d->pArray,sizeof(USERINFO)*UNIT_ARRAY_SIZE*(d->time+1));
   if(d->pArray==NULL) {
     fprintf(stderr,"Allocation error in realloc\n");
@@ -106,24 +104,24 @@ RegisterCustomer(DB_T d, const char *id,
   }
   memset(d->pArray+64*(d->time),0,UNIT_ARRAY_SIZE*sizeof(USERINFO)); 
   d->curArrSize=UNIT_ARRAY_SIZE*(d->time+1);
-  /*이 때 i==d->curArraysize*/
-  //(d->pArray[i]).name=(char *)malloc(strlen(name)+1);  
-  //strcpy((d->pArray[i]).name,name);
   (d->pArray[i]).name=strdup(name);
-  //(d->pArray[i]).id=(char *)malloc(strlen(id)+1);
-  //strcpy((d->pArray[i]).id,id);
-  d->pArray[i].id=strdup(id);
-  d->pArray[i].purchase=purchase;
+  (d->pArray[i]).id=strdup(id);
+  (d->pArray[i]).purchase=purchase;
 
   return 0;
             
   assert(0);
 }
-/*--------------------------------------------------------------------*/
+
 int
 UnregisterCustomerByID(DB_T d, const char *id)
 {
-  /*1. deallocate 2. name=NULL */
+  /* 
+    unregister a customer with 'id'
+    on success, return 0. Otherwise(failure), return (-1) 
+    1) If d or id is NULL, it is a failure. 
+    2) If no such item exists, it is a failure. 
+  */
   int i;
   if(NULL==d||NULL==id) return (-1);
 
@@ -133,17 +131,23 @@ UnregisterCustomerByID(DB_T d, const char *id)
         free(d->pArray[i].name);
         free(d->pArray[i].id);
 
-        d->pArray[i].name=NULL;  //struct로 이루어진 array
+        d->pArray[i].name=NULL;   // For checking states of elements
         return 0;
     }}
   }
-  return (-1); // 존재x
+  return (-1); 
 }
 
-/*--------------------------------------------------------------------*/
+
 int
 UnregisterCustomerByName(DB_T d, const char *name)
 {
+  /* 
+    unregister a customer with 'name'
+    on success, return 0. Otherwise(failure), return (-1)
+    1) If d or name is NULL, it is a failure. 
+    2) If no such item exists, it is a failure. 
+  */
   int i;
   if(NULL==d||NULL==name) return (-1);
 
@@ -153,16 +157,24 @@ UnregisterCustomerByName(DB_T d, const char *name)
         free(d->pArray[i].name);
         free((d->pArray[i]).id);
 
-        d->pArray[i].name=NULL;  //struct로 이루어진 array
+        d->pArray[i].name=NULL;  // For checking states of elements
         return 0;
     }}
   }
   return (-1);
 }
-/*--------------------------------------------------------------------*/
+
 int
 GetPurchaseByID(DB_T d, const char* id)
 {
+  /* 
+    get the purchase amount of a user whose ID is 'id' 
+    On success, it should return the purchase amount.
+    Otherwise, it should return -1
+    1) If d or id is NULL, it is a failure. 
+    2) If there is no customer whose ID matches the given one,
+    it is a failure. 
+  */
   int i;
   if(NULL==d||NULL==id) return (-1);
 
@@ -174,11 +186,18 @@ GetPurchaseByID(DB_T d, const char* id)
   }
   return (-1);
 }
-/*--------------------------------------------------------------------*/
+
 int
 GetPurchaseByName(DB_T d, const char* name)
 {
-  
+  /* 
+    get the purchase amount of a user whose name is 'name' 
+    On success, it should return the purchase amount.
+    Otherwise, it should return -1
+    1) If d or name is NULL, it is a failure. 
+    2) If there is no customer whose name matches the given one,
+    it is a failure. 
+  */
   int i;
   if(NULL==d||NULL==name) return (-1);
 
@@ -190,13 +209,20 @@ GetPurchaseByName(DB_T d, const char* name)
   }
   return (-1);
 }
-/*--------------------------------------------------------------------*/
+
 int
 GetSumCustomerPurchase(DB_T d, FUNCPTR_T fp)
 {
+  /* 
+    iterate all valid user items once, evaluate fp for each valid user
+    and return the sum of all fp function calls.
+    On success, GetCustomerPurchase should return the sum of all numbers 
+    returned by fp by iterating each user item in d.
+    Otherwise,if d or fp is NULL, it should return -1. 
+  */
   if(NULL==d||NULL==fp) return (-1);
   
-  int i,sum=0; //구조체 따로 저장?
+  int i,sum=0; 
   for(i=0;i<d->curArrSize;i++){
     if(NULL!=d->pArray[i].name) {
       sum+=(*fp)(d->pArray[i].id,d->pArray[i].name,

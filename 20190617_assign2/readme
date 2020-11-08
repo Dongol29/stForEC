@@ -1,6 +1,22 @@
-조동올 20190617 Assignment 2
+조동올 20190617 Assignment 3
 
-I have learned how to use git and the way to build linux virtual machine using AWS from my father. My laptop, the virtual machine, and eelab5 are connected through git. Also, I use memset() function which I found in stackoverflow, rather than use for loop to reset buf.
+I have learned how to use git and the way to build linux virtual machine using AWS from my father. My laptop, the virtual machine, and eelab5 are connected through git.
+
+Using array
+-pros: Simple. Only have to manage one array instead of two hash tables. No need to re-set 
+      elements when expand array.
+-cons: Frequent registration and unregistration of a user item creates many empty elements
+      scattered array, which makes linear operations slow.
+
+Using hash table
+-pros: Faster linear operations by storing key-value pairs which have same hash function  
+      result in the same linked list.
+-cons: Need to re-set elements when expand hash table. Need to design reasonable hash 
+      function.
+
+I implemented hash table expansion. But a problem arises when unregister users. Especially 221'th user. The other functionalities(:Registering, Getting total sum) operates well. In this reason, when I disable hash table expansion functionality by not adding 
+' –D TEST_FEATURE_X ', every functionality works well. Can I get partial points of total extra points of 15?
+ 
 I'd like to be provided more test cases, txt files.
 
 It is impossible because there is no way to calculate array(pcDest) size by parameter. If we enter command like "size_t len=sizeof(pcDest)", the value assigned in len is the size of pointer. 

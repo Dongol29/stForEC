@@ -1,3 +1,5 @@
+/* 20190617 조동올, assignment 3, customer_manager2.c */
+
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,8 +16,8 @@ typedef struct UserInfo {
   char *name;                // customer name
   char *id;                  // customer id
   int purchase;           
-  int id_hash;                  //나누기 안 한 hash값
-  int name_hash;
+  int id_hash;               // undivided hash value
+  int name_hash;             // undivided hash value
   struct UserInfo *id_next;
   struct UserInfo *name_next;
   struct UserInfo *next;
@@ -30,7 +32,8 @@ struct DB {
     int max_size;
 };
 
-static int hash(const char *pcKey) //ibucketcount 뻼
+static int hash(const char *pcKey) 
+/* modified hash function */
 {
    int i;
    unsigned int uiHash = 0U;
@@ -40,11 +43,14 @@ static int hash(const char *pcKey) //ibucketcount 뻼
    return (int)uiHash ;
 }
 
-/*--------------------------------------------------------------------*/
 DB_T
 CreateCustomerDB(void)
 {
-  /* Uncomment and use the following implementation if you want*/
+  /*
+     create and return a db structure
+     return NULL if fails to allocate the memory 
+  */
+
   DB_T d;
 
   d = (DB_T) calloc(1, sizeof(struct DB));
@@ -74,10 +80,12 @@ CreateCustomerDB(void)
 
   return d;
 }
-/*--------------------------------------------------------------------*/
+
 void
 DestroyCustomerDB(DB_T d)
 {
+  /* destory db and its associated memory */
+
   if(NULL!=d){
     USERINFO *p,*nextp;
     for(p=d->first;p!=NULL;p=nextp){
@@ -91,59 +99,59 @@ DestroyCustomerDB(DB_T d)
     free(d);
   }
 }
-/*--------------------------------------------------------------------*/
+
 int
 RegisterCustomer(DB_T d, const char *id,
 		 const char *name, const int purchase)
 {
-  if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); //1,2
+  /* 
+    register a customer with (name, id, purchase)
+    on success, return 0. Otherwise, return (-1) 
+  */
+  if(NULL==d||NULL==id||NULL==name||purchase<=0) return (-1); 
 
   USERINFO *p;
-  /*if(NULL==p){
-      fprintf(stderr,"Can't allocate a memory for p\n");
-      return (-1);
-  }*/
+  int id_hash=hash(id);    //undivided hash value: 
 
-  int h_id_O=hash(id);    //나누기 안 한 해시 id결과값
-
-  for(p=d->id_bucket[h_id_O&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
-    if(p->id!=NULL){
-      if(h_id_O==p->id_hash&&strcmp(p->id,id)==0){
+  for(p=d->id_bucket[id_hash&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
+      if(id_hash==p->id_hash&&strcmp(p->id,id)==0){
           fprintf(stderr,"Same id exists\n");
           return (-1);
       }
-    }
-  }       
-  int h_name_O=hash(name); //origin값
+  } 
 
-  for(p=d->name_bucket[h_name_O&(d->curBuckSize-1)];p!=NULL;p=p->name_next){
-    if(p->name!=NULL){
-      if(h_name_O==p->name_hash&&strcmp(p->name,name)==0){
+  int name_hash=hash(name); //undivided hash value
+
+  for(p=d->name_bucket[name_hash&(d->curBuckSize-1)];p!=NULL;p=p->name_next){
+      if(name_hash==p->name_hash&&strcmp(p->name,name)==0){
           fprintf(stderr,"Same name exists\n");
           return (-1);
-      }}
+      }
   } 
-  /*중복된 거 없다는 게 확인됨*/
+
   p=(USERINFO *)calloc(1,sizeof(USERINFO));
 
   p->id=strdup(id);
   p->name=strdup(name);
   p->purchase=purchase;
-  p->id_hash=h_id_O;
-  p->name_hash=h_name_O;
+  p->id_hash=id_hash;
+  p->name_hash=name_hash;
 
-  p->id_next=d->id_bucket[h_id_O&(d->curBuckSize-1)];
-  d->id_bucket[h_id_O&(d->curBuckSize-1)]=p;
+  p->id_next=d->id_bucket[id_hash&(d->curBuckSize-1)];
+  d->id_bucket[id_hash&(d->curBuckSize-1)]=p;
 
-  p->name_next=d->name_bucket[h_name_O&(d->curBuckSize-1)];   //
-  d->name_bucket[h_name_O&(d->curBuckSize-1)]=p;
+  p->name_next=d->name_bucket[name_hash&(d->curBuckSize-1)];   
+  d->name_bucket[name_hash&(d->curBuckSize-1)]=p;
 
   p->next=d->first;
   d->first=p;
   d->count++;
 
-  /* 75%이상 찼으면 expansion 후 재할당*/
-  //#ifdef TEST_FEATURE_X
+  /* If more than 75% full, reset value after expansion */
+
+  /* By adding –D TEST_FEATURE_X, can enable expansion function */
+  /* Please refer to Readme file. Thank you!! */
+  #ifdef TEST_FEATURE_X 
   if(d->max_size==0&&d->count>=0.75*d->curBuckSize){  
       d->curBuckSize*=2;
 
@@ -153,46 +161,41 @@ RegisterCustomer(DB_T d, const char *id,
 
       d->name_bucket=(USERINFO **)realloc(d->name_bucket,
                     sizeof(USERINFO *)*d->curBuckSize);
-      memset(d->name_bucket,0,sizeof(USERINFO *)*(d->curBuckSize));  //id table, name table의 포인터들 ==null
-      /*재할당*/
+      memset(d->name_bucket,0,sizeof(USERINFO *)*(d->curBuckSize)); 
+
+      /*Re-set*/
       USERINFO *ptr;
       for(ptr=d->first;ptr!=NULL;ptr=ptr->next){
-
-        //d->id_bucket[ptr->id_hash&(d->curBuckSize/2-1)]=NULL;
-        //d->name_bucket[ptr->name_hash&(d->curBuckSize/2-1)]=NULL;
-
-        ptr->id_next=NULL;
-        ptr->name_next=NULL; //기존 두 해시 테이블의 연결 삭제
-        
         ptr->id_next=d->id_bucket[ptr->id_hash&(d->curBuckSize-1)];
         d->id_bucket[ptr->id_hash&(d->curBuckSize-1)]=ptr;
 
         ptr->name_next=d->name_bucket[ptr->name_hash&(d->curBuckSize-1)];
-        d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;  //새로 할당
-
-      }
-      
+        d->name_bucket[ptr->name_hash&(d->curBuckSize-1)]=ptr;  
+      } 
       if(pow(2,20)==d->curBuckSize) d->max_size=1;
   }
-  //#endif
+  #endif
 
   return 0;
   
 }
-/*--------------------------------------------------------------------*/
+
 int
 UnregisterCustomerByID(DB_T d, const char *id)
 {
-  /*1. deallocate 2. name=NULL */
+  /* 
+    unregister a customer with 'id'
+    on success, return 0. Otherwise(failure), return (-1) 
+    1) If d or id is NULL, it is a failure. 
+    2) If no such item exists, it is a failure. 
+  */
   if(NULL==d||NULL==id) return (-1);
   
-
-  int h1=hash(id),count=0;
+  int h1=hash(id),name_hash,count=0,n=0;
   char *name;
-  int name_hash,n=0;
   USERINFO *p,*q;
-
   
+  /* Handle the case when d->first has the same id */
   if(d->first&&d->first->id_hash==h1&&strcmp(d->first->id,id)==0){
     name_hash=d->first->name_hash;
     free(d->first->id);
@@ -200,13 +203,9 @@ UnregisterCustomerByID(DB_T d, const char *id)
     free(d->first->name);
     d->first->name=NULL;
     d->first=d->first->next;
-
-    //name_hash=d->id_bucket[h1&(d->curBuckSize-1)]->name_hash;
-    //free(d->id_bucket[h1&(d->curBuckSize-1)]->id);   
+  
     d->id_bucket[h1&(d->curBuckSize-1)]=
                     d->id_bucket[h1&(d->curBuckSize-1)]->id_next;
-
-    //free(d->name_bucket[name_hash&(d->curBuckSize-1)]->name);  
     d->name_bucket[name_hash&(d->curBuckSize-1)]=
                     d->name_bucket[name_hash&(d->curBuckSize-1)]->name_next;             
     return 0;
@@ -217,12 +216,9 @@ UnregisterCustomerByID(DB_T d, const char *id)
   USERINFO *pf0=p;
   
   for(;p->next!=NULL;p=p->next){
-    if(p->next->id!=NULL);
     if(p->next->id_hash==h1&&strcmp(p->next->id,id)==0){
       count++;
       p->next=p->next->next;  
-      //printf("%d\n",p->next->next==NULL);
-      //printf("%s\n",d->first->name);
       n=1;
     }
     if(n==1) break;
@@ -280,18 +276,22 @@ UnregisterCustomerByID(DB_T d, const char *id)
   assert(0);
 }
 
-/*--------------------------------------------------------------------*/
 int
 UnregisterCustomerByName(DB_T d, const char *name)
 {
+  /* 
+    unregister a customer with 'name'
+    on success, return 0. Otherwise(failure), return (-1)
+    1) If d or name is NULL, it is a failure. 
+    2) If no such item exists, it is a failure. 
+  */
   if(NULL==d||NULL==name) return (-1);
   
-  int h1=hash(name),count=0;
+  int h1=hash(name),id_hash,count=0,n=0;
   char *id;
-  int id_hash,n=0;
   USERINFO *p,*q;
 
-  printf("h");
+  /* Handle the case when d->first has the same name */
   if(d->first&&d->first->name_hash==h1&&strcmp(d->first->name,name)==0){
     id_hash=d->first->id_hash;
     free(d->first->name);
@@ -299,20 +299,14 @@ UnregisterCustomerByName(DB_T d, const char *name)
     free(d->first->id);
     d->first->id=NULL;
     d->first=d->first->next;
-
-    //id_hash=d->name_bucket[h1&(d->curBuckSize-1)]->id_hash;
-    //free(d->name_bucket[h1&(d->curBuckSize-1)]->name);   
+  
     d->name_bucket[h1&(d->curBuckSize-1)]=
                     d->name_bucket[h1&(d->curBuckSize-1)]->name_next;
-
-    //free(d->id_bucket[id_hash&(d->curBuckSize-1)]->id);  
     d->id_bucket[id_hash&(d->curBuckSize-1)]=
                     d->id_bucket[id_hash&(d->curBuckSize-1)]->id_next;             
-
     return 0;
   }
 
-  printf("a");
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->next=d->first;
   USERINFO *pf0=p;
@@ -332,12 +326,12 @@ UnregisterCustomerByName(DB_T d, const char *name)
   }
   free(pf0);
 
+
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->name_next=d->name_bucket[h1&(d->curBuckSize-1)];
   USERINFO *pf1=p;
-  printf("b");
+
   for(;p->name_next!=NULL;p=p->name_next){
-    if(p->name_next->name!=NULL);
     if(p->name_next->name_hash==h1&&strcmp(p->name_next->name,name)==0){
       count++;
       free(p->name_next->name);
@@ -352,12 +346,12 @@ UnregisterCustomerByName(DB_T d, const char *name)
   }
   free(pf1);
 
+
   p=(USERINFO *)malloc(sizeof(USERINFO));
   p->id_next=d->id_bucket[id_hash&(d->curBuckSize-1)];
   USERINFO *pf2=p;
-  printf("c");
+
   for(;p->id_next!=NULL;p=p->id_next){
-    if(p->id_next->id!=NULL){         //------------------------------------
       if(id_hash==p->id_next->id_hash&&strcmp(id,p->id_next->id)==0){
       count++;
       free(p->id_next->id);
@@ -367,49 +361,71 @@ UnregisterCustomerByName(DB_T d, const char *name)
       p->id_next=p->id_next->id_next;
       free(q);
       n=3;
-    }}
+    }
     if(n==3) break;
   }
   free(pf2);
 
+
   if(count==3)  return 0;
 
-  //printf("hola");
-  //return (-1);
   assert(0);
 }
-/*--------------------------------------------------------------------*/
+
 int
 GetPurchaseByID(DB_T d, const char* id)
 {
-    if(NULL==d||NULL==id) return (-1);
-    int h=hash(id);
-    USERINFO *p;
-    for(p=d->id_bucket[h&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
-        if(h==p->id_hash&&strcmp(id,p->id)==0){
-            return p->purchase;
-        }
-    }
-    return (-1);
+  /* 
+    get the purchase amount of a user whose ID is 'id' 
+    On success, it should return the purchase amount.
+    Otherwise, it should return -1
+    1) If d or id is NULL, it is a failure. 
+    2) If there is no customer whose ID matches the given one,
+    it is a failure. 
+  */
+  if(NULL==d||NULL==id) return (-1);
+  int h=hash(id);
+  USERINFO *p;
+  for(p=d->id_bucket[h&(d->curBuckSize-1)];p!=NULL;p=p->id_next){
+      if(h==p->id_hash&&strcmp(id,p->id)==0){
+          return p->purchase;
+      }
+  }
+  return (-1);
 }
-/*--------------------------------------------------------------------*/
+
 int
 GetPurchaseByName(DB_T d, const char* name)
 {
-    if(NULL==d||NULL==name) return (-1);
-    int h=hash(name);
-    USERINFO *p;
-    for(p=d->name_bucket[h&(d->curBuckSize-1)];p!=NULL;p=p->name_next){
-        if(h==p->name_hash&&strcmp(name,p->name)==0){
-            return p->purchase;
-        }
-    }
-    return (-1);
+  /* 
+    get the purchase amount of a user whose name is 'name' 
+    On success, it should return the purchase amount.
+    Otherwise, it should return -1
+    1) If d or name is NULL, it is a failure. 
+    2) If there is no customer whose name matches the given one,
+    it is a failure. 
+  */
+  if(NULL==d||NULL==name) return (-1);
+  int h=hash(name);
+  USERINFO *p;
+  for(p=d->name_bucket[h&(d->curBuckSize-1)];p!=NULL;p=p->name_next){
+      if(h==p->name_hash&&strcmp(name,p->name)==0){
+          return p->purchase;
+      }
+  }
+  return (-1);
 }
-/*--------------------------------------------------------------------*/
+
 int
 GetSumCustomerPurchase(DB_T d, FUNCPTR_T fp)
 {
+  /* 
+    iterate all valid user items once, evaluate fp for each valid user
+    and return the sum of all fp function calls.
+    On success, GetCustomerPurchase should return the sum of all numbers 
+    returned by fp by iterating each user item in d.
+    Otherwise,if d or fp is NULL, it should return -1. 
+  */
   if(NULL==d||NULL==fp) return (-1);
   
   int sum=0; 

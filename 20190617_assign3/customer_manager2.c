@@ -148,10 +148,7 @@ RegisterCustomer(DB_T d, const char *id,
   d->count++;
 
   /* If more than 75% full, reset value after expansion */
-
-  /* By adding –D TEST_FEATURE_X, can enable expansion function */
-  /* Please refer to Readme file. Thank you!! */
-  #ifdef TEST_FEATURE_X 
+  
   if(d->max_size==0&&d->count>=0.75*d->curBuckSize){  
       d->curBuckSize*=2;
 
@@ -174,7 +171,6 @@ RegisterCustomer(DB_T d, const char *id,
       } 
       if(pow(2,20)==d->curBuckSize) d->max_size=1;
   }
-  #endif
 
   return 0;
   

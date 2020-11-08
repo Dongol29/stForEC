@@ -14,8 +14,7 @@ Using hash table
 -cons: Need to re-set elements when expand hash table. Need to design reasonable hash 
       function.
 
-I implemented hash table expansion. But a problem arises when unregister users. Especially 221'th user. The other functionalities(:Registering, Getting total sum) operates well. In this reason, when I disable hash table expansion functionality by not adding 
-' –D TEST_FEATURE_X ', every functionality works well. Can I get partial points of total extra points of 15?
+I implemented hash table expansion. 
  
 I'd like to be provided more test cases, txt files.
 

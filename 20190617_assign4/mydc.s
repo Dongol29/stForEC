@@ -18,6 +18,8 @@ scanfFormat:
 	.asciz "%s"
 sEmpty:
 	.asciz "dc: stack empty\n"
+sEmpty1:
+	.asciz "dc: stack empty1\n"
 Pprint:
 	.asciz "%d\n"
 ### --------------------------------------------------------------------
@@ -107,7 +109,7 @@ elseif5:
 	cmpl	$0, %eax   
 	jne 	else8
 	## printf("dc: stack empty\n")
-	pushl	$sEmpty
+	pushl	$sEmpty1
 	call	printf
 	addl 	$4, %esp
 	jmp 	input

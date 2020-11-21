@@ -6,6 +6,11 @@
 
 	.equ   ARRAYSIZE, 20
 	.equ   EOF, -1
+	## Formal parameter offsets:
+	.equ   IBASE, 8
+	.equ   IEXP, 12
+	## Local variable offsets:
+	.equ   IPINDEX, -8
 	
 .section ".rodata"
 
@@ -367,3 +372,28 @@ quit:
 	movl 	%ebp, %esp
 	popl 	%ebp
 	ret
+power:
+	pushl	%ebp
+	movl 	%esp, %ebp
+	## int iPower=1, int ipIndex=1;
+	pushl	$1
+	pushl 	$1
+ploop:
+	## if (ipIndex>iExp) goto ploopend
+	movl	IPINDEX(%ebp), %eax
+	cmpl	IEXP(%ebp), %eax
+	jg		ploopend
+	## iPower*=IBASE
+	movl 	-4(%ebp), %eax
+	imull 	IBASE(%ebp), %eax
+	movl 	%eax, -4(%ebp)
+	## ipIndex++
+	incl 	IPINDEX(%ebp)
+	jmp 	ploop
+ploopend:
+	## return value(=iPower) to eax
+	movl 	-4(%ebp), %eax
+	movl 	%ebp, %esp
+	popl 	%ebp
+	ret
+

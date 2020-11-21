@@ -109,7 +109,7 @@ elseif5:
 	cmpl	$0, %eax   
 	jne 	else8
 	## printf("dc: stack empty\n")
-	pushl	$sEmpty1
+	pushl	$sEmpty
 	call	printf
 	addl 	$4, %esp
 	jmp 	input

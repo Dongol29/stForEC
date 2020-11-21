@@ -208,7 +208,7 @@ endif4:
 elseif30:
 	## if(buffer[0]!='^') goto elseif32
 	movl	$buffer, %eax
-	cmpl	$'-', (%eax)
+	cmpl	$'^', (%eax)
 	jne		elseif32
 	## int a,b
 	##subl 	$8, %esp  
@@ -248,9 +248,9 @@ endif6:
 	pushl 	%edx
 	jmp 	input
 elseif32:
-	## if(buffer[0]!='^') goto elseif34
+	## if(buffer[0]!='*') goto elseif34
 	movl	$buffer, %eax
-	cmpl	$'-', (%eax)
+	cmpl	$'*', (%eax)
 	jne		elseif34
 	## int a,b
 	## subl 	$8, %esp  
@@ -287,9 +287,9 @@ endif8:
 	pushl 	%edx
 	jmp 	input
 elseif34:
-	## if(buffer[0]!='^') goto elseif36
+	## if(buffer[0]!='/') goto elseif36
 	movl	$buffer, %eax
-	cmpl	$'-', (%eax)
+	cmpl	$'/', (%eax)
 	jne		elseif34
 	## int a,b
 	## subl 	$8, %esp  

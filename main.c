@@ -6,8 +6,10 @@
 
 void main()
 {
-    char *p=(char *)malloc(sizeof(char));
-    strcpy(p,"c");
-    char *q=p;
-    strcmp(p,q);
+    stack.peek();
+}
+
+void stack.peek()
+{
+    printf("hola\n");
 }

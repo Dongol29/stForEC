@@ -61,7 +61,7 @@ input:
 	cmp	$EOF, %eax
 	je	quit
 	## if(isdigit(buffer[0])==0) goto else33
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	pushl	(%eax)    	
 	call	isdigit
 	addl	$4, %esp

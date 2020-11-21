@@ -68,7 +68,7 @@ input:
 	cmpl	$0, %eax
 	je  	else33
 	## if(isdigit(buffer[0])!='_') goto elseif5
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'_', (%eax)
 	jne 	elseif5
 	## int iIndex=0
@@ -99,7 +99,7 @@ endloop:
 	jmp input 
 elseif5:
 	## if(buffer[0]!='p') goto elseif11
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'p', (%eax)
 	jne 	elseif11
 	## if(stack.peek()!=NULL) goto else8
@@ -121,13 +121,13 @@ else8:
 	jmp		input
 elseif11:
 	## if(buffer[0]!='q') goto elseif13
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'q', (%eax)
 	jne		elseif13
 	jmp 	quit
 elseif13:
 	## if(buffer[0]!='+') goto elseif28
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'+', (%eax)
 	jne		elseif28
 	## int a,b
@@ -167,7 +167,7 @@ endif2:
 	jmp 	input
 elseif28:
 	## if(buffer[0]!='-') goto elseif30
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'-', (%eax)
 	jne		elseif30
 	## int a,b
@@ -207,7 +207,7 @@ endif4:
 	jmp 	input
 elseif30:
 	## if(buffer[0]!='^') goto elseif32
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'-', (%eax)
 	jne		elseif32
 	## int a,b
@@ -249,7 +249,7 @@ endif6:
 	jmp 	input
 elseif32:
 	## if(buffer[0]!='^') goto elseif34
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'-', (%eax)
 	jne		elseif34
 	## int a,b
@@ -288,7 +288,7 @@ endif8:
 	jmp 	input
 elseif34:
 	## if(buffer[0]!='^') goto elseif36
-	movl	buffer, %eax
+	movl	$buffer, %eax
 	cmpl	$'-', (%eax)
 	jne		elseif34
 	## int a,b

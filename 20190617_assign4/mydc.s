@@ -57,7 +57,7 @@ input:
 	je	quit
 	## if(isdigit(buffer[0])==0) goto else33
 	movl	buffer, %eax
-	pushl	(%eax)    //(buffer)는?
+	pushl	(%eax)    //(buffer)는
 	call	isdigit
 	addl	$4, %esp
 	cmpl	$0, %eax
@@ -99,7 +99,7 @@ elseif5:
 	jne 	elseif11
 	## if(stack.peek()!=NULL) goto else8;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	else8
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -129,7 +129,7 @@ elseif13:
 	//subl 	$8, %esp  이미 저장되있는 값이라서 필요없을것같은데
 	## if(stack.peek()!=NULL) goto endif1;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif1
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -137,11 +137,11 @@ elseif13:
 	addl 	$4, %esp
 	jmp 	input
 endif1:
-	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나?
+	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif2
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif2
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -169,7 +169,7 @@ elseif28:
 	//subl 	$8, %esp  이미 저장되있는 값이라서 필요없을것같은데
 	## if(stack.peek()!=NULL) goto endif3;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif3
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -177,11 +177,11 @@ elseif28:
 	addl 	$4, %esp
 	jmp 	input
 endif3:
-	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나?
+	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif4
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif4
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -209,7 +209,7 @@ elseif30:
 	//subl 	$8, %esp  이미 저장되있는 값이라서 필요없을것같은데
 	## if(stack.peek()!=NULL) goto endif5;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif5
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -217,11 +217,11 @@ elseif30:
 	addl 	$4, %esp
 	jmp 	input
 endif5:
-	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나?
+	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif6
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif6
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -251,7 +251,7 @@ elseif32:
 	//subl 	$8, %esp  이미 저장되있는 값이라서 필요없을것같은데
 	## if(stack.peek()!=NULL) goto endif7;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif7
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -259,11 +259,11 @@ elseif32:
 	addl 	$4, %esp
 	jmp 	input
 endif7:
-	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나?
+	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif8
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif8
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -290,7 +290,7 @@ elseif34:
 	//subl 	$8, %esp  이미 저장되있는 값이라서 필요없을것같은데
 	## if(stack.peek()!=NULL) goto endif9;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif9
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -298,11 +298,11 @@ elseif34:
 	addl 	$4, %esp
 	jmp 	input
 endif9:
-	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나?
+	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif10
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif10
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -326,7 +326,7 @@ else36:
 	//subl 	$8, %esp  이미 저장되있는 값이라서 필요없을것같은데
 	## if(stack.peek()!=NULL) goto endif11;
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif11
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -334,11 +334,11 @@ else36:
 	addl 	$4, %esp
 	jmp 	input
 endif11:
-	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나?
+	## a=(int)stack.pop()  //추가할 때 int로 변환하는데 또 (int)해야하나
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif12
 	movl	(%esp), %eax
-	cmpl	$0, %eax //$0해도 되겠지? 그리고 esp가 젤 위에 있겠지?
+	cmpl	$0, %eax //$0해도 되겠지 그리고 esp가 젤 위에 있겠지
 	jne 	endif12
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty

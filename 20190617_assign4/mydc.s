@@ -479,7 +479,7 @@ error:
 	pushl	$buffer
 	call 	memset
 	addl 	$12, %esp
-	jne		input
+	jmp		input
 else_digit:
 	## int no=atoi(buffer)
 	pushl	$buffer

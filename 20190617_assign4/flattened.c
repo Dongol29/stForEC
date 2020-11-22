@@ -38,7 +38,16 @@
 	##29			/* ... */
 	##30		} else if (buffer[0] == '^') {
 	##31			/* ... powerfunc() ... */
-	##32		} else if { /* ... and so on ... */
+	##32		} else if (buffer[0] == 'f'){
+					int i=%esp-%ebp
+					for(;i>0;i-=4){
+						printf("%d\n",(%ebp,%eax)))
+					}
+					continue
+				} else if(buffer[0] == 'c'){
+
+				}
+
 	##33 	} else { /* the first no. is a digit */
 	##34		int no = atoi(buffer);
 	##35		stack.push(no);	/* pushl some register value */
@@ -148,7 +157,7 @@ endif8:
 	goto while;
 ## /
 elseif_quo:
-	if(buffer[0]!='/') goto else_rem;
+	if(buffer[0]!='/') goto elseif_rem;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif9;
 	printf("dc: stack empty\n");
@@ -165,8 +174,8 @@ endif10:
 	stack.push(res);
 	goto while;
 ## %
-else_rem:
-	//if(buffer[0]!='%') ;
+elseif_rem:
+	if(buffer[0]!='%') goto elseif_f;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif11;
 	printf("dc: stack empty\n");
@@ -182,6 +191,56 @@ endif12:
 	res=a%b; //div를 먼저 해서 저장 후 그 만큼 loop돌려서 뺌  --걍 얘를 하나의 함수로 만들까?
 	stack.push(res);
 	goto while;
+
+elseif_f:
+	if(buffer[0]!='f') goto elseif_c;
+	int i=%esp-%ebp;
+loop_f:
+	if(i<=0) goto endloop_f;
+	printf("%d\n",(%ebp,%eax));
+	goto loop_f;
+endloop_f:
+	goto input;
+elseif_c:
+	if(buffer[0]!='c') goto elseif_d;
+	/* movl		%ebp, %esp */
+	goto input;
+elseif_d:	
+	if(buffer[0]!='d') goto elseif_r;
+	if(stack.peek()!=NULL) goto else_d;
+	printf("dc: stack empty\n");
+	goto input;
+else_d:
+	/* movl 	(%esp), %eax
+	   pushl 	%eax 	*/
+	goto input;
+elseif_r:
+	if(buffer[0]!='r') goto elseif_x;
+	int a,b;
+	if(stack.peek()!=NULL) goto endif13;
+	printf("dc: stack empty\n");
+	goto input;
+endif13:
+	a=(int)stack.pop();
+	if(stack.peek()!=NULL) goto endif14;
+	printf("dc: stack empty\n");
+	stack.push(a); //
+	goto input;
+endif14:
+	b=(int)stack.pop();
+	stack.push(b);
+	stack.push(a);
+	goto input;
+elseif_x:
+	if(buffer[0]!='x') goto elseif_y;
+	srand(time(NULL));
+	int a=rand()%1024 //=RAND_MAX
+	stack.push(a);
+	goto input;
+elseif_y:
+	if(buffer[0]!='y') goto input; //무시
+	
+
 else_digit:
 	int no=atoi(buffer);
 	stack.push(no);

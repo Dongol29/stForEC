@@ -4,12 +4,3 @@
 #include <assert.h>
 
 
-void main()
-{
-    stack.peek();
-}
-
-void stack.peek()
-{
-    printf("hola\n");
-}

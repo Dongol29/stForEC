@@ -368,7 +368,7 @@ endif12:
 	pushl 	%edx
 	jmp 	input
 elseif_f:
-	## if(buffer[0]!='f') goto elseif_c;
+	## if(buffer[0]!='f') goto elseif_c
 	movl	$buffer, %eax
 	cmpl	$'f', (%eax)
 	jne		elseif_c
@@ -468,12 +468,14 @@ elseif_x:
 	pushl 	%edx
 	jmp 	input
 elseif_y:
-	## if(buffer[0]!='y') goto input
+	## if(buffer[0]!='y') goto error
 	movl	$buffer, %eax
 	cmpl	$'y', (%eax)
+	jne		error
+error:
+	movb	$buffer, %eax
+	cmpb	$'y', (%eax)
 	jne		input
-
-
 else_digit:
 	## int no=atoi(buffer)
 	pushl	$buffer

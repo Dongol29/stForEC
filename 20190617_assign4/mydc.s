@@ -470,7 +470,7 @@ elseif_x:
 elseif_y:
 	## if(buffer[0]!='y') goto error
 	movl	$buffer, %eax
-	cmpl	$'y', (%eax)
+	cmpb	$'y', (%eax)
 	jne		error
 error:
 	##memset(buffer,0,ARRAYSIZE)

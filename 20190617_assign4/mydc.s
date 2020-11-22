@@ -330,7 +330,7 @@ endif10:
 	pushl 	%edx
 	jmp 	input
 elseif_rem:
-	if(buffer[0]!='%') goto elseif_f
+	## if(buffer[0]!='%') goto elseif_f
 	movl	$buffer, %eax
 	cmpl	$'%', (%eax)
 	jne		elseif_f
@@ -472,7 +472,7 @@ elseif_y:
 	cmpl	$'y', (%eax)
 	jne		input
 
-	
+
 else_digit:
 	## int no=atoi(buffer)
 	pushl	$buffer

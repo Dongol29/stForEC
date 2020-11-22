@@ -463,7 +463,7 @@ elseif_x:
 	call 	srand
 	addl 	$4, %esp
 	call 	rand
-	movl 	RAND_MAX, %ebx
+	movl 	$RAND_MAX, %ebx
 	idivl 	%ebx
 	pushl 	%edx
 	jmp 	input
@@ -473,8 +473,12 @@ elseif_y:
 	cmpl	$'y', (%eax)
 	jne		error
 error:
-	movl	$buffer, %eax
-	cmpb	$'y', (%eax)
+	##memset(buffer,0,ARRAYSIZE)
+	pushl 	$ARRAYSIZE
+	pushl 	$0
+	pushl	$buffer, 
+	call 	memset
+	addl 	$12, %esp
 	jne		input
 else_digit:
 	## int no=atoi(buffer)

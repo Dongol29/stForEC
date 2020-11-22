@@ -470,20 +470,14 @@ elseif_x:
 elseif_y:
 	## if(buffer[0]!='y') goto error
 	movl	$buffer, %eax
-	cmpb	$'y', (%eax)
-	jne		error
-error:
-	##memset(buffer,0,ARRAYSIZE)
-	pushl 	$ARRAYSIZE
-	pushl 	$0
-	pushl	$buffer
-	call 	memset
-	addl 	$12, %esp
-	jmp		input
+	cmpl	$'y', (%eax)
+	jne		input
+
 else_digit:
 	## int no=atoi(buffer)
 	pushl	$buffer
 	call	atoi
+	addl 	$4, %esp
 	## stack.push(no)
 	pushl 	%eax
 	jmp 	input

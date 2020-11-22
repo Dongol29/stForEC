@@ -463,7 +463,8 @@ elseif_x:
 	call 	srand
 	addl 	$4, %esp
 	call 	rand
-	idivl 	RAND_MAX
+	movl 	RAND_MAX, %ebx
+	idivl 	%ebx
 	pushl 	%edx
 	jmp 	input
 elseif_y:

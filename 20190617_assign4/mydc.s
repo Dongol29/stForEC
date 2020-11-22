@@ -473,8 +473,8 @@ elseif_y:
 	cmpl	$'y', (%eax)
 	jne		error
 error:
-	movb	$buffer, %eax
-	cmpb	$'y', (%eax)
+	movb	$buffer, %al
+	cmpb	$'y', (%al)
 	jne		input
 else_digit:
 	## int no=atoi(buffer)

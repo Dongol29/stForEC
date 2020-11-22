@@ -50,8 +50,8 @@
 
 input:
 	if(scanf("%s",buffer)==EOF) goto quit;
-	if(isdigit(buffer[0])==0) goto else33;
-	if(isdigit(buffer[0])!='_') goto elseif5;
+	if(isdigit(buffer[0])==0) goto else_digit;
+	if(isdigit(buffer[0])!='_') goto elseif_p;
 	int i=0;
 loop:
 	if(buffer[i+1]==0) goto endloop;
@@ -62,21 +62,21 @@ endloop:
 	int no=atoi(buffer);
 	stack.push(no);
 	goto input;
-elseif
-	if(buffer[0]!='p') goto elseif11;
-	if(stack.peek()!=NULL) goto else8;
+elseif_p
+	if(buffer[0]!='p') goto elseif_q;
+	if(stack.peek()!=NULL) goto else_p;
 	printf("dc: stack empty\n");
 	goto input;
-else8:
+else_p:
 	printf("%d\n", (int)stack.top());
 	goto input;
-elseif11:
-	if(buffer[0]!='q') goto elseif13;
+elseif_q:
+	if(buffer[0]!='q') goto elseif_plus;
 	goto quit;
 
 ## +
-elseif13:
-	if(buffer[0]!='+') goto elseif28;
+elseif_plus:
+	if(buffer[0]!='+') goto elseif_minus;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif1;
 	printf("dc: stack empty\n");
@@ -93,8 +93,8 @@ endif2:
 	stack.push(res);
 	goto input;
 ## -
-elseif28:
-	if(buffer[0]!='-') goto elseif30;
+elseif_minus:
+	if(buffer[0]!='-') goto elseif_power;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif3;
 	printf("dc: stack empty\n");
@@ -111,8 +111,8 @@ endif4:
 	stack.push(res);
 	goto input;
 ## ^
-elseif30:
-	if(buffer[0]!='^') goto elseif32;
+elseif_power:
+	if(buffer[0]!='^') goto elseif_mul;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif5;
 	printf("dc: stack empty\n");
@@ -129,8 +129,8 @@ endif6:
 	stack.push(res);
 	goto while;
 ## *
-elseif32:
-	if(buffer[0]!='*') goto elseif34;
+elseif_mul:
+	if(buffer[0]!='*') goto elseif_quo;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif7;
 	printf("dc: stack empty\n");
@@ -147,8 +147,8 @@ endif8:
 	stack.push(res);
 	goto while;
 ## /
-elseif34:
-	if(buffer[0]!='/') goto else36;
+elseif_quo:
+	if(buffer[0]!='/') goto else_rem;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif9;
 	printf("dc: stack empty\n");
@@ -165,7 +165,7 @@ endif10:
 	stack.push(res);
 	goto while;
 ## %
-else36:
+else_rem:
 	//if(buffer[0]!='%') ;
 	int a,b;
 	if(stack.peek()!=NULL) goto endif11;
@@ -182,7 +182,7 @@ endif12:
 	res=a%b; //div를 먼저 해서 저장 후 그 만큼 loop돌려서 뺌  --걍 얘를 하나의 함수로 만들까?
 	stack.push(res);
 	goto while;
-else33:
+else_digit:
 	int no=atoi(buffer);
 	stack.push(no);
 	goto while;

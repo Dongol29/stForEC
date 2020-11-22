@@ -476,7 +476,7 @@ error:
 	##memset(buffer,0,ARRAYSIZE)
 	pushl 	$ARRAYSIZE
 	pushl 	$0
-	pushl	$buffer, 
+	pushl	$buffer
 	call 	memset
 	addl 	$12, %esp
 	jne		input

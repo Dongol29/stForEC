@@ -100,6 +100,7 @@ endloop:
 	pushl	$buffer
 	call	atoi
 	## stack.push(no)
+	addl	$4, %esp
 	movl	%eax, %edx
 	subl 	%edx, %eax
 	subl  	%edx, %eax

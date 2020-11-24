@@ -81,15 +81,13 @@ input:
 loop:
 	## if(buffer[iIndex+1]==0) goto endloop
 	movl	iIndex, %eax
-	sall 	$2, %eax
-	addl	$4, %eax
+	addl	$1, %eax
 	addl	$buffer, %eax
 	movl 	(%eax), %eax
 	cmpl 	$0, %eax
 	je 		endloop
 	## buffer[iIndex]=buffer[iIndex+1]
 	movl	iIndex, %eax
-	sall 	$2, %eax
 	addl	$buffer, %eax
 	movl 	4(%eax), %ebx
 	movl 	%ebx, (%eax)	

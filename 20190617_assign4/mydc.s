@@ -67,7 +67,7 @@ input:
 	## if(isdigit(buffer[0])!=0) goto else_digit
 	movl	$buffer, %eax
 	movl 	(%eax), %eax
-	pushl	%eax  	
+	pushl	%al  	
 	call	isdigit
 	addl	$4, %esp
 	cmpl	$0, %eax
@@ -107,7 +107,7 @@ endloop:
 elseif_p:
 	## if(buffer[0]!='p') goto elseif_q
 	movl	$buffer, %eax
-	cmpl	$'p', (%eax)
+	cmpb	$'p', (%eax)
 	jne 	elseif_q
 	## if(stack.peek()!=NULL) goto else_p
 	movl	(%esp), %eax
@@ -130,13 +130,13 @@ else_p:
 elseif_q:
 	## if(buffer[0]!='q') goto elseif_plus
 	movl	$buffer, %eax
-	cmpl	$'q', (%eax)
+	cmpb	$'q', (%eax)
 	jne		elseif_plus
 	jmp 	quit
 elseif_plus:
 	## if(buffer[0]!='+') goto elseif_minus
 	movl	$buffer, %eax
-	cmpl	$'+', (%eax)
+	cmpb	$'+', (%eax)
 	jne		elseif_minus
 	## int a,b
 	##subl 	$8, %esp  
@@ -176,7 +176,7 @@ endif2:
 elseif_minus:
 	## if(buffer[0]!='-') goto elseif_power
 	movl	$buffer, %eax
-	cmpl	$'-', (%eax)
+	cmpb	$'-', (%eax)
 	jne		elseif_power
 	## int a,b
 	##subl 	$8, %esp  
@@ -216,7 +216,7 @@ endif4:
 elseif_power:
 	## if(buffer[0]!='^') goto elseif_mul
 	movl	$buffer, %eax
-	cmpl	$'^', (%eax)
+	cmpb	$'^', (%eax)
 	jne		elseif_mul
 	## int a,b
 	##subl 	$8, %esp  
@@ -258,7 +258,7 @@ endif6:
 elseif_mul:
 	## if(buffer[0]!='*') goto elseif_quo
 	movl	$buffer, %eax
-	cmpl	$'*', (%eax)
+	cmpb	$'*', (%eax)
 	jne		elseif_quo
 	## int a,b
 	## subl 	$8, %esp  
@@ -297,7 +297,7 @@ endif8:
 elseif_quo:
 	## if(buffer[0]!='/') goto elseif_rem
 	movl	$buffer, %eax
-	cmpl	$'/', (%eax)
+	cmpb	$'/', (%eax)
 	jne		elseif_rem
 	## int a,b
 	## subl 	$8, %esp  
@@ -336,7 +336,7 @@ endif10:
 elseif_rem:
 	## if(buffer[0]!='%') goto elseif_f
 	movl	$buffer, %eax
-	cmpl	$'%', (%eax)
+	cmpb	$'%', (%eax)
 	jne		elseif_f
 	## int a,b
 	## subl 	$8, %esp  
@@ -374,7 +374,7 @@ endif12:
 elseif_f:
 	## if(buffer[0]!='f') goto elseif_c
 	movl	$buffer, %eax
-	cmpl	$'f', (%eax)
+	cmpb	$'f', (%eax)
 	jne		elseif_c
 	## int i=%esp-%ebp
 	movl 	%esp, %eax
@@ -396,14 +396,14 @@ endloop_f:
 elseif_c:
 	## if(buffer[0]!='c') goto elseif_d
 	movl	$buffer, %eax
-	cmpl	$'c', (%eax)
+	cmpb	$'c', (%eax)
 	jne		elseif_d
 	movl 	%ebp, %esp
 	jmp 	input
 elseif_d:
 	## if(buffer[0]!='d') goto elseif_r
 	movl	$buffer, %eax
-	cmpl	$'d', (%eax)
+	cmpb	$'d', (%eax)
 	jne		elseif_r
 	## if(stack.peek()!=NULL) goto else_d
 	movl	(%esp), %eax
@@ -421,7 +421,7 @@ else_d:
 elseif_r:
 	## if(buffer[0]!='r') goto elseif_x
 	movl	$buffer, %eax
-	cmpl	$'r', (%eax)
+	cmpb	$'r', (%eax)
 	jne		elseif_x
 	## if(stack.peek()!=NULL) goto endif13
 	movl	(%esp), %eax
@@ -457,7 +457,7 @@ endif14:
 elseif_x:
 	## if(buffer[0]!='x') goto elseif_y
 	movl	$buffer, %eax
-	cmpl	$'x', (%eax)
+	cmpb	$'x', (%eax)
 	jne		elseif_y
 	## srand(time(NULL))
 	pushl 	$0
@@ -474,7 +474,7 @@ elseif_x:
 elseif_y:
 	## if(buffer[0]!='y') goto input
 	movl	$buffer, %eax
-	cmpl	$'y', (%eax)
+	cmpb	$'y', (%eax)
 	jne		input
 
 else_digit:

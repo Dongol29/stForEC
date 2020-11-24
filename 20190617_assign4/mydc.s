@@ -117,8 +117,9 @@ elseif_p:
 	jmp 	input
 else_p:
 	##printf("%d\n", (int)stack.top())
-	movl	%esp, %eax
-	pushl	(%eax)
+	movl	(%esp), %eax
+	movl 	$0, %al
+	pushl	%eax
 	pushl	Pprint
 	call 	printf
 	addl	$8, %esp

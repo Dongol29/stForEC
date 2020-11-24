@@ -74,7 +74,7 @@ input:
 	jne  	else_digit
 	## if(isdigit(buffer[0])!='_') goto elseif_p
 	movl	$buffer, %eax
-	cmpl	$'_', (%eax)
+	cmpb	$'_', (%eax)
 	jne 	elseif_p
 	## int iIndex=0
 	movl	$0, iIndex

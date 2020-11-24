@@ -64,13 +64,13 @@ input:
 	## check if user input EOF
 	cmp	$EOF, %eax
 	je	quit
-	## if(isdigit(buffer[0])==0) goto else_digit
+	## if(isdigit(buffer[0])!=0) goto else_digit
 	movl	$buffer, %eax
 	pushl	(%eax)    	
 	call	isdigit
 	addl	$4, %esp
 	cmpl	$0, %eax
-	je  	else_digit
+	jne  	else_digit
 	## if(isdigit(buffer[0])!='_') goto elseif_p
 	movl	$buffer, %eax
 	cmpl	$'_', (%eax)

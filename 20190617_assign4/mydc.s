@@ -101,7 +101,7 @@ endloop:
 	call	atoi
 	## stack.push(no)
 	movl	%eax, %edx
-	movl 	$0, %eax
+	subl 	%edx, %eax
 	subl  	%edx, %eax
 	pushl 	%eax
 	jmp input 

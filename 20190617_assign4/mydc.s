@@ -62,11 +62,12 @@ input:
 	addl    $8, %esp
 
 	## check if user input EOF
-	cmp	$EOF, %eax
+	cmp  $EOF, %eax
 	je	quit
 	## if(isdigit(buffer[0])!=0) goto else_digit
 	movl	$buffer, %edx
-	pushl	(%edx)    	
+	movl 	(%edx), %edx
+	pushl	%edx)   	
 	call	isdigit
 	addl	$4, %esp
 	cmpl	$0, %eax

@@ -89,7 +89,7 @@ loop:
 	## buffer[iIndex]=buffer[iIndex+1]
 	movl	iIndex, %eax
 	addl	$buffer, %eax
-	movl 	4(%eax), %ebx
+	movl 	1(%eax), %ebx
 	movl 	%ebx, (%eax)	
 	## iIndex++
 	incl	iIndex

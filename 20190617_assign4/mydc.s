@@ -118,7 +118,7 @@ elseif_p:
 else_p:
 	##printf("%d\n", (int)stack.top())
 	movl	(%esp), %eax
-	lea 	%eax, %eax
+	leal 	%eax, %eax
 	pushl	%eax
 	pushl	Pprint
 	call 	printf

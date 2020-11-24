@@ -120,7 +120,7 @@ else_p:
 	pushl	(%esp)
 	## movb 	$0, %al
 	## pushl	%eax
-	pushl	Pprint
+	pushl	$Pprint
 	call 	printf
 	addl	$8, %esp
 	jmp		input

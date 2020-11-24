@@ -111,7 +111,7 @@ elseif_p:
 	cmpl	$0, %eax   
 	jne 	else_p
 	## printf("dc: stack empty\n")
-	pushl	$sEmpty
+	pushl	$sEmpty1
 	call	printf
 	addl 	$4, %esp
 	jmp 	input
@@ -468,7 +468,7 @@ elseif_x:
 	pushl 	%edx
 	jmp 	input
 elseif_y:
-	## if(buffer[0]!='y') goto error
+	## if(buffer[0]!='y') goto input
 	movl	$buffer, %eax
 	cmpl	$'y', (%eax)
 	jne		input

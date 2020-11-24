@@ -167,8 +167,8 @@ endif2:
 	## b=(int)stack.pop()
 	popl	%ebx
 	## res=a+b
-	movl	%eax, %edx
-	addl 	%ebx, %edx
+	movl	%ebx, %edx
+	addl 	%eax, %edx
 	## stack.push(res)
 	pushl 	%edx
 	jmp 	input
@@ -206,8 +206,8 @@ endif4:
 	## b=(int)stack.pop()
 	popl	%ebx
 	## res=a-b
-	movl	%eax, %edx
-	subl 	%ebx, %edx
+	movl	%ebx, %edx
+	subl 	%eax, %edx
 	## stack.push(res)
 	pushl 	%edx
 	jmp 	input
@@ -448,9 +448,9 @@ endif14:
 	## b=(int)stack.pop()
 	popl 	%ebx
 	## stack.push(b)
-	pushl 	%ebx
-	## stack.push(a)
 	pushl 	%eax
+	## stack.push(a)
+	pushl 	%ebx
 	jmp 	input
 elseif_x:
 	## if(buffer[0]!='x') goto elseif_y

@@ -67,7 +67,7 @@ input:
 	## if(isdigit(buffer[0])!=0) goto else_digit
 	movl	$buffer, %eax
 	movl 	(%eax), %eax
-	pushb	%al	
+	pushl	%al	
 	call	isdigit
 	addl	$4, %esp
 	cmpl	$0, %eax

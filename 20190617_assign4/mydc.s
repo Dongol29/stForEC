@@ -100,6 +100,9 @@ endloop:
 	pushl	$buffer
 	call	atoi
 	## stack.push(no)
+	movl	%eax, %edx
+	movl 	$0, %eax
+	subl  	%edx, %eax
 	pushl 	%eax
 	jmp input 
 elseif_p:

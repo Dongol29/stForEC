@@ -5,8 +5,7 @@
 
 void main()
 {
-    char buffer[20]={'a',};
-    printf("%s\n",&buffer[0]);
-    scanf("%s",buffer);
-    printf("%s\n",&buffer[0]);
+    char *buffer="a3";
+    int n=atoi(buffer);b
+    printf("%d\n",n);
 }

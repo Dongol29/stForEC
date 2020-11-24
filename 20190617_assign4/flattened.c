@@ -40,7 +40,7 @@
 	##31			/* ... powerfunc() ... */
 	##32		} else if (buffer[0] == 'f'){
 					int i=%esp-%ebp
-					for(;i>0;i-=4){
+					for(;i<0;i+=4){
 						printf("%d\n",(%ebp,%eax)))
 					}
 					continue

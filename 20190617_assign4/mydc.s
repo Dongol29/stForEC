@@ -380,16 +380,17 @@ elseif_f:
 	movl 	%esp, %eax
 	subl 	%ebp, %eax
 loop_f:
-	## if(i<=0) goto endloop_f
+	## if(i>=0) goto endloop_f
 	cmpl 	$0, %eax
-	jle 	endloop_f
+	jge 	endloop_f
 	## printf("%d\n",(%ebp,%eax))
 	movl 	$0, %edx
 	addl 	%ebp, %edx
 	addl 	%eax, %edx
 	pushl	(%edx)
+	pushl	$Pprint
 	call	printf
-	addl 	$4, %esp
+	addl 	$4, %eax
 	jmp 	loop_f
 endloop_f:
 	jmp 	input

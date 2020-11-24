@@ -65,9 +65,10 @@ input:
 	cmp  $EOF, %eax
 	je	quit
 	## if(isdigit(buffer[0])!=0) goto else_digit
-	movl	$buffer, %eax
-	movl 	(%eax), %eax
-	movb 	%al, %eax
+	movl	$buffer, %edx
+	movl 	(%edx), %edx
+	movl 	%edx, %eax
+	andl 	$0xFF, %eax  
 	pushl	%eax
 	call	isdigit
 	addl	$4, %esp

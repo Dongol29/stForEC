@@ -153,8 +153,8 @@ endif1:
 	## a=(int)stack.pop()  
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif2
-	movl	(%esp), %eax
-	cmpl	$0, %eax  
+	movl	(%esp), %edx
+	cmpl	$0, %edx  
 	jne 	endif2
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -167,8 +167,7 @@ endif2:
 	## b=(int)stack.pop()
 	popl	%ebx
 	## res=a+b
-	movl 	$0, %edx
-	addl	%eax, %edx
+	movl	%eax, %edx
 	addl 	%ebx, %edx
 	## stack.push(res)
 	pushl 	%edx
@@ -193,8 +192,8 @@ endif3:
 	## a=(int)stack.pop()   
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif4
-	movl	(%esp), %eax
-	cmpl	$0, %eax 	
+	movl	(%esp), %edx
+	cmpl	$0, %edx 	
 	jne 	endif4
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -207,8 +206,7 @@ endif4:
 	## b=(int)stack.pop()
 	popl	%ebx
 	## res=a-b
-	movl 	$0, %edx
-	addl	%eax, %edx
+	movl	%eax, %edx
 	subl 	%ebx, %edx
 	## stack.push(res)
 	pushl 	%edx
@@ -233,8 +231,8 @@ endif5:
 	## a=(int)stack.pop()  	
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif6
-	movl	(%esp), %eax
-	cmpl	$0, %eax 	
+	movl	(%esp), %edx
+	cmpl	$0, %edx 	
 	jne 	endif6
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -275,8 +273,8 @@ endif7:
 	## a=(int)stack.pop()  	
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif8
-	movl	(%esp), %eax
-	cmpl	$0, %eax 	
+	movl	(%esp), %edx
+	cmpl	$0, %edx 	
 	jne 	endif8
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -314,8 +312,8 @@ endif9:
 	## a=(int)stack.pop()  
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif10
-	movl	(%esp), %eax
-	cmpl	$0, %eax 	 
+	movl	(%esp), %edx
+	cmpl	$0, %edx 	 
 	jne 	endif10
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -353,8 +351,8 @@ endif11:
 	## a=(int)stack.pop()  	
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif12
-	movl	(%esp), %eax
-	cmpl	$0, %eax 		
+	movl	(%esp), %edx
+	cmpl	$0, %edx 		
 	jne 	endif12
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -436,8 +434,8 @@ endif13:
 	## a=(int)stack.pop()
 	popl	%eax
 	## if(stack.peek()!=NULL) goto endif14
-	movl	(%esp), %eax
-	cmpl	$0, %eax  
+	movl	(%esp), %edx
+	cmpl	$0, %edx  
 	jne 	endif14
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty

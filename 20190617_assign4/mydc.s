@@ -312,7 +312,7 @@ elseif_quo:
 	jmp 	input
 endif9:
 	## a=(int)stack.pop()  
-	popl	%eax
+	popl	%ebx
 	## if(stack.peek()!=NULL) goto endif10
 	movl	(%esp), %edx
 	cmpl	$0, %edx 	 
@@ -326,12 +326,11 @@ endif9:
 	jmp		input
 endif10:
 	## b=(int)stack.pop()
-	popl	%ebx
+	popl	%eax
 	## res=a/b
 	idivl	%ebx
 	## stack.push(res)
-	movl	%eax, %edx
-	pushl 	%edx
+	pushl	%eax
 	jmp 	input
 elseif_rem:
 	## if(buffer[0]!='%') goto elseif_f

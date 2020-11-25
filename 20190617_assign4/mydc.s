@@ -370,7 +370,7 @@ endif12:
 	movl	$0, %edx
 	idivl	%ebx
 	## stack.push(res)
-	pushl 	%eax
+	pushl 	%edx
 	jmp 	input
 elseif_f:
 	## if(buffer[0]!='f') goto elseif_c

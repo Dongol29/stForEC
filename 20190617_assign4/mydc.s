@@ -391,7 +391,7 @@ loop_f:
 	pushl	$Pprint
 	call	printf
 	addl 	$8, %esp
-	addl 	$4, %edgx
+	addl 	$4, %edx
 	jmp 	loop_f
 endloop_f:
 	jmp 	input

@@ -386,7 +386,7 @@ loop_f:
 	## printf("%d\n",(%ebp,%edx))
 	movl 	$0, %eax
 	addl 	%ebp, %eax
-	addl 	%eax, %eax
+	addl 	%edx, %eax
 	pushl	(%eax)
 	pushl	$Pprint
 	call	printf

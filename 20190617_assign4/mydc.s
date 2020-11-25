@@ -314,8 +314,8 @@ endif9:
 	## a=(int)stack.pop()  
 	popl	%ebx
 	## if(stack.peek()!=NULL) goto endif10
-	movl	(%esp), %edx
-	cmpl	$0, %edx 	 
+	movl	(%esp), %eax
+	cmpl	$0, %eax 	 
 	jne 	endif10
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -328,6 +328,7 @@ endif10:
 	## b=(int)stack.pop()
 	popl	%eax
 	## res=a/b
+	movl 	$0, %edx
 	idivl	%ebx
 	## stack.push(res)
 	pushl	%eax

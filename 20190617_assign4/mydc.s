@@ -377,21 +377,21 @@ elseif_f:
 	cmpb	$'f', (%eax)
 	jne		elseif_c
 	## int i=%esp-%ebp
-	movl 	%esp, %eax
-	subl 	%ebp, %eax
+	movl 	%esp, %edx
+	subl 	%ebp, %edx
 loop_f:
 	## if(i>=0) goto endloop_f
-	cmpl 	$0, %eax
+	cmpl 	$0, %edx
 	jge 	endloop_f
-	## printf("%d\n",(%ebp,%eax))
-	movl 	$0, %edx
-	addl 	%ebp, %edx
-	addl 	%eax, %edx
-	pushl	(%edx)
+	## printf("%d\n",(%ebp,%edx))
+	movl 	$0, %eax
+	addl 	%ebp, %eax
+	addl 	%eax, %eax
+	pushl	(%eax)
 	pushl	$Pprint
 	call	printf
 	addl 	$8, %esp
-	addl 	$4, %eax
+	addl 	$4, %edgx
 	jmp 	loop_f
 endloop_f:
 	jmp 	input

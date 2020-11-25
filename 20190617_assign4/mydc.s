@@ -311,7 +311,7 @@ elseif_quo:
 	addl 	$4, %esp
 	jmp 	input
 endif9:
-	## a=(int)stack.pop()  
+	## b=(int)stack.pop()  
 	popl	%ebx
 	## if(stack.peek()!=NULL) goto endif10
 	movl	(%esp), %eax
@@ -325,7 +325,7 @@ endif9:
 	pushl	%eax
 	jmp		input
 endif10:
-	## b=(int)stack.pop()
+	## a=(int)stack.pop()
 	popl	%eax
 	## res=a/b
 	movl 	$0, %edx
@@ -350,11 +350,11 @@ elseif_rem:
 	addl 	$4, %esp
 	jmp 	input
 endif11:
-	## a=(int)stack.pop()  	
-	popl	%eax
+	## b=(int)stack.pop()  	
+	popl	%ebx
 	## if(stack.peek()!=NULL) goto endif12
-	movl	(%esp), %edx
-	cmpl	$0, %edx 		
+	movl	(%esp), %eax
+	cmpl	$0, %eax 		
 	jne 	endif12
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
@@ -364,12 +364,13 @@ endif11:
 	pushl	%eax
 	jmp		input
 endif12:
-	## b=(int)stack.pop()
-	popl	%ebx
+	## a=(int)stack.pop()
+	popl	%eax
 	## res=a%b
+	movl	$0, %edx
 	idivl	%ebx
 	## stack.push(res)
-	pushl 	%edx
+	pushl 	%eax
 	jmp 	input
 elseif_f:
 	## if(buffer[0]!='f') goto elseif_c

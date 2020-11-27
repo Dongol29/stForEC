@@ -13,7 +13,7 @@
 	## Local variable offsets:
 	.equ   IPINDEX, -8
 	.equ   N, -4
-	.equ   I, 8
+	.equ   I, -8
 
 	
 .section ".rodata"

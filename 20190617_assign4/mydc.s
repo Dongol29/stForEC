@@ -11,6 +11,7 @@
 	.equ   IBASE, 8
 	.equ   IEXP, 12
 	## Local variable offsets:
+	.equ   IPOWER, -4
 	.equ   IPINDEX, -8
 	.equ   N, -4
 	.equ   I, -8

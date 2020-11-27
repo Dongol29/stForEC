@@ -50,9 +50,10 @@ iIndex:
 	.type   main,@function
 
 main:
-
 	pushl   %ebp
 	movl    %esp, %ebp
+
+## While loop
 input:
 
 	## dc number stack initialized. %esp = %ebp
@@ -76,6 +77,11 @@ input:
 	addl	$4, %esp
 	cmpl	$0, %eax
 	jne  	else_digit
+
+##  Checking if it is negative number by checking existence of the 
+## pre-appending '-' symbol to the number. If it is, pushes negative 
+## value to the stack.
+if_minus:
 	## if(isdigit(buffer[0])!='_') goto elseif_p
 	movl	$buffer, %eax
 	cmpb	$'_', (%eax)
@@ -108,6 +114,9 @@ endloop:
 	subl  	%edx, %eax
 	pushl 	%eax
 	jmp input 
+
+##  Doing the operation corresponding to operator
+##'p':  Prints the value that sits on the top of the stack.
 elseif_p:
 	## if(buffer[0]!='p') goto elseif_q
 	movl	$buffer, %eax
@@ -131,12 +140,19 @@ else_p:
 	call 	printf
 	addl	$8, %esp
 	jmp		input
+
+##  Doing the operation corresponding to operator
+##'q': quit the program.
 elseif_q:
 	## if(buffer[0]!='q') goto elseif_plus
 	movl	$buffer, %eax
 	cmpb	$'q', (%eax)
 	jne		elseif_plus
 	jmp 	quit
+
+##  Doing the operation corresponding to operator
+##'+': pops upmost two values from the stack, performs addition
+## and pushes the result to the stack.
 elseif_plus:
 	## if(buffer[0]!='+') goto elseif_minus
 	movl	$buffer, %eax
@@ -176,6 +192,10 @@ endif2:
 	## stack.push(res)
 	pushl 	%edx
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'-': pops upmost two values from the stack, performs subtraction
+## and pushes the result to the stack.
 elseif_minus:
 	## if(buffer[0]!='-') goto elseif_power
 	movl	$buffer, %eax
@@ -215,6 +235,10 @@ endif4:
 	## stack.push(res)
 	pushl 	%edx
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'^': pops upmost two values from the stack, performs exponentiation
+## and pushes the result to the stack.
 elseif_power:
 	## if(buffer[0]!='^') goto elseif_mul
 	movl	$buffer, %eax
@@ -257,6 +281,10 @@ endif6:
 	movl	%eax, %edx
 	pushl 	%edx
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'*': pops upmost two values from the stack, performs multiflication
+## and pushes the result to the stack.
 elseif_mul:
 	## if(buffer[0]!='*') goto elseif_quo
 	movl	$buffer, %eax
@@ -296,6 +324,10 @@ endif8:
 	movl	%eax, %edx
 	pushl 	%edx
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'/': pops upmost two values from the stack, performs division and 
+## pushes the quotient to the stack.
 elseif_quo:
 	## if(buffer[0]!='/') goto elseif_rem
 	movl	$buffer, %eax
@@ -335,6 +367,10 @@ endif10:
 	## stack.push(res)
 	pushl	%eax
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'%': pops upmost two values from the stack, performs division and 
+## pushes the remainder to the stack.
 elseif_rem:
 	## if(buffer[0]!='%') goto elseif_f
 	movl	$buffer, %eax
@@ -374,6 +410,9 @@ endif12:
 	## stack.push(res)
 	pushl 	%edx
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'f': Prints the contents of the stack in LIFO order.
 elseif_f:
 	## if(buffer[0]!='f') goto elseif_c
 	movl	$buffer, %eax
@@ -398,6 +437,9 @@ loop_f:
 	jmp 	loop_f
 endloop_f:
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'c': Clears the contents of the stack.
 elseif_c:
 	## if(buffer[0]!='c') goto elseif_d
 	movl	$buffer, %eax
@@ -405,6 +447,10 @@ elseif_c:
 	jne		elseif_d
 	movl 	%ebp, %esp
 	jmp 	input
+
+##  Doing the operation corresponding to operator
+##'d': Duplicates the top-most entry of the stack 
+## and pushes it in the stack.
 elseif_d:
 	## if(buffer[0]!='d') goto elseif_r
 	movl	$buffer, %eax
@@ -423,6 +469,9 @@ else_d:
 	movl 	(%esp), %eax
 	pushl 	%eax
 	jmp 	input
+
+## Doing the operation corresponding to operator
+##'r': Reverses the order of (swaps) the top two values on the stack.
 elseif_r:
 	## if(buffer[0]!='r') goto elseif_x
 	movl	$buffer, %eax
@@ -459,6 +508,8 @@ endif14:
 	## stack.push(a)
 	pushl 	%ebx
 	jmp 	input
+
+## Doing the operation corresponding to operator 'x'
 elseif_x:
 	## if(buffer[0]!='x') goto elseif_y
 	movl	$buffer, %eax
@@ -476,6 +527,8 @@ elseif_x:
 	idivl 	%ebx
 	pushl 	%edx
 	jmp 	input
+
+## Doing the operation corresponding to operator 'y'
 elseif_y:
 	## if(buffer[0]!='y') goto input
 	movl	$buffer, %eax
@@ -493,6 +546,7 @@ elseif_y:
 	## stack.push(res);
 	pushl	%eax
 	jmp 	input
+
 else_digit:
 	## int no=atoi(buffer)
 	pushl	$buffer
@@ -501,11 +555,17 @@ else_digit:
 	## stack.push(no)
 	pushl 	%eax
 	jmp 	input
+
 quit:
 	movl	$0, %eax
 	movl 	%ebp, %esp
 	popl 	%ebp
 	ret
+
+##  This power function performs exponentiation and stores the result
+## in eax.
+##  The formal parameter offsets IBASE and IEXP are used.
+##  The local variable offset IPINDEX is used.
 power:
 	pushl	%ebp
 	movl 	%esp, %ebp
@@ -518,18 +578,22 @@ ploop:
 	cmpl	IEXP(%ebp), %eax
 	jg		ploopend
 	## iPower*=IBASE
-	movl 	-4(%ebp), %eax
+	movl 	IPOWER(%ebp), %eax
 	imull 	IBASE(%ebp), %eax
-	movl 	%eax, -4(%ebp)
+	movl 	%eax, IPOWER(%ebp)
 	## ipIndex++
 	incl 	IPINDEX(%ebp)
 	jmp 	ploop
 ploopend:
 	## return value(=iPower) to eax
-	movl 	-4(%ebp), %eax
+	movl 	IPOWER(%ebp), %eax
 	movl 	%ebp, %esp
 	popl 	%ebp
 	ret
+
+##  This prime function finds the biggest one of the prime numbers that
+## are lesser or equal to the input, stores it in the eax if it exist
+##  The local variable offsets I and N are used.
 prime:
 	pushl	%ebp
 	movl 	%esp, %ebp
@@ -574,7 +638,6 @@ endloop1:
 	movl 	%ebp, %esp
 	popl	%ebp
 	ret
-
 
 	
 

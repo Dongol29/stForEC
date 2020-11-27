@@ -6,6 +6,7 @@
 
 void main()
 {
-    int a=1;
-    if(a--) printf("hola\n");
+    char buffer[4]={'4','4','4','a'};
+    int n=atoi(buffer);
+    printf("%d\n",n);
 }

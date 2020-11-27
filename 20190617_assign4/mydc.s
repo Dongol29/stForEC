@@ -566,7 +566,7 @@ quit:
 ##  This power function performs exponentiation and stores the result
 ## in eax.
 ##  The formal parameter offsets IBASE and IEXP are used.
-##  The local variable offset IPINDEX is used.
+##  The local variable offsets IPINDEX, IPOWER are used.
 power:
 	pushl	%ebp
 	movl 	%esp, %ebp

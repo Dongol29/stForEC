@@ -544,7 +544,8 @@ loop1:
 	jl 		endloop1
 loop2:
 	## if(i>n) goto endloop2
-	cmpl 	N(%ebp), I(%ebp)
+	movl 	N(%ebp), %eax
+	cmpl 	I(%ebp), %eax
 	jg 		endloop2
 	## if(n%i==0) goto endloop2
 	movl 	N(%ebp), %eax

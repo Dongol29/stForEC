@@ -534,7 +534,7 @@ prime:
 	pushl	%ebp
 	movl 	%esp, %ebp
 	## int n=a
-	movl 	4(%ebp), %eax
+	movl 	8(%ebp), %eax
 	pushl 	%eax
 	pushl 	$2
 loop1:

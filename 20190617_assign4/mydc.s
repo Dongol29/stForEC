@@ -534,7 +534,8 @@ prime:
 	pushl	%ebp
 	movl 	%esp, %ebp
 	## int n=a
-	pushl 	4(%ebp)
+	movl 	4(%ebp), %eax
+	pushl 	%eax
 	pushl 	$2
 loop1:
 	## if(n<2) goto endloop1

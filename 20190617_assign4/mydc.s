@@ -12,6 +12,8 @@
 	.equ   IEXP, 12
 	## Local variable offsets:
 	.equ   IPINDEX, -8
+	.equ   N, -4
+	.equ   I, 8
 
 	
 .section ".rodata"
@@ -479,7 +481,19 @@ elseif_y:
 	movl	$buffer, %eax
 	cmpb	$'y', (%eax)
 	jne		input
-
+	## a=stack.copy() 
+	movl	(%esp), %eax
+	## if(a<=1) goto input
+	cmpl 	$1, %eax
+	jle 	input
+	## res=prime(a)
+	pushl	%eax
+	call 	prime
+	addl 	$4, %esp
+	## stack.push(res);
+	movl	%eax, %edx
+	pushl 	%edx
+	jmp 	input
 else_digit:
 	## int no=atoi(buffer)
 	pushl	$buffer
@@ -517,4 +531,47 @@ ploopend:
 	movl 	%ebp, %esp
 	popl 	%ebp
 	ret
+prime:
+	pushl	%ebp
+	movl 	%esp, %ebp
+	## int n=a, i=2
+	pushl 	4(%ebp)
+	pushl 	$2
+loop1:
+	## if(n<2) goto endloop1
+	movl 	N(%ebp), %eax
+	cmpl 	$2, %eax
+	jl 		endloop1
+loop2:
+	## if(i>n) goto endloop2
+	cmpl 	N(%ebp), I(%ebp)
+	jg 		endloop2
+	## if(n%i==0) goto endloop2
+	movl 	N(%ebp), %eax
+	movl 	I(%ebp), %ebx
+	movl 	$0, %edx
+	idiv 	%ebx
+	cmpl 	$0, %edx
+	je 		endloop2
+	## if(i==n-1) goto endloop1
+	movl 	N(%ebp), %eax
+	decl 	%eax
+	cmpl 	I(%ebp), %eax
+	je 		endloop1
+	## i++
+	incl 	I(%ebp)
+	jmp 	loop2
+endloop2:
+	## n--
+	decl 	N(%ebp)
+	jmp 	loop1
+endloop1:
+	## return n to eax
+	movl 	N(%ebp), %eax
+	movl 	%ebp, %esp
+	popl	%ebp
+	ret
+
+
+	
 

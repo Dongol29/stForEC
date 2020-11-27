@@ -47,6 +47,7 @@
 				} else if(buffer[0] == 'c'){
 
 				}
+				
 
 	##33 	} else { /* the first no. is a digit */
 	##34		int no = atoi(buffer);
@@ -54,6 +55,7 @@
 	##36	}
 	##37 }
 
+a=stack.pop();
 
 
 
@@ -239,10 +241,47 @@ elseif_x:
 	goto input;
 elseif_y:
 	if(buffer[0]!='y') goto input; //무시
-	
-
+	a=stack.pop();
+	if(a<=1) goto input;
+	res=prime(a);
+	stack.push(res);
+	goto input;
 else_digit:
 	int no=atoi(buffer);
 	stack.push(no);
 	goto while;
 quit:
+
+int prime(int a) //a>=2
+{
+	int i,n;
+	for(n=a;n>=2;n--){
+		for(i=2;i<n;i++){
+			if(n%i==0) break;
+			if(i==n-1)  return n;
+		}
+	    continue;
+	}
+}
+
+int prime(int a){
+	int n=a, i=2;
+loop1:
+	if(n<2) goto endloop1;
+loop2:
+	if(i>n) goto endloop2;
+	if(n%i==0) goto endloop2;
+	if(i==n-1) goto endloop1;
+	i++;
+	goto loop2;
+endloop2:
+	n--;
+	goto loop1;
+endloop1:
+	return n
+}
+
+
+prime:
+	pushl	%ebp
+	movl 	%esp, %ebp

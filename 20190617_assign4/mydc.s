@@ -491,8 +491,7 @@ elseif_y:
 	call 	prime
 	addl 	$4, %esp
 	## stack.push(res);
-	movl	%eax, %edx
-	pushl 	%edx
+	pushl	%eax
 	jmp 	input
 else_digit:
 	## int no=atoi(buffer)
@@ -534,7 +533,7 @@ ploopend:
 prime:
 	pushl	%ebp
 	movl 	%esp, %ebp
-	## int n=a, i=2
+	## int n=a
 	pushl 	4(%ebp)
 	pushl 	$2
 loop1:
@@ -542,11 +541,13 @@ loop1:
 	movl 	N(%ebp), %eax
 	cmpl 	$2, %eax
 	jl 		endloop1
+	## i=2
+	movl 	$2, I(%ebp)
 loop2:
-	## if(i>n) goto endloop2
+	## if(i>=n) goto endloop2
 	movl 	N(%ebp), %eax
 	cmpl 	I(%ebp), %eax
-	jg 		endloop2
+	jge 	endloop2
 	## if(n%i==0) goto endloop2
 	movl 	N(%ebp), %eax
 	movl 	I(%ebp), %ebx

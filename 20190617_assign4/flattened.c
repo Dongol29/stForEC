@@ -265,11 +265,12 @@ int prime(int a) //a>=2
 }
 
 int prime(int a){
-	int n=a, i=2;
+	int n=a;
 loop1:
 	if(n<2) goto endloop1;
 loop2:
-	if(i>n) goto endloop2;
+	i=2;
+	if(i>=n) goto endloop2;
 	if(n%i==0) goto endloop2;
 	if(i==n-1) goto endloop1;
 	i++;

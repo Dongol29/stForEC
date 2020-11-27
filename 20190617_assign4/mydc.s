@@ -444,12 +444,12 @@ endif13:
 	movl	(%esp), %edx
 	cmpl	$0, %edx  
 	jne 	endif14
+	## stack.push(a)
+	pushl	%eax
 	## printf("dc: stack empty\n")
 	pushl	$sEmpty
 	call	printf
 	addl 	$4, %esp
-	## stack.push(a)
-	pushl	%eax
 	jmp		input
 endif14:
 	## b=(int)stack.pop()

@@ -131,7 +131,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             }
             else if ((c == ' ') || (c == '\t'))
                eState = STATE_START;
-            else if (c=="|")
+            else if (c=='|')
             {
                 acValue[iValueIndex++]=c;
                 acValue[iValueIndex]='\0';

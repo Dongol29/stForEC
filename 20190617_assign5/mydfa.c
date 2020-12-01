@@ -54,7 +54,7 @@ static void printToken(void *pvItem, void *pvExtra)
 
 {
    struct Token *psToken = (struct Token*)pvItem;
-   printf("%s ", psToken->pcValue);
+   printf("%s\n", psToken->pcValue);
 }
 
 /*--------------------------------------------------------------------*/

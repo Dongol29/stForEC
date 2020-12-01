@@ -108,7 +108,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
    int iLineIndex = 0;
    int iValueIndex = 0;
    char c;
-   char acValue[MAX_LINE_SIZE];
+   char acValue[MAX_LINE_SIZE]={0,};
    struct Token *psToken;
 
    assert(pcLine != NULL);

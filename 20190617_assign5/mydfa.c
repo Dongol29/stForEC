@@ -122,10 +122,9 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
       switch (eState)
       {
          case STATE_START:
-            printf("start\n");
             if ((c == '\n') || (c == '\0'))
                return TRUE;
-            else if (!isspace(c)&&c!='|')
+            else if (!isspace(c)&&c!='|'&&c!='"')
             {
                acValue[iValueIndex++] = c;
                eState = STATE_WORD;
@@ -164,7 +163,6 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             break;
 
          case STATE_WORD:
-            printf("word\n");
             if ((c == '\n') || (c == '\0'))
             {
                /* Create a NUMBER token. */
@@ -184,7 +182,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
 
                return TRUE;
             }
-            else if (!isspace(c)&&c!='|')
+            else if (!isspace(c)&&c!='|'&&c!='"')
             {
                acValue[iValueIndex++] = c;
                eState = STATE_WORD;
@@ -254,7 +252,6 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             break;
 
          case STATE_QUOTE:
-            printf("quote\n");
             if((c == '\n') || (c == '\0'))
             {
                 fprintf(stderr,"./ish: Could not find quote pair\n");

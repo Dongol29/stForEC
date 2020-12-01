@@ -151,6 +151,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             }
             else if (c=='"')
             {
+                printf("hola\n");
                 eState=STATE_QUOTE;
             }
 

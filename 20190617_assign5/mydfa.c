@@ -149,7 +149,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
                iValueIndex=0;
                eState=STATE_START;
             }
-            else if (c=='\"')
+            else if (c=='"')
             {
                 eState=STATE_QUOTE;
             }
@@ -239,7 +239,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
                iValueIndex = 0;
                eState=STATE_START;
             }
-            else if (c=='\"')
+            else if (c=='"')
             {
                 eState=STATE_QUOTE;
             }
@@ -256,7 +256,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
                 fprintf(stderr,"./ish: Could not find quote pair\n");
                 return FALSE;
             }
-            else if (c=='\"')
+            else if (c=='"')
             {
                 eState=STATE_WORD;
             }

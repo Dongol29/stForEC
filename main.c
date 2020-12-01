@@ -6,6 +6,5 @@
 
 void main()
 {
-    char *st={'"',};
-    printf("%s",st);
+    printf("%c\n",'"');
 }

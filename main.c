@@ -6,5 +6,7 @@
 
 void main()
 {
-    printf("%c\n",'"');
+    char s[10];
+    fgets(s,10,stdin);
+    printf("%c\n",s[7]);
 }

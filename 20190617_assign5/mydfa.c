@@ -269,6 +269,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
          default:
             assert(FALSE);
       }
+      printf("step:%s\n",acValue);
    }
 }
 
@@ -297,7 +298,7 @@ int main(void)
       iSuccessful = lexLine(acLine, oTokens);
       if (iSuccessful)
       {
-          printf("Tokens:  ");
+          //printf("Tokens:  ");
           DynArray_map(oTokens, printToken, NULL);
           printf("\n");
       }

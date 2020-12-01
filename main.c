@@ -6,8 +6,6 @@
 
 void main()
 {
-    char *st="";
-    char *ss={"\0"};
-    int a=strcmp(st,ss);
-    printf("%d\n",a);
+    char *st={'"',};
+    printf("%s",st);
 }

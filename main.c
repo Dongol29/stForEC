@@ -6,7 +6,8 @@
 
 void main()
 {
-    char buffer[4]={'4','4','4','a'};
-    int n=atoi(buffer);
-    printf("%d\n",n);
+    char *st="";
+    char *ss={"\0"};
+    int a=strcmp(st,ss);
+    printf("%d\n",a);
 }

@@ -270,7 +270,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
          default:
             assert(FALSE);
       }
-      printf("step:%s\n",acValue);
+      //printf("step:%s\n",acValue);
    }
 }
 

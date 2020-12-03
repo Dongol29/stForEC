@@ -149,7 +149,7 @@ int DynArray_add(DynArray_T oDynArray, const void *pvElement)
 {
 	assert(oDynArray != NULL);
 	assert(DynArray_isValid(oDynArray));
-	
+
 	if (oDynArray->iLength == oDynArray->iPhysLength)
 		if (!DynArray_grow(oDynArray))
 			return 0;

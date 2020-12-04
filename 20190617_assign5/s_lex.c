@@ -33,20 +33,6 @@ struct Token
    /* The string which is the token's value. */
 };
 
-struct DynArray
-{
-	/* The number of elements in the DynArray from the client's
-	   point of view. */
-	int iLength;
-	
-	/* The number of elements in the array that underlies the
-	   DynArray. */
-	int iPhysLength;
-	
-	/* The array that underlies the DynArray. */
-	const void **ppvArray;
-};
-
 /*--------------------------------------------------------------------*/
 
 static void freeToken(void *pvItem, void *pvExtra)
@@ -288,80 +274,6 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
    }
 }
 
-static int synLine(DynArray_T oTokens)
-
-/* lexline 이랑 비슷한 comment */
-{
-    enum SynState {STATE_START, STATE_WORD, STATE_PIPE};
-
-    enum SynState eState = STATE_START;
-
-    assert(oTokens != NULL);
-
-    struct Token *Token;
-    
-    enum TokenType type;
-
-    int i=0;
-    for (;;)
-    {
-        Token=(struct Token *)DynArray_get(oTokens,i);
-        type=Token->eType;
-
-        switch(eState)
-        {
-            case STATE_START:
-                if(type==TOKEN_WORD)
-                {
-                    eState=STATE_WORD;
-                }
-                else if(type==TOKEN_PIPE)
-                //error
-                {
-                    fprintf(stderr,"./ish: Missing command name\n");
-                    return FALSE;
-                }
-                else  //이 때 더이상 pstoken없는게 맞나?
-                {
-                    return TRUE;
-                }
-                break;
-            case STATE_WORD:
-                if(type==TOKEN_WORD)
-                {
-                    eState=STATE_WORD;
-                }
-                else if(type==TOKEN_PIPE)
-                {
-                    eState=STATE_PIPE;
-                }
-                else //이 때 더이상 pstoken없는게 맞나?
-                {
-                    return TRUE;
-                }
-                break;
-            case STATE_PIPE:
-                if(type=TOKEN_WORD) //count++해야하나?
-                {
-                    eState=STATE_WORD;
-                }
-                else 
-                {
-                    fprintf(stderr,"./ish: Pipe or redirection destination not specified\n");
-                    return FALSE;
-                }
-                break;
-            default:
-                assert(FALSE);
-        }  
-        i++;
-    }
-}
-
-
-
-
-
 /*--------------------------------------------------------------------*/
 
 int main(void)
@@ -390,11 +302,6 @@ int main(void)
           //printf("Tokens:  ");
           DynArray_map(oTokens, printToken, NULL);
           printf("\n");
-
-          if(synLine(oTokens))
-          {
-              printf("Valid\n");
-          }
       }
       printf("------------------------------------\n");
 

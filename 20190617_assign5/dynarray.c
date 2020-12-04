@@ -94,7 +94,8 @@ void *DynArray_get(DynArray_T oDynArray, int iIndex)
 {
 	assert(oDynArray != NULL);
 	assert(iIndex >= 0);
-	assert(iIndex < oDynArray->iLength);
+	//assert(iIndex < oDynArray->iLength);
+	if(iIndex >= oDynArray->iLength) return NULL;
 	assert(DynArray_isValid(oDynArray));
 	
 	return (void*)(oDynArray->ppvArray)[iIndex];

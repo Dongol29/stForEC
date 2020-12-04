@@ -18,7 +18,7 @@ enum {MAX_LINE_SIZE = 1024};
 
 enum {FALSE, TRUE};
 
-enum TokenType {TOKEN_WORD, TOKEN_PIPE};
+enum TokenType {TOKEN_WORD, TOKEN_PIPE, END};
 
 /*--------------------------------------------------------------------*/
 
@@ -305,8 +305,10 @@ static int synLine(DynArray_T oTokens)
     int i=0;
     for (;;)
     {
+   
         Token=(struct Token *)DynArray_get(oTokens,i);
-        type=Token->eType;
+        if(NULL==Token) type=END;
+        else type=Token->eType;
 
         switch(eState)
         {

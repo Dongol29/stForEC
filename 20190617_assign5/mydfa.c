@@ -326,6 +326,7 @@ static int synLine(DynArray_T oTokens)
                     return TRUE;
                 }
                 break;
+
             case STATE_WORD:
                 if(type==TOKEN_WORD)
                 {
@@ -340,8 +341,9 @@ static int synLine(DynArray_T oTokens)
                     return TRUE;
                 }
                 break;
+
             case STATE_PIPE:
-                if(type=TOKEN_WORD) //count++해야하나?
+                if(type==TOKEN_WORD) //count++해야하나?
                 {
                     eState=STATE_WORD;
                 }
@@ -351,6 +353,7 @@ static int synLine(DynArray_T oTokens)
                     return FALSE;
                 }
                 break;
+
             default:
                 assert(FALSE);
         }  

@@ -234,7 +234,7 @@ void DynArray_toArray(DynArray_T oDynArray, void **ppvArray)
    oDynArray, call (*pfApply)(pvElement, pvExtra). */
 void DynArray_map(DynArray_T oDynArray,
 				  void (*pfApply)(void *pvElement, void *pvExtra),
-				  int pvExtra)
+				  const void *pvExtra)
 {
 	int i;
 	
@@ -243,7 +243,7 @@ void DynArray_map(DynArray_T oDynArray,
 	assert(DynArray_isValid(oDynArray));
 	
 	for (i = 0; i < oDynArray->iLength; i++)
-		(*pfApply)((void*)oDynArray->ppvArray[i], (int)pvExtra);
+		(*pfApply)((void*)oDynArray->ppvArray[i], (void*)pvExtra);
 }
 /*--------------------------------------------------------------------*/
 /* Swap ppvArray[iOne] and ppvArray[iTwo]. */

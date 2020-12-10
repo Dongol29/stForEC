@@ -49,7 +49,7 @@ struct DynArray
 
 /*--------------------------------------------------------------------*/
 
-static void freeToken(void *pvItem, int pvExtra)
+static void freeToken(void *pvItem, void *pvExtra)
 
 /* Free token pvItem.  pvExtra is unused. */
 
@@ -61,7 +61,7 @@ static void freeToken(void *pvItem, int pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-static void printToken(void *pvItem, int pvExtra)
+static void printToken(void *pvItem, void *pvExtra)
 
 /* Print token pvItem to stdout iff it is a word.  pvExtra is
    unused. */

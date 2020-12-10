@@ -376,7 +376,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
       while(1){
          Token=(struct Token *)DynArray_get(oTokens,j++);
          if(Token->eType==TOKEN_PIPE) break;
-         
+
          cmds[i][k]=Token->pcValue;
          k++;
       }
@@ -403,7 +403,7 @@ int main(void)
    int iSuccessful;
    int num_pipe;
 
-   char *** cmds;
+   //char ***cmds;
 
    printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
@@ -433,7 +433,7 @@ int main(void)
       // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
       //char **argv생성--> 
       {
-         cmds=make_Cmd(oTokens,num_pipe);
+         make_Cmd(oTokens,num_pipe);
       }
       
       printf("------------------------------------\n");

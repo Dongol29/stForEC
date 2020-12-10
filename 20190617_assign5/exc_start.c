@@ -18,7 +18,7 @@ enum {MAX_LINE_SIZE = 1024};
 
 enum {FALSE, TRUE};
 
-enum TokenType {TOKEN_WORD, TOKEN_PIPE};
+enum TokenType {TOKEN_WORD, TOKEN_PIPE, END};
 
 /*--------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ struct DynArray
 
 /*--------------------------------------------------------------------*/
 
-static void freeToken(void *pvItem, void *pvExtra)
+static void freeToken(void *pvItem, int pvExtra)
 
 /* Free token pvItem.  pvExtra is unused. */
 
@@ -61,7 +61,7 @@ static void freeToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
-static void printToken(void *pvItem, void *pvExtra)
+static void printToken(void *pvItem, int pvExtra)
 
 /* Print token pvItem to stdout iff it is a word.  pvExtra is
    unused. */
@@ -302,11 +302,13 @@ static int synLine(DynArray_T oTokens)
     
     enum TokenType type;
 
-    int i=0;
+    int i=0, count=0; //count: pipe의 개수 셈;개수+1만큼 fork?
     for (;;)
     {
+   
         Token=(struct Token *)DynArray_get(oTokens,i);
-        type=Token->eType;
+        if(NULL==Token) type=END;
+        else type=Token->eType;
 
         switch(eState)
         {
@@ -323,9 +325,10 @@ static int synLine(DynArray_T oTokens)
                 }
                 else  //이 때 더이상 pstoken없는게 맞나?
                 {
-                    return TRUE;
+                    return count;
                 }
                 break;
+
             case STATE_WORD:
                 if(type==TOKEN_WORD)
                 {
@@ -333,15 +336,17 @@ static int synLine(DynArray_T oTokens)
                 }
                 else if(type==TOKEN_PIPE)
                 {
+                    count++;
                     eState=STATE_PIPE;
                 }
                 else //이 때 더이상 pstoken없는게 맞나?
                 {
-                    return TRUE;
+                    return count;
                 }
                 break;
+
             case STATE_PIPE:
-                if(type=TOKEN_WORD) //count++해야하나?
+                if(type==TOKEN_WORD) //count++해야하나?
                 {
                     eState=STATE_WORD;
                 }
@@ -351,6 +356,7 @@ static int synLine(DynArray_T oTokens)
                     return FALSE;
                 }
                 break;
+
             default:
                 assert(FALSE);
         }  
@@ -358,7 +364,28 @@ static int synLine(DynArray_T oTokens)
     }
 }
 
+char *** make_Cmd(DynArray_T oTokens,int num_pipe)
+{
+   char ***cmds;
+   int i,k,j=0,m;
+   struct Token *Token;
 
+   for(i=0;i<=num_pipe;i++){  //cmd 수는 num_pipe+1개
+      k=0;
+      while(1){
+         Token=(struct Token *)DynArray_get(oTokens,j++);
+         if(Token->eType==TOKEN_PIPE) break;
+         
+         cmds[i][k]=Token->pcValue;
+         k++;
+      }
+
+   }
+   for(m=0;m<=i;m++){
+      printf("%s\n",cmds[m][0]);
+   }
+   return cmds;
+}
 
 
 
@@ -373,6 +400,9 @@ int main(void)
    char acLine[MAX_LINE_SIZE];
    DynArray_T oTokens;
    int iSuccessful;
+   int num_pipe;
+
+   char *** cmds;
 
    printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
@@ -390,12 +420,21 @@ int main(void)
           //printf("Tokens:  ");
           DynArray_map(oTokens, printToken, NULL);
           printf("\n");
-
+         /*
           if(synLine(oTokens))
           {
               printf("Valid\n");
           }
+         */
       }
+      num_pipe = synLine(oTokens);
+      if(num_pipe)
+      // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
+      //char **argv생성--> 
+      {
+         cmds=make_Cmd(oTokens,num_pipe);
+      }
+      
       printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);

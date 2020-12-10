@@ -52,7 +52,7 @@ void DynArray_toArray(DynArray_T oDynArray, void **ppvArray);
    oDynArray, call (*pfApply)(pvElement, pvExtra). */
 void DynArray_map(DynArray_T oDynArray,
 				  void (*pfApply)(void *pvElement, void *pvExtra),
-				  const void *pvExtra);
+				  int pvExtra);
 
 /* Sort oDynArray in the order determined by *pfCompare.
    *pfCompare should return <0, 0, or >0 depending upon whether

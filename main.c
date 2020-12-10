@@ -4,9 +4,8 @@
 #include <assert.h>
 
 
-void main()
+char *** main()
 {
-    char s[10];
-    fgets(s,10,stdin);
-    printf("%c\n",s[7]);
+    char *** ar=NULL;
+    return (char ***)ar;
 }

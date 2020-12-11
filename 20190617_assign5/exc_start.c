@@ -385,7 +385,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
       while(1){
          Token=(struct Token *)DynArray_get(oTokens,j++);
          printf("2\n");
-         if(Token->eType==TOKEN_PIPE) break;
+         if(NULL==Token||Token->eType==TOKEN_PIPE) break;
          printf("3\n");
          cmds[i][k]=Token->pcValue;
          printf("4\n");

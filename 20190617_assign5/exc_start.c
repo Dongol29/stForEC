@@ -321,7 +321,7 @@ static int synLine(DynArray_T oTokens)
                 //error
                 {
                     fprintf(stderr,"./ish: Missing command name\n");
-                    return FALSE;
+                    return (-1);
                 }
                 else  //이 때 더이상 pstoken없는게 맞나?
                 {
@@ -353,7 +353,7 @@ static int synLine(DynArray_T oTokens)
                 else 
                 {
                     fprintf(stderr,"./ish: Pipe or redirection destination not specified\n");
-                    return FALSE;
+                    return (-1);
                 }
                 break;
 
@@ -437,7 +437,7 @@ int main(void)
          */
       }
       num_pipe = synLine(oTokens);
-      if(num_pipe)
+      if(num_pipe>=0) 
       // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
       //char **argv생성--> 
       {

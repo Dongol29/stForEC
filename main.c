@@ -4,8 +4,6 @@
 #include <assert.h>
 
 
-char *** main()
+void main()
 {
-    char *** ar=NULL;
-    return (char ***)ar;
-}
+    

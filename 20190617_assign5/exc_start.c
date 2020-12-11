@@ -367,11 +367,19 @@ static int synLine(DynArray_T oTokens)
 char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 {
    char ***cmds=(char ***)calloc(num_pipe+1,sizeof(char **));
+   if(cmds==NULL){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return NULL;
+      }
    int i,k,j=0,m;
    struct Token *Token;
 
    for(i=0;i<=num_pipe;i++){  //cmd 수는 num_pipe+1개
-      cmds[i]=(char **)malloc(1024*sizeof(char *)); //cmd하나에 존재하는 string수
+      cmds[i]=(char **)calloc(1024,sizeof(char *)); //cmd하나에 존재하는 토큰수
+      if(cmds[i]==NULL){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return NULL;
+      }
       k=0;
       while(1){
          Token=(struct Token *)DynArray_get(oTokens,j++);
@@ -382,7 +390,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
       }
 
    }
-   for(m=0;m<=i;m++){
+   for(m=0;m<=num_pipe;m++){
       printf("%s\n",cmds[m][0]);
    }
    return cmds;

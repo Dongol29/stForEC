@@ -391,9 +391,11 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 
    }
    printf("oh\n");
-   for(m=0;m<=num_pipe;m++){
+   /*  i=0,k=0으로 끝나면 여기서 segfault나옴
+    for(m=0;m<=num_pipe;m++){
       printf("%s\n",cmds[m][0]);
-   }
+    }
+   */
    return cmds;
 }
 

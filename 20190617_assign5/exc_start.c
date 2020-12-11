@@ -390,6 +390,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
       }
 
    }
+   printf("oh\n");
    for(m=0;m<=num_pipe;m++){
       printf("%s\n",cmds[m][0]);
    }

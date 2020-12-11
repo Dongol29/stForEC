@@ -372,7 +372,8 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
          fprintf(stderr,"Memory allocation error!!\n");
          return NULL;
       }
-   int i,k,j=0,m;
+   int i,k,j=0;
+   //int m;
    struct Token *Token;
 
    for(i=0;i<=num_pipe;i++){  //cmd 수는 num_pipe+1개

@@ -442,6 +442,7 @@ int exc1_Line(char ***cmds)
    else if(strcmp(name,"exit")==0){
 
    }
+   return 0;
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {

@@ -513,13 +513,13 @@ int exc2_Line(char ***cmds,int num_pipe)
       int pid, p[2],status;
       if (pipe(p) == -1) exit(1);
 
-      
+
 
       fflush(NULL);
       pid=fork();
       
       if(pid<0){
-         printf(stderr,"fork failed\n");
+         fprintf(stderr,"fork failed\n");
       }
       else if(pid==0){
          execvp(cmds[i][0],cmds[i]);

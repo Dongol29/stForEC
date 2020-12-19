@@ -11,8 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <direct.h>
-
+#include <unistd.h>
 /*--------------------------------------------------------------------*/
 
 enum {MAX_LINE_SIZE = 1024};

@@ -481,6 +481,19 @@ int exc1_Line(char ***cmds)
       }
       exit(0);
    }
+
+   /* Built-in command 아닌 경우 */
+   else{
+      int pid=fork(),status;
+      if(pid==0){
+         /* in child */
+         execvp(cmds[0][0],cmds[0]);
+         fprintf(stderr, "exec failed\n");
+         exit(EXIT_FAILURE);
+      }
+      /* in parent */
+      pid = wait(&status);
+   }
    return TRUE;
 }
 int exc2_Line(char ***cmds,int num_pipe)

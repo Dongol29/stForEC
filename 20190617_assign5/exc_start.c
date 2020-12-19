@@ -12,7 +12,7 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
-#include <wait.h>
+#include <sys/wait.h>
 /*--------------------------------------------------------------------*/
 
 enum {MAX_LINE_SIZE = 1024};
@@ -442,7 +442,7 @@ int exc1_Line(char ***cmds)
          return (-1);
       }
       else if(cmds[0][1]==NULL){
-         fprintf(stderr,"ish: unsetenv takes one parameter\n");
+         fprintf(stderr,"./ish: unsetenv takes one parameter\n");
          return (-1);
       }
       else{
@@ -468,7 +468,8 @@ int exc1_Line(char ***cmds)
       }
       else{
          if(chdir(cmds[0][1])<0){
-            fprintf(stderr,"./ish: cd failed\n");
+            /* cd failed */
+            fprintf(stderr,"./ish: No such file or directory\n");
             return (-1);
          }
          return TRUE;
@@ -485,11 +486,13 @@ int exc1_Line(char ***cmds)
 
    /* Built-in command 아닌 경우 */
    else{
+      fflush(NULL);
+
       int pid=fork(),status;
       if(pid==0){
          /* in child */
          execvp(cmds[0][0],cmds[0]);
-         fprintf(stderr, "exec failed\n");
+         fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
          exit(EXIT_FAILURE);
       }
       /* in parent */
@@ -499,6 +502,36 @@ int exc1_Line(char ***cmds)
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {
+   char *name=cmds[0][0];
+   if(!strcmp(name,"setenv")||!strcmp(name,"unsetenv")||!strcmp(name,"cd")||!strcmp(name,"exit"))
+   {
+      fprintf(stderr,"./ish: buit-in command redirection error\n");
+      return (-1);
+   }
+   int i;
+   for(i=0;i<num_pipe;i++){
+      int pid, p[2],status;
+      if (pipe(p) == -1) exit(1);
+
+      
+
+      fflush(NULL);
+      pid=fork();
+      
+      if(pid<0){
+         printf(stderr,"fork failed\n");
+      }
+      else if(pid==0){
+         execvp(cmds[i][0],cmds[i]);
+         fprintf(stderr, "exec failed\n");
+         exit(EXIT_FAILURE);
+      }
+      else{
+         pid = wait(&status);
+      }
+      /*redirect stdout to the stdin */
+
+   }
    return 0;
 }
 
@@ -531,11 +564,12 @@ int main(void)
       }
 
       iSuccessful = lexLine(acLine, oTokens);
+      
       if (iSuccessful)
       {
           //printf("Tokens:  ");
-          DynArray_map(oTokens, printToken, NULL);
-          printf("\n");
+          //DynArray_map(oTokens, printToken, NULL);
+          //printf("\n");
          /*
           if(synLine(oTokens))
           {

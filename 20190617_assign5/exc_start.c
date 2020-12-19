@@ -446,7 +446,7 @@ int exc1_Line(char ***cmds)
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {
-
+   return 0;
 }
 
 

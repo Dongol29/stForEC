@@ -410,7 +410,7 @@ int exc1_Line(char ***cmds)
 {
    char *name=cmds[0][0];
    int result;
-   if(name=="setenv"){
+   if(strcmp(name,"setenv")==0){
       if(cmds[0][1]==NULL){
          fprintf(stderr,"./ish: setenv takes one or two parameters\n");
          return (-1);
@@ -431,15 +431,15 @@ int exc1_Line(char ***cmds)
       }
    }
 
-   else if(name=="unsetenv"){
+   else if(strcmp(name,"unsetenv")==0){
 
    }
 
-   else if(name=="cd"){
+   else if(strcmp(name,"cd")==0){
 
    }
 
-   else if(name=="exit"){
+   else if(strcmp(name,"exit")==0){
 
    }
 }

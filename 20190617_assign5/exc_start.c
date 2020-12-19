@@ -366,7 +366,7 @@ static int synLine(DynArray_T oTokens)
 
 char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 {
-   printf("NUM PIPE: %d\n",num_pipe);
+   //printf("NUM PIPE: %d\n",num_pipe);
    char ***cmds=(char ***)calloc(num_pipe+1,sizeof(char **));
    if(cmds==NULL){
          fprintf(stderr,"Memory allocation error!!\n");
@@ -385,13 +385,18 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
       k=0;
       while(1){
          Token=(struct Token *)DynArray_get(oTokens,j++);
-         if(NULL==Token||Token->eType==TOKEN_PIPE) break;
+         if(NULL==Token||Token->eType==TOKEN_PIPE) {
+            if(k==0){
+               free(cmds[0]); free(cmds);
+               return NULL;
+            }
+            break;  
+         }
          cmds[i][k]=Token->pcValue;
          k++;
       }
 
    }
-   printf("oh\n");
    /*  i=0,k=0으로 끝나면 여기서 segfault나옴
     for(m=0;m<=num_pipe;m++){
       printf("%s\n",cmds[m][0]);
@@ -399,6 +404,50 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
    */
    return cmds;
 }
+
+int exc1_Line(char ***cmds)
+/* pipe 없는 경우 */
+{
+   char *name=cmds[0][0];
+   int result;
+   if(name=="setenv"){
+      if(cmds[0][1]==NULL){
+         fprintf(stderr,"./ish: setenv takes one or two parameters\n");
+         return (-1);
+      }
+      else if(cmds[0][2]==NULL){
+         result=setenv(cmds[0][1],"",1);
+         if(result==-1){
+            fprintf(stderr,"setenv failed\n");
+            return (-1);
+         }
+      }
+      else{
+         result=setenv(cmds[0][1],cmds[0][2],1);
+         if(result==-1){
+            fprintf(stderr,"setenv failed\n");
+            return (-1);
+         }
+      }
+   }
+
+   else if(name=="unsetenv"){
+
+   }
+
+   else if(name=="cd"){
+
+   }
+
+   else if(name=="exit"){
+
+   }
+}
+int exc2_Line(char ***cmds,int num_pipe)
+{
+
+}
+
 
 
 
@@ -415,7 +464,7 @@ int main(void)
    int iSuccessful;
    int num_pipe;
 
-   //char ***cmds;
+   char ***cmds;
 
    printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
@@ -445,7 +494,9 @@ int main(void)
       // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
       //char **argv생성--> 
       {
-         make_Cmd(oTokens,num_pipe);
+         cmds=make_Cmd(oTokens,num_pipe);
+         if(num_pipe==0) exc1_Line(cmds);
+         else exc2_Line(cmds,num_pipe);
       }
       
       printf("------------------------------------\n");

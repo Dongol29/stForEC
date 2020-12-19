@@ -6,4 +6,7 @@
 
 void main()
 {
+    char *a="";
+    printf("%d\n",NULL==a);
+}
     

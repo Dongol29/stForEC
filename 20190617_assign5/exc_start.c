@@ -411,38 +411,77 @@ int exc1_Line(char ***cmds)
    char *name=cmds[0][0];
    int result;
    if(strcmp(name,"setenv")==0){
-      if(cmds[0][1]==NULL){
+      if(cmds[0][3]!=NULL){
+         fprintf(stderr,"./ish: setenv takes one or two parameters\n");
+         return (-1);
+      }
+      else if(cmds[0][1]==NULL){
          fprintf(stderr,"./ish: setenv takes one or two parameters\n");
          return (-1);
       }
       else if(cmds[0][2]==NULL){
          result=setenv(cmds[0][1],"",1);
          if(result==-1){
-            fprintf(stderr,"setenv failed\n");
+            fprintf(stderr,"./ish: setenv failed\n");
             return (-1);
          }
       }
       else{
-         result=setenv(cmds[0][1],cmds[0][2],1);
-         if(result==-1){
-            fprintf(stderr,"setenv failed\n");
+         if(setenv(cmds[0][1],cmds[0][2],1)==-1){
+            fprintf(stderr,"./ish: setenv failed\n");
             return (-1);
          }
+         return TRUE;
       }
    }
 
    else if(strcmp(name,"unsetenv")==0){
-
+      if(cmds[0][2]!=NULL){
+         fprintf(stderr,"./ish: unsetenv takes one parameter\n");
+         return (-1);
+      }
+      else if(cmds[0][1]==NULL){
+         fprintf(stderr,"ish: unsetenv takes one parameter\n");
+         return (-1);
+      }
+      else{
+         if(unsetenv(cmds[0][1])==-1){
+            fprintf(stderr,"./ish: unsetenv failed\n");
+            return (-1);
+         }
+         return TRUE;
+      }
    }
 
    else if(strcmp(name,"cd")==0){
-
+      if(cmds[0][2]!=NULL){
+         fprintf(stderr,"./ish: cd takes one parameter\n");
+         return (-1);
+      }
+      else if(cmds[0][1]==NULL){
+         if(chdir(getenv("HOME"))<0){
+            fprintf(stderr,"./ish: cd failed\n");
+            return (-1);
+         }
+         return TRUE;
+      }
+      else{
+         if(chdir(cmds[0][1])<0){
+            fprintf(stderr,"./ish: cd failed\n");
+            return (-1);
+         }
+         return TRUE;
+      }
    }
 
    else if(strcmp(name,"exit")==0){
-
+      if(cmds[0][1]!=NULL){
+         fprintf(stderr,"./ish: exit does not take any parameters\n");
+         return (-1);
+      }
+      exit(0);
    }
-   return 0;
+   return TRUE;
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {

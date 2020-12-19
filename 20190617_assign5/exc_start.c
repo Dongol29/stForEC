@@ -568,8 +568,8 @@ int main(void)
       if (iSuccessful)
       {
           //printf("Tokens:  ");
-          //DynArray_map(oTokens, printToken, NULL);
-          //printf("\n");
+          DynArray_map(oTokens, printToken, NULL);
+          printf("\n");
          /*
           if(synLine(oTokens))
           {

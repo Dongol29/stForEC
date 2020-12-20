@@ -518,14 +518,14 @@ int exc2_Line(char ***cmds,int num_pipe)
    int i;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
-      fprintf(stderr,"Memory allocation error!!\n");
+      fprintf(stderr,"./ish: Memory allocation error!!\n");
       return (-1);
    }
 
    for(i=0;i<num_pipe+1;i++){
       p[i]=(int *)calloc(2,sizeof(int));
       if(NULL==p[i]){
-         fprintf(stderr,"Memory allocation error!!\n");
+         fprintf(stderr,"./ish: Memory allocation error!!\n");
          return (-1);
       }
    }
@@ -534,13 +534,13 @@ int exc2_Line(char ***cmds,int num_pipe)
    for(i=0;i<num_pipe+1;i++){
       int pid,status;
       if(i<num_pipe){
-       if (pipe(p[i]) == -1) exit(1);
+         if (pipe(p[i]) == -1) exit(1);
       }
       fflush(NULL);
       pid=fork();
       
       if(pid<0){ 
-         fprintf(stderr,"fork failed\n");
+         fprintf(stderr,"./ish: fork failed\n");
       }
       else if(pid==0){ /* child process */
          if(i>0){
@@ -551,7 +551,10 @@ int exc2_Line(char ***cmds,int num_pipe)
          }
          printf("3\n");
          if(i<num_pipe){
-            dup2(p[i][1],1);
+            if(dup2(p[i][1],1)==-1){
+               fprintf(stderr,"./ish: dup2 failed\n");
+               return (-1);
+            }
          }
          printf("4\n");
          execvp(cmds[i][0],cmds[i]);

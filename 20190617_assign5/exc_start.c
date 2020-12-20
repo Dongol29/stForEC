@@ -622,10 +622,11 @@ int main(void)
       //char **argv생성--> 
       {
          cmds=make_Cmd(oTokens,num_pipe);
+         printf("4\n");
          if(num_pipe==0) exc1_Line(cmds);
          else exc2_Line(cmds,num_pipe);
       }
-      printf("4\n");
+      printf("5\n");
       //printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);

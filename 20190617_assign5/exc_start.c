@@ -64,7 +64,7 @@ static void freeToken(void *pvItem, void *pvExtra)
 
 /*
 static void printToken(void *pvItem, void *pvExtra)
-
+*/
 /* Print token pvItem to stdout iff it is a word.  pvExtra is
    unused. */
 /*

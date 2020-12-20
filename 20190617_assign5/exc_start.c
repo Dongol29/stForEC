@@ -411,6 +411,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 int exc1_Line(char ***cmds)
 /* pipe 없는 경우 */
 {
+   printf("1\n");
    char *name=cmds[0][0];
    int result;
    if(strcmp(name,"setenv")==0){
@@ -504,6 +505,7 @@ int exc1_Line(char ***cmds)
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {
+   printf("2\n");
    char *name=cmds[0][0];
    if(!strcmp(name,"setenv")||!strcmp(name,"unsetenv")||!strcmp(name,"cd")||!strcmp(name,"exit"))
    {

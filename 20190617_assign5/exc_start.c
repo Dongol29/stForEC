@@ -531,6 +531,7 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    for(i=0;i<num_pipe+1;i++){
+      printf("%d\n",num_pipe);
       int pid,status;
       if(i<num_pipe){
          if (pipe(p[i]) == -1) exit(1);
@@ -556,7 +557,6 @@ int exc2_Line(char ***cmds,int num_pipe)
             */
             //close(p[i][1]);
          }
-      
          else{
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);

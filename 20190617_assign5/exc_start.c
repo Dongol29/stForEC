@@ -543,7 +543,7 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
       else if(pid==0){ /* child process */
          if(i>0){
-            close(p[i-1][1]);
+            //close(p[i-1][1]);
             dup2(p[i-1][0],0);
             close(p[i-1][0]); //read from stdin
          }
@@ -554,6 +554,7 @@ int exc2_Line(char ***cmds,int num_pipe)
                fprintf(stderr,"./ish: dup2 failed\n");
                return (-1);
             }
+            close(p[i][1]);
          }
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");

@@ -529,6 +529,7 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
    }
 
+   printf("1\n");
    for(i=0;i<num_pipe+1;i++){
       int pid,status;
       if (pipe(p[i]) == -1) exit(1);
@@ -541,6 +542,7 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
       else if(pid==0){ /* child process */
          if(i>0){
+            printf("2\n");
             close(p[i-1][1]);
             dup2(p[i-1][0],0);
             close(p[i-1][0]); //read from stdin
@@ -555,14 +557,9 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
 
       else{ /* parent process */
-         if(i>1){
-            close(p[i-1][1]);
-            close(p[i-1][0]);
-         }
+         printf("3\n"); 
          pid = wait(&status);
       }
-      /*redirect stdout to the stdin */
-
    }
    for(i=0;i<num_pipe+1;i++) free(p[i]);
    free(p);

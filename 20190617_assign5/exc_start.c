@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 /*--------------------------------------------------------------------*/
 
 enum {MAX_LINE_SIZE = 1024};
@@ -581,10 +582,59 @@ int main(void)
    char ***cmds;
 
    //printf("------------------------------------\n");
+
+   /* interpret commands from the ./ishrc file */
+   char *pathname=getenv("HOME");
+   strcat(pathname,"/.ishrc");
+   
+   int fd=open(pathname,O_RDONLY);
+
    while (1)
    {
-      printf("%%");
+      printf("%% ");
+      if(fgets(acLine, MAX_LINE_SIZE, fd) == NULL) break;
+      oTokens = DynArray_new(0);
+      if (oTokens == NULL)
+      {
+         fprintf(stderr, "Cannot allocate memory\n");
+         exit(EXIT_FAILURE);
+      }
+
+      iSuccessful = lexLine(acLine, oTokens);
+      
+      if (iSuccessful)
+      {
+          //printf("Tokens:  ");
+          //DynArray_map(oTokens, printToken, NULL);
+          //printf("\n");
+         /*
+          if(synLine(oTokens))
+          {
+              printf("Valid\n");
+          }
+         */
+      }
+      num_pipe = synLine(oTokens);
+      if(num_pipe>=0) 
+      // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
+      //char **argv생성--> 
+      {
+         cmds=make_Cmd(oTokens,num_pipe);
+         if(num_pipe==0) exc1_Line(cmds);
+         else exc2_Line(cmds,num_pipe);
+      }
+      
+      //printf("------------------------------------\n");
+
+      DynArray_map(oTokens, freeToken, NULL);
+      DynArray_free(oTokens);
+   }
+
+   while (1)
+   {
+      printf("%% ");
       if(fgets(acLine, MAX_LINE_SIZE, stdin) == NULL) break;
+
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
       {

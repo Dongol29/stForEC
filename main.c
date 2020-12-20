@@ -6,8 +6,8 @@
 
 void main()
 {
-    int a[2];
-    pipe(a);
-    pipe(a);
+   char *pathname=getenv("HOME");
+   strcat(pathname,"/.ishrc");
+   printf("%s\n",pathname);
 }
     

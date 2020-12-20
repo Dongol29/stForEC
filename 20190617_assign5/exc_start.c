@@ -549,7 +549,7 @@ int exc2_Line(char ***cmds,int num_pipe)
             close(p[i-1][0]); 
             close(p[i-1][1]);
          }
-         if(i!=num_pipe){
+         if(i<num_pipe){
             dup2(p[i][1],1);
             /*
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
@@ -558,13 +558,13 @@ int exc2_Line(char ***cmds,int num_pipe)
             */
             //close(p[i][1]);
          }
-         /*
-         else{
+         
+         else if(i>num_pipe-1){
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
          }
-         */
+         
          //dup2(p[i][1],1);
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");
@@ -577,7 +577,7 @@ int exc2_Line(char ***cmds,int num_pipe)
             close(p[i-1][0]);
          }
          
-         if(i>=num_pipe-1){
+         if(i==num_pipe){
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);

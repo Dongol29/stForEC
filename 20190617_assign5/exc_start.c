@@ -530,7 +530,6 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
    }
 
-   printf("1\n");
    for(i=0;i<num_pipe+1;i++){
       int pid,status;
       if(i<num_pipe){
@@ -544,19 +543,18 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
       else if(pid==0){ /* child process */
          if(i>0){
-            printf("2\n");
             close(p[i-1][1]);
             dup2(p[i-1][0],0);
             close(p[i-1][0]); //read from stdin
          }
          printf("3\n");
          if(i<num_pipe){
+            printf("4\n");
             if(dup2(p[i][1],1)==-1){
                fprintf(stderr,"./ish: dup2 failed\n");
                return (-1);
             }
          }
-         printf("4\n");
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");
          exit(EXIT_FAILURE);

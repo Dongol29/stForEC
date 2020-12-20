@@ -489,6 +489,7 @@ int exc1_Line(char ***cmds)
 
    /* Built-in command 아닌 경우 */
    else{
+      printf("2\n");
       fflush(NULL);
 
       int pid=fork(),status;
@@ -505,7 +506,6 @@ int exc1_Line(char ***cmds)
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {
-   printf("2\n");
    char *name=cmds[0][0];
    if(!strcmp(name,"setenv")||!strcmp(name,"unsetenv")||!strcmp(name,"cd")||!strcmp(name,"exit"))
    {

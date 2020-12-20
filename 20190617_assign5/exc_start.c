@@ -592,6 +592,7 @@ int main(void)
    while (1)
    {
       printf("%% ");
+      printf("1\n");
       if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
@@ -599,7 +600,7 @@ int main(void)
          fprintf(stderr, "Cannot allocate memory\n");
          exit(EXIT_FAILURE);
       }
-
+      printf("2\n");
       iSuccessful = lexLine(acLine, oTokens);
       
       if (iSuccessful)
@@ -614,6 +615,7 @@ int main(void)
           }
          */
       }
+      printf("3\n");
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
       // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
@@ -623,7 +625,7 @@ int main(void)
          if(num_pipe==0) exc1_Line(cmds);
          else exc2_Line(cmds,num_pipe);
       }
-      
+      printf("4\n");
       //printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);

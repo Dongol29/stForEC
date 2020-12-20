@@ -515,7 +515,8 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    /* not built-in command */
-   int i,out;
+   int i;
+   FILE *out;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
       fprintf(stderr,"./ish: Memory allocation error!!\n");
@@ -551,10 +552,9 @@ int exc2_Line(char ***cmds,int num_pipe)
             dup2(p[i][1],1);
             //dup2 실행되는건가 보려고
             
-            out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
-            dup2(out,1);
-            close(out);
-            fprintf(1,"hola\n");
+            out=fopen("/dev/tty","r");
+            
+            fprintf(out,"hola\n");
             
             //
             close(p[i][1]);

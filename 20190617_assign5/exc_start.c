@@ -551,14 +551,14 @@ int exc2_Line(char ***cmds,int num_pipe)
          if(i<num_pipe){
             dup2(p[i][1],1);
          }
-
+         printf("4\n");
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");
          exit(EXIT_FAILURE);
       }
 
       else{ /* parent process */
-         printf("4\n"); 
+         printf("5\n"); 
          pid = wait(&status);
       }
    }

@@ -581,9 +581,10 @@ int main(void)
    char ***cmds;
 
    //printf("------------------------------------\n");
-   while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
+   while (1)
    {
       printf("%%");
+      if(fgets(acLine, MAX_LINE_SIZE, stdin) == NULL) break;
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
       {

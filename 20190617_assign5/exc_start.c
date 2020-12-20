@@ -587,12 +587,12 @@ int main(void)
    char *pathname=getenv("HOME");
    strcat(pathname,"/.ishrc");
    
-   int fd=open(pathname,O_RDONLY);
+   FILE *fp=fopen(pathname,"r");
 
    while (1)
    {
       printf("%% ");
-      if(fgets(acLine, MAX_LINE_SIZE, fd) == NULL) break;
+      if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
       {

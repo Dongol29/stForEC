@@ -548,7 +548,9 @@ int exc2_Line(char ***cmds,int num_pipe)
             close(p[i-1][0]); 
          }
          if(i!=num_pipe){
+            printf("hola\n");
             dup2(p[i][1],1);
+            printf("haha\n");
             close(p[i][1]);
          }
          execvp(cmds[i][0],cmds[i]);

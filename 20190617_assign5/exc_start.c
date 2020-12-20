@@ -548,7 +548,7 @@ int exc2_Line(char ***cmds,int num_pipe)
             close(p[i-1][0]); //read from stdin
          }
          printf("3\n");
-         if(i<num_pipe){
+         if(i!=num_pipe){
             printf("4\n");
             if(dup2(p[i][1],1)==-1){
                fprintf(stderr,"./ish: dup2 failed\n");

@@ -6,7 +6,6 @@
 /*--------------------------------------------------------------------*/
 
 #include "dynarray.h"
-#include "dynarray.c"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -583,6 +583,7 @@ int main(void)
    //printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
    {
+      printf("%");
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
       {

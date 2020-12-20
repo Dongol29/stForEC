@@ -11,7 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
+#include <unistd.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 /*--------------------------------------------------------------------*/
 
 enum {MAX_LINE_SIZE = 1024};
@@ -363,7 +365,143 @@ static int synLine(DynArray_T oTokens)
     }
 }
 
+char *** make_Cmd(DynArray_T oTokens,int num_pipe)
+{
+   //printf("NUM PIPE: %d\n",num_pipe);
+   char ***cmds=(char ***)calloc(num_pipe+1,sizeof(char **));
+   if(cmds==NULL){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return NULL;
+      }
+   int i,k,j=0;
+   //int m;
+   struct Token *Token;
 
+   for(i=0;i<=num_pipe;i++){  //cmd 수는 num_pipe+1개
+      cmds[i]=(char **)calloc(1024,sizeof(char *)); //cmd하나에 존재하는 토큰수
+      if(cmds[i]==NULL){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return NULL;
+      }
+      k=0;
+      while(1){
+         Token=(struct Token *)DynArray_get(oTokens,j++);
+         if(NULL==Token||Token->eType==TOKEN_PIPE) {
+            if(k==0){
+               free(cmds[0]); free(cmds);
+               return NULL;
+            }
+            break;  
+         }
+         cmds[i][k]=Token->pcValue;
+         k++;
+      }
+
+   }
+   /*  i=0,k=0으로 끝나면 여기서 segfault나옴
+    for(m=0;m<=num_pipe;m++){
+      printf("%s\n",cmds[m][0]);
+    }
+   */
+   return cmds;
+}
+
+int exc1_Line(char ***cmds)
+/* pipe 없는 경우 */
+{
+   if(NULL==cmds) return TRUE;
+
+   char *name=cmds[0][0];
+   int result;
+   if(strcmp(name,"setenv")==0){
+      if(cmds[0][3]!=NULL){
+         fprintf(stderr,"./ish: setenv takes one or two parameters\n");
+         return (-1);
+      }
+      else if(cmds[0][1]==NULL){
+         fprintf(stderr,"./ish: setenv takes one or two parameters\n");
+         return (-1);
+      }
+      else if(cmds[0][2]==NULL){
+         result=setenv(cmds[0][1],"",1);
+         if(result==-1){
+            fprintf(stderr,"./ish: setenv failed\n");
+            return (-1);
+         }
+      }
+      else{
+         if(setenv(cmds[0][1],cmds[0][2],1)==-1){
+            fprintf(stderr,"./ish: setenv failed\n");
+            return (-1);
+         }
+         return TRUE;
+      }
+   }
+
+   else if(strcmp(name,"unsetenv")==0){
+      if(cmds[0][2]!=NULL){
+         fprintf(stderr,"./ish: unsetenv takes one parameter\n");
+         return (-1);
+      }
+      else if(cmds[0][1]==NULL){
+         fprintf(stderr,"./ish: unsetenv takes one parameter\n");
+         return (-1);
+      }
+      else{
+         if(unsetenv(cmds[0][1])==-1){
+            fprintf(stderr,"./ish: unsetenv failed\n");
+            return (-1);
+         }
+         return TRUE;
+      }
+   }
+
+   else if(strcmp(name,"cd")==0){
+      if(cmds[0][2]!=NULL){
+         fprintf(stderr,"./ish: cd takes one parameter\n");
+         return (-1);
+      }
+      else if(cmds[0][1]==NULL){
+         if(chdir(getenv("HOME"))<0){
+            fprintf(stderr,"./ish: cd failed\n");
+            return (-1);
+         }
+         return TRUE;
+      }
+      else{
+         if(chdir(cmds[0][1])<0){
+            /* cd failed */
+            fprintf(stderr,"./ish: No such file or directory\n");
+            return (-1);
+         }
+         return TRUE;
+      }
+   }
+
+   else if(strcmp(name,"exit")==0){
+      if(cmds[0][1]!=NULL){
+         fprintf(stderr,"./ish: exit does not take any parameters\n");
+         return (-1);
+      }
+      exit(0);
+   }
+
+   /* Built-in command 아닌 경우 */
+   else{
+      fflush(NULL);
+
+      int pid=fork(),status;
+      if(pid==0){
+         /* in child */
+         execvp(cmds[0][0],cmds[0]);
+         fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
+         exit(EXIT_FAILURE);
+      }
+      /* in parent */
+      pid = wait(&status);
+   }
+   return TRUE;
+}
 
 
 
@@ -378,10 +516,15 @@ int main(void)
    char acLine[MAX_LINE_SIZE];
    DynArray_T oTokens;
    int iSuccessful;
+   int num_pipe;
 
-   printf("------------------------------------\n");
-   while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
+   char ***cmds;
+
+   while (1)
    {
+      printf("%% ");
+      if(fgets(acLine, MAX_LINE_SIZE, stdin) == NULL) break;
+
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
       {
@@ -390,18 +533,30 @@ int main(void)
       }
 
       iSuccessful = lexLine(acLine, oTokens);
+      
       if (iSuccessful)
       {
           //printf("Tokens:  ");
-          DynArray_map(oTokens, printToken, NULL);
-          printf("\n");
-
+          //DynArray_map(oTokens, printToken, NULL);
+          //printf("\n");
+         /*
           if(synLine(oTokens))
           {
               printf("Valid\n");
           }
+         */
       }
-      printf("------------------------------------\n");
+      num_pipe = synLine(oTokens);
+      if(num_pipe>=0) 
+      // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
+      //char **argv생성--> 
+      {
+         cmds=make_Cmd(oTokens,num_pipe);
+         if(num_pipe==0) exc1_Line(cmds);
+         else exc2_Line(cmds,num_pipe);
+      }
+      
+      //printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);
       DynArray_free(oTokens);

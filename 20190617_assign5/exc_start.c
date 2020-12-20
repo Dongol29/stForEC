@@ -550,12 +550,14 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
 
       else{ /* parent process */
-         
+
          pid = wait(&status);
       }
       /*redirect stdout to the stdin */
 
    }
+   for(i=0;i<num_pipe+1;i++) free(p[i]);
+   free(p);
    return 0;
 }
 

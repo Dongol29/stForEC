@@ -411,9 +411,9 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 int exc1_Line(char ***cmds)
 /* pipe 없는 경우 */
 {
-   printf("1\n");
+   if(NULL==cmds) return TRUE;
+
    char *name=cmds[0][0];
-   printf("2\n");
    int result;
    if(strcmp(name,"setenv")==0){
       if(cmds[0][3]!=NULL){

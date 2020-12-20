@@ -554,7 +554,7 @@ int exc2_Line(char ***cmds,int num_pipe)
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
-            printf("hola\n");
+            fprintf(stdout,"hola\n");
             
             //
             close(p[i][1]);

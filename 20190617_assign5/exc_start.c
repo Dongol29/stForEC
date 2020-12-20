@@ -526,7 +526,7 @@ int exc2_Line(char ***cmds,int num_pipe)
 
    for(i=0;i<num_pipe+1;i++){
       int pid,status;
-      if (pipe(p) == -1) exit(1);
+      if (pipe(p[i]) == -1) exit(1);
 
       fflush(NULL);
       pid=fork();

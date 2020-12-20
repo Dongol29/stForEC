@@ -515,7 +515,7 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    /* not built-in command */
-   int i;
+   int i,out;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
       fprintf(stderr,"./ish: Memory allocation error!!\n");
@@ -548,10 +548,13 @@ int exc2_Line(char ***cmds,int num_pipe)
             close(p[i-1][0]); 
          }
          if(i!=num_pipe){
-            printf("hola\n");
             dup2(p[i][1],1);
-            printf("haha\n");
             close(p[i][1]);
+         }
+         else{
+            out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
+            dup2(out,1);
+            close(out);
          }
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");

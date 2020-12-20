@@ -506,14 +506,15 @@ int exc1_Line(char ***cmds)
 }
 int exc2_Line(char ***cmds,int num_pipe)
 {
+   /* check whether there is file redirection with built-in command */
    char *name=cmds[0][0];
    if(!strcmp(name,"setenv")||!strcmp(name,"unsetenv")||!strcmp(name,"cd")||!strcmp(name,"exit"))
    {
       fprintf(stderr,"./ish: buit-in command redirection error\n");
       return (-1);
    }
-   int i;
 
+   int i;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
       fprintf(stderr,"Memory allocation error!!\n");
@@ -554,7 +555,10 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
 
       else{ /* parent process */
-
+         if(i>1){
+            close(p[i-1][1]);
+            close(p[i-1][0]);
+         }
          pid = wait(&status);
       }
       /*redirect stdout to the stdin */

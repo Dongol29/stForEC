@@ -552,8 +552,8 @@ int main(void)
       //char **argv생성--> 
       {
          cmds=make_Cmd(oTokens,num_pipe);
-         if(num_pipe==0) exc1_Line(cmds);
-         else exc2_Line(cmds,num_pipe);
+         exc1_Line(cmds);
+         
       }
       
       //printf("------------------------------------\n");

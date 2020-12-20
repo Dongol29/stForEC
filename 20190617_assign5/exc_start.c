@@ -514,6 +514,7 @@ int exc2_Line(char ***cmds,int num_pipe)
       return (-1);
    }
 
+   /* not built-in command */
    int i;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
@@ -532,8 +533,9 @@ int exc2_Line(char ***cmds,int num_pipe)
    printf("1\n");
    for(i=0;i<num_pipe+1;i++){
       int pid,status;
-      if (pipe(p[i]) == -1) exit(1);
-
+      if(i<num_pipe){
+       if (pipe(p[i]) == -1) exit(1);
+      }
       fflush(NULL);
       pid=fork();
       

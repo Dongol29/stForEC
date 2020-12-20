@@ -550,10 +550,12 @@ int exc2_Line(char ***cmds,int num_pipe)
          if(i!=num_pipe){
             dup2(p[i][1],1);
             //dup2 실행되는건가 보려고
+            /*
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
             printf("hola\n");
+            */
             //
             close(p[i][1]);
          }

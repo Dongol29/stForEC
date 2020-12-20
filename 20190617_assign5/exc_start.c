@@ -166,7 +166,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             }
             else if (c=='"')
             {
-                printf("hola\n");
+                //printf("hola\n");
                 eState=STATE_QUOTE;
             }
 
@@ -509,24 +509,48 @@ int exc2_Line(char ***cmds,int num_pipe)
       return (-1);
    }
    int i;
-   for(i=0;i<num_pipe;i++){
-      int pid, p[2],status;
+
+   int **p=(int **)calloc(num_pipe+1,sizeof(int *));
+   if(NULL==p){
+      fprintf(stderr,"Memory allocation error!!\n");
+      return (-1);
+   }
+
+   for(i=0;i<num_pipe+1;i++){
+      p[i]=(int *)calloc(2,sizeof(int));
+      if(NULL==p[i]){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return (-1);
+      }
+   }
+
+   for(i=0;i<num_pipe+1;i++){
+      int pid,status;
       if (pipe(p) == -1) exit(1);
-
-
 
       fflush(NULL);
       pid=fork();
       
-      if(pid<0){
+      if(pid<0){ 
          fprintf(stderr,"fork failed\n");
       }
-      else if(pid==0){
+      else if(pid==0){ /* child process */
+         if(i>0){
+            close(p[i-1][1]);
+            dup2(p[i-1][0],0);
+            close(p[i-1][0]); //read from stdin
+         }
+         if(i<num_pipe){
+            dup2(p[i][1],1);
+         }
+
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");
          exit(EXIT_FAILURE);
       }
-      else{
+
+      else{ /* parent process */
+         
          pid = wait(&status);
       }
       /*redirect stdout to the stdin */

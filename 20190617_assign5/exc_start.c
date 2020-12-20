@@ -62,15 +62,16 @@ static void freeToken(void *pvItem, void *pvExtra)
 
 /*--------------------------------------------------------------------*/
 
+/*
 static void printToken(void *pvItem, void *pvExtra)
 
 /* Print token pvItem to stdout iff it is a word.  pvExtra is
    unused. */
-
+/*
 {
    struct Token *psToken = (struct Token*)pvItem;
    printf("%s\n", psToken->pcValue);
-}
+}*/
 
 /*--------------------------------------------------------------------*/
 
@@ -579,7 +580,7 @@ int main(void)
 
    char ***cmds;
 
-   printf("------------------------------------\n");
+   //printf("------------------------------------\n");
    while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
    {
       oTokens = DynArray_new(0);
@@ -594,8 +595,8 @@ int main(void)
       if (iSuccessful)
       {
           //printf("Tokens:  ");
-          DynArray_map(oTokens, printToken, NULL);
-          printf("\n");
+          //DynArray_map(oTokens, printToken, NULL);
+          //printf("\n");
          /*
           if(synLine(oTokens))
           {
@@ -613,7 +614,7 @@ int main(void)
          else exc2_Line(cmds,num_pipe);
       }
       
-      printf("------------------------------------\n");
+      //printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);
       DynArray_free(oTokens);

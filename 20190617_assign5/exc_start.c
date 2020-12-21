@@ -551,20 +551,20 @@ int exc2_Line(char ***cmds,int num_pipe)
          }
          if(i!=num_pipe){
             dup2(p[i][1],1);
-            
+            /*
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
-            
+            */
             //close(p[i][1]);
          }
-         
+         /*
          else{
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
          }
-         
+         */
          //dup2(p[i][1],1);
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");
@@ -573,22 +573,22 @@ int exc2_Line(char ***cmds,int num_pipe)
 
       else{ /* parent process */
          if(i>0){
-            close(p[i-1][1]);
             close(p[i-1][0]);
+            close(p[i-1][1]);
          }
-         
+         /*
          if(i==num_pipe){
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
          }
-         
+         */
          pid = wait(&status);
       }
    }
    for(i=0;i<num_pipe+1;i++) free(p[i]);
    free(p);
-   return 0;
+   return TRUE;
 }
 
 
@@ -685,8 +685,6 @@ int main(void)
       }
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
-      // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
-      //char **argv생성--> 
       {
          cmds=make_Cmd(oTokens,num_pipe);
          if(num_pipe==0) exc1_Line(cmds);

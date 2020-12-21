@@ -530,6 +530,8 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
    }
 
+   void (*pfret)(int);
+
    for(i=0;i<num_pipe+1;i++){
       printf("%d\n",num_pipe);
       int pid,status;
@@ -551,11 +553,11 @@ int exc2_Line(char ***cmds,int num_pipe)
          }
          if(i!=num_pipe){
             dup2(p[i][1],1);
-            /*
+            
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
-            */
+            
             //close(p[i][1]);
          }
          /*
@@ -572,7 +574,20 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
 
       else{ /* parent process */
-         printf("%d\n",pid);
+         // unblock SIGQUIT, set state=0
+         state=0;
+         sigset_t sSet;
+         sigemptyset(&sSet);
+         sigaddset(&sSet, SIGQUIT); 
+         sigprocmask(SIG_UNBLOCK, &sSet, NULL);
+         // deal with signals
+         pfret= signal(SIGINT, SIG_IGN);
+         assert(pfret!=SIG_ERR);
+         pfret= signal(SIGQUIT, quitHandler);
+         assert(pfret!=SIG_ERR);
+         pfret= signal(SIGALRM, alarmHandler);
+         assert(pfret!=SIG_ERR);
+
          if(i>0){
             close(p[i-1][0]);
             close(p[i-1][1]);
@@ -592,7 +607,21 @@ int exc2_Line(char ***cmds,int num_pipe)
    return TRUE;
 }
 
-
+int state=0;
+static void quitHandler(int isig)
+{  
+   if(state==1) raise(SIGQUIT);
+   printf("Type Ctrl-\\ again within 5 seconds to exit.\n");
+   alarm(5);
+   state=1; 
+}
+static void alarmHandler(int isig)
+{
+   sigset_t sSet;
+   sigemptyset(&sSet);
+   sigaddset(&sSet, SIGQUIT); 
+   sigprocmask(SIG_BLOCK, &sSet, NULL);
+}
 
 
 /*--------------------------------------------------------------------*/

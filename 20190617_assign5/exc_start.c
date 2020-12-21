@@ -409,6 +409,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 }
 
 int state=0;
+static sigset_t sSet;
 static void quitHandler(int isig)
 {  
    if(state==1) raise(SIGQUIT);
@@ -418,9 +419,6 @@ static void quitHandler(int isig)
 }
 static void alarmHandler(int isig)
 {
-   sigset_t sSet;
-   sigemptyset(&sSet);
-   sigaddset(&sSet, SIGQUIT); 
    sigprocmask(SIG_BLOCK, &sSet, NULL);
 }
 
@@ -592,9 +590,6 @@ int exc2_Line(char ***cmds,int num_pipe)
          // unblock SIGQUIT, set state=0
          //void (*pfret)(int);
          state=0;
-         sigset_t sSet;
-         sigemptyset(&sSet);
-         sigaddset(&sSet, SIGQUIT); 
          sigprocmask(SIG_UNBLOCK, &sSet, NULL);
          // deal with signals
          signal(SIGINT, SIG_IGN);     

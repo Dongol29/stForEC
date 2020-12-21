@@ -641,7 +641,7 @@ int exc2_Line(char ***cmds,int num_pipe)
 }
 /*--------------------------------------------------------------------*/
 
-void surpress_unusedVariableError(sighandler_t pfHandler)
+void surpress_unusedVariableError(void (*pfret)(int))
 {
 }
 /*--------------------------------------------------------------------*/
@@ -654,7 +654,6 @@ int main(void)
 {
    char acLine[MAX_LINE_SIZE];
    DynArray_T oTokens;
-   int iSuccessful;
    int num_pipe;
 
    char ***cmds;

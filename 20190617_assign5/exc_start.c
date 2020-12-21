@@ -667,7 +667,7 @@ int main(void)
    pfret=signal(SIGALRM, alarmHandler);
    assert(pfret!=SIG_ERR);
 
-   void surpress_unusedVariableError(pfret);
+   surpress_unusedVariableError(pfret);
    
    /* operate with commands from ./ishrc */
 
@@ -687,7 +687,7 @@ int main(void)
          fprintf(stderr, "Cannot allocate memory\n");
          exit(EXIT_FAILURE);
       }
-      iSuccessful = lexLine(acLine, oTokens);
+      lexLine(acLine, oTokens);
       
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
@@ -716,7 +716,7 @@ int main(void)
          exit(EXIT_FAILURE);
       }
 
-      iSuccessful = lexLine(acLine, oTokens);
+      lexLine(acLine, oTokens);
       
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 

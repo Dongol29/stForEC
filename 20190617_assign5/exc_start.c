@@ -413,29 +413,22 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
    return cmds;
 }
 
-int state=0;
 static sigset_t sSet;
 
 /*--------------------------------------------------------------------*/
 
-static void handler(int isig)
-{
-   exit(0);
-}
-
 static void quitHandler(int isig)
 {  
-   if(state==1) raise(SIGQUIT);
    printf("Type Ctrl-\\ again within 5 seconds to exit.\n");
    alarm(5);
-   state=1; 
+   signal(SIGQUIT,SIG_DFL);
 }
 
 /*--------------------------------------------------------------------*/
 
 static void alarmHandler(int isig)
 {
-   sigprocmask(SIG_BLOCK, &sSet, NULL);
+   signal(SIGQUIT,quitHandler);
 }
 
 /*--------------------------------------------------------------------*/
@@ -527,7 +520,7 @@ int exc1_Line(char ***cmds)
       int pid=fork(),status;
       if(pid==0){
          /* in child */
-         signal(SIGQUIT,handler);
+         signal(SIGQUIT,SIG_DFL);
 
          execvp(cmds[0][0],cmds[0]);
          fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
@@ -581,21 +574,20 @@ int exc2_Line(char ***cmds,int num_pipe)
          fprintf(stderr,"./ish: fork failed\n");
       }
       else if(pid==0){ /* child process */
-         signal(SIGQUIT,handler);
+         signal(SIGQUIT,SIG_DFL);
 
          if(i>0){
+            close(p[i-1][1]);
             dup2(p[i-1][0],0);
             close(p[i-1][0]); 
-            close(p[i-1][1]);
          }
          if(i!=num_pipe){
             dup2(p[i][1],1);
-            
+            /*
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);
             close(out);
-            
-            //close(p[i][1]);
+            */
          }
          /*
          else{
@@ -611,27 +603,10 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
 
       else{ /* parent process */
-         // unblock SIGQUIT, set state=0
-         //void (*pfret)(int);
-         /*
-         state=0;
-         sigprocmask(SIG_UNBLOCK, &sSet, NULL);
-         // deal with signals
-         signal(SIGINT, SIG_IGN);     
-         signal(SIGQUIT, quitHandler);
-         signal(SIGALRM, alarmHandler);
-         */
          if(i>0){
             close(p[i-1][0]);
             close(p[i-1][1]);
          }
-         /*
-         if(i==num_pipe){
-            out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
-            dup2(out,1);
-            close(out);
-         }
-         */
          pid = wait(&status);
       }
    }
@@ -655,6 +630,14 @@ int main(void)
    char acLine[MAX_LINE_SIZE];
    DynArray_T oTokens;
    int num_pipe;
+
+   /* make sure signals are not blocked */
+   sigset_t sSet;
+   sigemptyset(&sSet);
+   sigaddset(&sSet, SIGINT);
+   sigaddset(&sSet, SIGQUIT);
+   sigaddset(&sSet, SIGALRM);
+   sigprocmask(SIG_UNBLOCK, &sSet, NULL);
 
    char ***cmds;
    void (*pfret)(int);

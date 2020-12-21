@@ -550,7 +550,7 @@ int exc2_Line(char ***cmds,int num_pipe)
             close(p[i-1][1]);
          }
          if(i!=num_pipe){
-            dup2(p[i][1],1);
+            /*dup2(p[i][1],1);*/
             
             out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
             dup2(out,1);

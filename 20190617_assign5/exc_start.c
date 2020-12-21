@@ -638,8 +638,11 @@ int exc2_Line(char ***cmds,int num_pipe)
    free(p);
    return TRUE;
 }
+/*--------------------------------------------------------------------*/
 
-
+void surpress_unusedVariableError(void (*pfret)(int))
+{
+}
 /*--------------------------------------------------------------------*/
 
 int main(void)
@@ -664,9 +667,10 @@ int main(void)
    pfret=signal(SIGALRM, alarmHandler);
    assert(pfret!=SIG_ERR);
 
+   void surpress_unusedVariableError(pfret);
    
    /* operate with commands from ./ishrc */
-   
+
    char *pathname=getenv("HOME");
    strcat(pathname,"/.ishrc");
    

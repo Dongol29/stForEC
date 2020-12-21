@@ -227,7 +227,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             {
                 //First, create word token
                 acValue[iValueIndex]='\0';
-                psToken = makeToken(TOKEN_PIPE, acValue);
+                psToken = makeToken(TOKEN_WORD, acValue);
                if (psToken == NULL)
                {
                   fprintf(stderr, "Cannot allocate memory\n");
@@ -243,7 +243,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
                //Next, create pipe token
                acValue[iValueIndex++]=c;
                acValue[iValueIndex]='\0';
-               psToken = makeToken(TOKEN_WORD, acValue);
+               psToken = makeToken(TOKEN_PIPE, acValue);
                if (psToken == NULL)
                {
                   fprintf(stderr, "Cannot allocate memory\n");

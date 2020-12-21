@@ -515,7 +515,7 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    /* not built-in command */
-   int i,out;
+   int i;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
       fprintf(stderr,"./ish: Memory allocation error!!\n");

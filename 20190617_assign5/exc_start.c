@@ -408,6 +408,23 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
    return cmds;
 }
 
+int state=0;
+static void quitHandler(int isig)
+{  
+   if(state==1) raise(SIGQUIT);
+   printf("Type Ctrl-\\ again within 5 seconds to exit.\n");
+   alarm(5);
+   state=1; 
+}
+static void alarmHandler(int isig)
+{
+   sigset_t sSet;
+   sigemptyset(&sSet);
+   sigaddset(&sSet, SIGQUIT); 
+   sigprocmask(SIG_BLOCK, &sSet, NULL);
+}
+
+
 int exc1_Line(char ***cmds)
 /* pipe 없는 경우 */
 {
@@ -515,7 +532,7 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    /* not built-in command */
-   int i;
+   int i,out;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
       fprintf(stderr,"./ish: Memory allocation error!!\n");
@@ -529,8 +546,6 @@ int exc2_Line(char ***cmds,int num_pipe)
          return (-1);
       }
    }
-
-   void (*pfret)(int);
 
    for(i=0;i<num_pipe+1;i++){
       printf("%d\n",num_pipe);
@@ -575,6 +590,7 @@ int exc2_Line(char ***cmds,int num_pipe)
 
       else{ /* parent process */
          // unblock SIGQUIT, set state=0
+         void (*pfret)(int);
          state=0;
          sigset_t sSet;
          sigemptyset(&sSet);
@@ -605,22 +621,6 @@ int exc2_Line(char ***cmds,int num_pipe)
    for(i=0;i<num_pipe+1;i++) free(p[i]);
    free(p);
    return TRUE;
-}
-
-int state=0;
-static void quitHandler(int isig)
-{  
-   if(state==1) raise(SIGQUIT);
-   printf("Type Ctrl-\\ again within 5 seconds to exit.\n");
-   alarm(5);
-   state=1; 
-}
-static void alarmHandler(int isig)
-{
-   sigset_t sSet;
-   sigemptyset(&sSet);
-   sigaddset(&sSet, SIGQUIT); 
-   sigprocmask(SIG_BLOCK, &sSet, NULL);
 }
 
 

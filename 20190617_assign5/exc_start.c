@@ -659,7 +659,7 @@ int main(void)
    {
       printf("%% ");
       //if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;
-      printf("%s\n",acLine);
+      printf("%s",acLine);
       oTokens = DynArray_new(0);
       if (oTokens == NULL)
       {

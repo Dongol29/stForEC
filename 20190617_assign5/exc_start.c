@@ -272,7 +272,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
          case STATE_QUOTE:
             if((c == '\n') || (c == '\0'))
             {
-                fprintf(stderr,"./ish: Could not find quote pair\n");
+                fprintf(stderr,"./ish: Could not find quote pair");
                 return FALSE;
             }
             else if (c=='"')

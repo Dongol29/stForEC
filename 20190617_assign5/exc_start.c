@@ -583,13 +583,11 @@ int exc2_Line(char ***cmds,int num_pipe)
          exit(EXIT_FAILURE);
       }
 
-      else{ /* parent process */
-         /*
+      else{ /* parent process */   
          if(i>0){
             close(p[i-1][0]);
             close(p[i-1][1]);
          }
-         */
          pid = wait(&status);
       }
    }

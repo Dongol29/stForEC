@@ -559,7 +559,6 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    for(i=0;i<num_pipe+1;i++){
-      printf("%d\n",num_pipe);
       int pid,status;
 
       if(i<num_pipe){

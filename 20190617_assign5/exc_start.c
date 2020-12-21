@@ -646,6 +646,9 @@ int main(void)
    pfret=signal(SIGALRM, alarmHandler);
    assert(pfret!=SIG_ERR);
 
+   pfret=signal(SIGTTIN, SIG_IGN);  
+   assert(pfret!=SIG_ERR); 
+
    surpress_unusedVariableError(pfret);
    
    /* operate with commands from ./ishrc */

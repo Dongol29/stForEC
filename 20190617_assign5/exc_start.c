@@ -413,8 +413,6 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
    return cmds;
 }
 
-static sigset_t sSet;
-
 /*--------------------------------------------------------------------*/
 
 static void quitHandler(int isig)
@@ -545,7 +543,7 @@ int exc2_Line(char ***cmds,int num_pipe)
    }
 
    /* not built-in command */
-   int i,out;
+   int i;
    int **p=(int **)calloc(num_pipe+1,sizeof(int *));
    if(NULL==p){
       fprintf(stderr,"./ish: Memory allocation error!!\n");

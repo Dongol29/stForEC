@@ -403,12 +403,12 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
       }
    }
    /*  i=0,k=0으로 끝나면 여기서 segfault나옴*/
-   /*
+   
     int m;
     for(m=0;m<=num_pipe;m++){
       printf("%s\n",cmds[m][0]);
     }
-   */
+   
    return cmds;
 }
 
@@ -518,7 +518,6 @@ int exc1_Line(char ***cmds)
       if(pid==0){
          /* in child */
          signal(SIGQUIT,SIG_DFL);
-         signal(SIGTTIN, SIG_IGN);  
 
          execvp(cmds[0][0],cmds[0]);
          fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
@@ -572,7 +571,6 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
       else if(pid==0){ /* child process */
          signal(SIGQUIT,SIG_DFL);
-         signal(SIGTTIN, SIG_IGN);  
 
          if(i>0){
             close(p[i-1][1]);
@@ -581,20 +579,7 @@ int exc2_Line(char ***cmds,int num_pipe)
          }
          if(i!=num_pipe){
             dup2(p[i][1],1);
-            /*
-            out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
-            dup2(out,1);
-            close(out);
-            */
          }
-         /*
-         else{
-            out=open("/dev/tty",O_RDONLY | O_TRUNC | O_CREAT, 0600);
-            dup2(out,1);
-            close(out);
-         }
-         */
-         //dup2(p[i][1],1);
          execvp(cmds[i][0],cmds[i]);
          fprintf(stderr, "exec failed\n");
          exit(EXIT_FAILURE);
@@ -647,9 +632,6 @@ int main(void)
    assert(pfret!=SIG_ERR);
    pfret=signal(SIGALRM, alarmHandler);
    assert(pfret!=SIG_ERR);
-
-   pfret=signal(SIGTTIN, SIG_IGN);  
-   assert(pfret!=SIG_ERR); 
 
    surpress_unusedVariableError(pfret);
    

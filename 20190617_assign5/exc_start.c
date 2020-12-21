@@ -417,6 +417,11 @@ static sigset_t sSet;
 
 /*--------------------------------------------------------------------*/
 
+static void handler(int isig)
+{
+   exit(0);
+}
+
 static void quitHandler(int isig)
 {  
    if(state==1) raise(SIGQUIT);
@@ -521,17 +526,13 @@ int exc1_Line(char ***cmds)
       int pid=fork(),status;
       if(pid==0){
          /* in child */
+         signal(SIGQUIT,handler);
+
          execvp(cmds[0][0],cmds[0]);
          fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
          exit(EXIT_FAILURE);
       }
       /* in parent */
-      state=0;
-      sigprocmask(SIG_UNBLOCK, &sSet, NULL);
-      // deal with signals
-      signal(SIGINT, SIG_IGN);     
-      signal(SIGQUIT, quitHandler);
-      signal(SIGALRM, alarmHandler);
       pid = wait(&status);
    }
    return TRUE;
@@ -579,6 +580,8 @@ int exc2_Line(char ***cmds,int num_pipe)
          fprintf(stderr,"./ish: fork failed\n");
       }
       else if(pid==0){ /* child process */
+         signal(SIGQUIT,handler);
+
          if(i>0){
             dup2(p[i-1][0],0);
             close(p[i-1][0]); 
@@ -609,13 +612,14 @@ int exc2_Line(char ***cmds,int num_pipe)
       else{ /* parent process */
          // unblock SIGQUIT, set state=0
          //void (*pfret)(int);
+         /*
          state=0;
          sigprocmask(SIG_UNBLOCK, &sSet, NULL);
          // deal with signals
          signal(SIGINT, SIG_IGN);     
          signal(SIGQUIT, quitHandler);
          signal(SIGALRM, alarmHandler);
-         
+         */
          if(i>0){
             close(p[i-1][0]);
             close(p[i-1][1]);
@@ -650,10 +654,19 @@ int main(void)
    int num_pipe;
 
    char ***cmds;
+   void (*pfret)(int);
 
-   //printf("------------------------------------\n");
+   /* handle signals */
+   pfret=signal(SIGINT, SIG_IGN);  
+   assert(pfret!=SIG_ERR);   
+   pfret=signal(SIGQUIT, quitHandler);
+   assert(pfret!=SIG_ERR);
+   pfret=signal(SIGALRM, alarmHandler);
+   assert(pfret!=SIG_ERR);
 
-   /* interpret commands from the ./ishrc file */
+   
+   /* operate with commands from ./ishrc */
+   
    char *pathname=getenv("HOME");
    strcat(pathname,"/.ishrc");
    
@@ -672,28 +685,13 @@ int main(void)
       }
       iSuccessful = lexLine(acLine, oTokens);
       
-      if (iSuccessful)
-      {
-          //printf("Tokens:  ");
-          //DynArray_map(oTokens, printToken, NULL);
-          //printf("\n");
-         /*
-          if(synLine(oTokens))
-          {
-              printf("Valid\n");
-          }
-         */
-      }
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
-      // 1.char ***만듬 2.prm으로 token 받고, pipe토큰 전까지의 pcvalue를 element로 하는
-      //char **argv생성--> 
       {
          cmds=make_Cmd(oTokens,num_pipe);
          if(num_pipe==0) exc1_Line(cmds);
          else exc2_Line(cmds,num_pipe);
       }
-      //printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);
       DynArray_free(oTokens);
@@ -701,6 +699,7 @@ int main(void)
 
    /*--------------------------------------------------------------------*/
 
+   /* operate with commands from stdin */
    while (1)
    {
       printf("%% ");
@@ -715,18 +714,6 @@ int main(void)
 
       iSuccessful = lexLine(acLine, oTokens);
       
-      if (iSuccessful)
-      {
-          //printf("Tokens:  ");
-          //DynArray_map(oTokens, printToken, NULL);
-          //printf("\n");
-         /*
-          if(synLine(oTokens))
-          {
-              printf("Valid\n");
-          }
-         */
-      }
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
       {
@@ -734,8 +721,6 @@ int main(void)
          if(num_pipe==0) exc1_Line(cmds);
          else exc2_Line(cmds,num_pipe);
       }
-      
-      //printf("------------------------------------\n");
 
       DynArray_map(oTokens, freeToken, NULL);
       DynArray_free(oTokens);

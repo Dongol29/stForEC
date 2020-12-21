@@ -665,9 +665,10 @@ int main(void)
          exit(EXIT_FAILURE);
       }
       lexLine(acLine, oTokens);
+      /*
       DynArray_map(oTokens, printToken, NULL);
       printf("\n");
-      
+      */
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
       {

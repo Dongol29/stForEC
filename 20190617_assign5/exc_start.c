@@ -15,6 +15,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <pwd.h>
 /*--------------------------------------------------------------------*/
 
 enum {MAX_LINE_SIZE = 1024};
@@ -485,15 +486,17 @@ int exc1_Line(char ***cmds)
          fprintf(stderr,"./ish: cd takes one parameter\n");
          return (-1);
       }
-      /*
+      
       else if(cmds[0][1]==NULL){
-         if(chdir(getenv("HOME"))<0){
-            fprintf(stderr,"./ish: cd failed\n");
+         struct passwd *pw = getpwuid(getuid());
+         const char *homedir = pw->pw_dir;
+         if(chdir(homedir)<0){
+            fprintf(stderr,"cd failed\n");
             return (-1);
          }
          return TRUE;
       }
-      */
+      
       else{
          if(chdir(cmds[0][1])<0){
             /* cd failed */

@@ -590,19 +590,15 @@ int exc2_Line(char ***cmds,int num_pipe)
 
       else{ /* parent process */
          // unblock SIGQUIT, set state=0
-         void (*pfret)(int);
          state=0;
          sigset_t sSet;
          sigemptyset(&sSet);
          sigaddset(&sSet, SIGQUIT); 
          sigprocmask(SIG_UNBLOCK, &sSet, NULL);
          // deal with signals
-         pfret= signal(SIGINT, SIG_IGN);
-         assert(pfret!=SIG_ERR);
-         pfret= signal(SIGQUIT, quitHandler);
-         assert(pfret!=SIG_ERR);
-         pfret= signal(SIGALRM, alarmHandler);
-         assert(pfret!=SIG_ERR);
+         assert(signal(SIGINT, SIG_IGN)!=SIG_ERR);
+         assert(signal(SIGQUIT, quitHandler)!=SIG_ERR);
+         assert(signal(SIGALRM, alarmHandler)!=SIG_ERR);
 
          if(i>0){
             close(p[i-1][0]);

@@ -640,7 +640,7 @@ int exc2_Line(char ***cmds,int num_pipe)
 }
 /*--------------------------------------------------------------------*/
 
-void surpress_unusedVariableError(void (*pfret)(int))
+void surpress_unusedVariableError(sighandler_t pfHandler)
 {
 }
 /*--------------------------------------------------------------------*/

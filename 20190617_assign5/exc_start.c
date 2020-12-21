@@ -226,7 +226,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
             {
                 //First, create word token
                 acValue[iValueIndex]='\0';
-                psToken = makeToken(TOKEN_WORD, acValue);
+                psToken = makeToken(TOKEN_PIPE, acValue);
                if (psToken == NULL)
                {
                   fprintf(stderr, "Cannot allocate memory\n");
@@ -401,7 +401,6 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
          cmds[i][k]=Token->pcValue;
          k++;
       }
-
    }
    /*  i=0,k=0으로 끝나면 여기서 segfault나옴
     for(m=0;m<=num_pipe;m++){

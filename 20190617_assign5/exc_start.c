@@ -485,6 +485,7 @@ int exc1_Line(char ***cmds)
          fprintf(stderr,"./ish: cd takes one parameter\n");
          return (-1);
       }
+      /*
       else if(cmds[0][1]==NULL){
          if(chdir(getenv("HOME"))<0){
             fprintf(stderr,"./ish: cd failed\n");
@@ -492,6 +493,7 @@ int exc1_Line(char ***cmds)
          }
          return TRUE;
       }
+      */
       else{
          if(chdir(cmds[0][1])<0){
             /* cd failed */
@@ -519,7 +521,7 @@ int exc1_Line(char ***cmds)
          /* in child */
          signal(SIGQUIT,SIG_DFL);
 
-         execl(cmds[0][0],cmds[0]);
+         execvp(cmds[0][0],cmds[0]);
          fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
          exit(EXIT_FAILURE);
       }

@@ -640,7 +640,7 @@ int main(void)
    
    FILE *fp=fopen(pathname,"r");
 
-   while (fgets(acLine, MAX_LINE_SIZE, fp))
+   while (fgets(acLine, MAX_LINE_SIZE, fp)!=NULL)
    {
       printf("%% ");
       //if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;

@@ -403,11 +403,12 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
          k++;
       }
    }
-   /*  i=0,k=0으로 끝나면 여기서 segfault나옴
+   /*  i=0,k=0으로 끝나면 여기서 segfault나옴*/
+    int m;
     for(m=0;m<=num_pipe;m++){
       printf("%s\n",cmds[m][0]);
     }
-   */
+   
    return cmds;
 }
 

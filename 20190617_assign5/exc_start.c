@@ -519,7 +519,7 @@ int exc1_Line(char ***cmds)
          /* in child */
          signal(SIGQUIT,SIG_DFL);
 
-         execvp(cmds[0][0],cmds[0]);
+         execl(cmds[0][0],cmds[0]);
          fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
          exit(EXIT_FAILURE);
       }

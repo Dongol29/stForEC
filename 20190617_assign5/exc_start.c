@@ -291,6 +291,8 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
    }
 }
 
+/*--------------------------------------------------------------------*/
+
 static int synLine(DynArray_T oTokens)
 
 /* lexline 이랑 비슷한 comment */
@@ -367,6 +369,8 @@ static int synLine(DynArray_T oTokens)
     }
 }
 
+/*--------------------------------------------------------------------*/
+
 char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 {
    //printf("NUM PIPE: %d\n",num_pipe);
@@ -410,6 +414,9 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 
 int state=0;
 static sigset_t sSet;
+
+/*--------------------------------------------------------------------*/
+
 static void quitHandler(int isig)
 {  
    if(state==1) raise(SIGQUIT);
@@ -417,11 +424,15 @@ static void quitHandler(int isig)
    alarm(5);
    state=1; 
 }
+
+/*--------------------------------------------------------------------*/
+
 static void alarmHandler(int isig)
 {
    sigprocmask(SIG_BLOCK, &sSet, NULL);
 }
 
+/*--------------------------------------------------------------------*/
 
 int exc1_Line(char ***cmds)
 /* pipe 없는 경우 */
@@ -515,10 +526,19 @@ int exc1_Line(char ***cmds)
          exit(EXIT_FAILURE);
       }
       /* in parent */
+      state=0;
+      sigprocmask(SIG_UNBLOCK, &sSet, NULL);
+      // deal with signals
+      signal(SIGINT, SIG_IGN);     
+      signal(SIGQUIT, quitHandler);
+      signal(SIGALRM, alarmHandler);
       pid = wait(&status);
    }
    return TRUE;
 }
+
+/*--------------------------------------------------------------------*/
+
 int exc2_Line(char ***cmds,int num_pipe)
 {
    /* check whether there is file redirection with built-in command */
@@ -678,6 +698,8 @@ int main(void)
       DynArray_map(oTokens, freeToken, NULL);
       DynArray_free(oTokens);
    }
+
+   /*--------------------------------------------------------------------*/
 
    while (1)
    {

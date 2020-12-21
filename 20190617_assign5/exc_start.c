@@ -518,6 +518,7 @@ int exc1_Line(char ***cmds)
       if(pid==0){
          /* in child */
          signal(SIGQUIT,SIG_DFL);
+         signal(SIGTTIN, SIG_IGN);  
 
          execvp(cmds[0][0],cmds[0]);
          fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
@@ -571,6 +572,7 @@ int exc2_Line(char ***cmds,int num_pipe)
       }
       else if(pid==0){ /* child process */
          signal(SIGQUIT,SIG_DFL);
+         signal(SIGTTIN, SIG_IGN);  
 
          if(i>0){
             close(p[i-1][1]);

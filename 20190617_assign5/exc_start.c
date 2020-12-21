@@ -654,10 +654,10 @@ int main(void)
    
    FILE *fp=fopen(pathname,"r");
 
-   while (1)
+   while (fgets(acLine, MAX_LINE_SIZE, fp))
    {
       printf("%% ");
-      if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;
+      //if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;
       printf("%s\n",acLine);
       oTokens = DynArray_new(0);
       if (oTokens == NULL)

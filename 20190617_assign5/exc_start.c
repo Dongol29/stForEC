@@ -288,7 +288,6 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
          default:
             assert(FALSE);
       }
-      //printf("step:%s\n",acValue);
    }
 }
 
@@ -296,7 +295,7 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
 
 static int synLine(DynArray_T oTokens)
 
-/* lexline 이랑 비슷한 comment */
+/* lexline 이랑 비슷한 comment 달기 */
 {
     enum SynState {STATE_START, STATE_WORD, STATE_PIPE};
 
@@ -308,7 +307,7 @@ static int synLine(DynArray_T oTokens)
     
     enum TokenType type;
 
-    int i=0, count=0; //count: pipe의 개수 셈;개수+1만큼 fork?
+    int i=0, count=0; 
     for (;;)
     {
    
@@ -329,7 +328,7 @@ static int synLine(DynArray_T oTokens)
                     fprintf(stderr,"./ish: Missing command name\n");
                     return (-1);
                 }
-                else  //이 때 더이상 pstoken없는게 맞나?
+                else  
                 {
                     return count;
                 }
@@ -345,14 +344,14 @@ static int synLine(DynArray_T oTokens)
                     count++;
                     eState=STATE_PIPE;
                 }
-                else //이 때 더이상 pstoken없는게 맞나?
+                else 
                 {
                     return count;
                 }
                 break;
 
             case STATE_PIPE:
-                if(type==TOKEN_WORD) //count++해야하나?
+                if(type==TOKEN_WORD) 
                 {
                     eState=STATE_WORD;
                 }
@@ -383,8 +382,8 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
    int i,k,j=0;
    struct Token *Token;
 
-   for(i=0;i<=num_pipe;i++){  //cmd 수는 num_pipe+1개
-      cmds[i]=(char **)calloc(1024,sizeof(char *)); //cmd하나에 존재하는 토큰수
+   for(i=0;i<=num_pipe;i++){  // the number of commands=num_pipe+1
+      cmds[i]=(char **)calloc(1024,sizeof(char *)); 
       if(cmds[i]==NULL){
          fprintf(stderr,"Memory allocation error!!\n");
          return NULL;
@@ -403,13 +402,6 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
          k++;
       }
    }
-   /*  i=0,k=0으로 끝나면 여기서 segfault나옴*/
-   
-    int m;
-    for(m=0;m<=num_pipe;m++){
-      printf("%s\n",cmds[m][0]);
-    }
-   
    return cmds;
 }
 
@@ -432,7 +424,7 @@ static void alarmHandler(int isig)
 /*--------------------------------------------------------------------*/
 
 int exc1_Line(char ***cmds)
-/* pipe 없는 경우 */
+/* case1: no pipe redirection */
 {
    if(NULL==cmds) return TRUE;
 
@@ -537,6 +529,7 @@ int exc1_Line(char ***cmds)
 /*--------------------------------------------------------------------*/
 
 int exc2_Line(char ***cmds,int num_pipe)
+/* case2: has pipe redirection */
 {
    /* check whether there is file redirection with built-in command */
    char *name=cmds[0][0];
@@ -659,10 +652,7 @@ int main(void)
          exit(EXIT_FAILURE);
       }
       lexLine(acLine, oTokens);
-      /*
-      DynArray_map(oTokens, printToken, NULL);
-      printf("\n");
-      */
+   
       num_pipe = synLine(oTokens);
       if(num_pipe>=0) 
       {

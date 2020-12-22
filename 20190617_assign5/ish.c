@@ -403,6 +403,7 @@ static void quitHandler(int isig)
 /* signal handler of SIGQUIT */
 {  
    printf("\nType Ctrl-\\ again within 5 seconds to exit.\n");
+   printf("%% ");
    alarm(5);
    signal(SIGQUIT,SIG_DFL);
 }

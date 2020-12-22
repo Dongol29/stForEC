@@ -646,6 +646,7 @@ int main(void)
    strcat(pathname,"/.ishrc");
    
    FILE *fp=fopen(pathname,"r");
+   if(fp==NULL) goto STDIN;
 
    while (fgets(acLine, MAX_LINE_SIZE, fp)!=NULL)
    {
@@ -675,6 +676,7 @@ int main(void)
    /*--------------------------------------------------------------------*/
 
    /* operate with commands from stdin */
+STDIN:
    while (1)
    {
       printf("%% ");

@@ -402,7 +402,7 @@ char *** make_Cmd(DynArray_T oTokens,int num_pipe)
 static void quitHandler(int isig)
 /* signal handler of SIGQUIT */
 {  
-   printf("Type Ctrl-\\ again within 5 seconds to exit.\n");
+   printf("\nType Ctrl-\\ again within 5 seconds to exit.\n");
    alarm(5);
    signal(SIGQUIT,SIG_DFL);
 }

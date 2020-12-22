@@ -2,7 +2,7 @@
 
 I have learned how to use git and the way to build linux virtual machine using AWS from my father. My laptop, the virtual machine, and eelab5 are connected through git.
 
-I didn’t implement extra credit 1, so when 'cat .ishrc > /tmp/no1 > /tmp/no2’ is entered from .ishrc, my ish print 1) contents of .ishrc and 2) cat: '>': No such file or directory. Also, other redirection commands including ‘>’ or ‘<‘ with cat command make similar results.
+I didn’t implement extra credit 1&2, so when 'cat .ishrc > /tmp/no1 > /tmp/no2’ is entered from .ishrc, my ish print 1) contents of .ishrc and 2) cat: '>': No such file or directory. Also, other redirection commands including ‘>’ or ‘<‘ with cat command make similar results.
 All commands above (and equal) ‘ echo "*** MULTIPLE REDIRECTION ERRORS" ‘ is successfully operate.
 Thank you!
 

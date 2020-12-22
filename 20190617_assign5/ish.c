@@ -1,24 +1,28 @@
-//Donggeon Kim, Assignment5, ish.c
+/*--------------------------------------------------------------------*/
+/* dfa.c                                                              */
+/* Original Author: Bob Dondero                                       */
+/* Illustrate lexical analysis using a deterministic finite state     */
+/* automaton (DFA)                                                    */
+/*--------------------------------------------------------------------*/
+
 #include "dynarray.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <pwd.h>
-
 /*--------------------------------------------------------------------*/
 
 enum {MAX_LINE_SIZE = 1024};
 
 enum {FALSE, TRUE};
 
-//When Token is not |, TOKEN_NORMAL
-//when Token is |, TOKEN_SPECIAL
-enum TokenType {TOKEN_NORMAL, TOKEN_SPECIAL};
+enum TokenType {TOKEN_WORD, TOKEN_PIPE, END};
 
 /*--------------------------------------------------------------------*/
 
@@ -26,29 +30,26 @@ enum TokenType {TOKEN_NORMAL, TOKEN_SPECIAL};
 
 struct Token
 {
-  enum TokenType eType;
-  /* The type of the token. */
+   enum TokenType eType;
+   /* The type of the token. */
 
-  char *pcValue;
-  /* The string which is the token's value. */
+   char *pcValue;
+   /* The string which is the token's value. */
 };
 
-/*--------------------------------------------------------------------*/
-
-struct Command
-
+struct DynArray
 {
-  // The string which is the name of command. ex)setenv, cd, etc
-  char *command_name;
-
-  /*
-    The dynamic array that stores command in the first storage and
-    each arguments in the storage sequentially, and null in the last
-    storage
-  */
-  DynArray_T oArguments;
+	/* The number of elements in the DynArray from the client's
+	   point of view. */
+	int iLength;
+	
+	/* The number of elements in the array that underlies the
+	   DynArray. */
+	int iPhysLength;
+	
+	/* The array that underlies the DynArray. */
+	const void **ppvArray;
 };
-
 
 /*--------------------------------------------------------------------*/
 
@@ -57,215 +58,39 @@ static void freeToken(void *pvItem, void *pvExtra)
 /* Free token pvItem.  pvExtra is unused. */
 
 {
-  struct Token *psToken = (struct Token*)pvItem;
-  free(psToken->pcValue);
-  free(psToken);
-}
-
-/*--------------------------------------------------------------------*/
-
-static void freeCommand(void *pvItem, void *pvExtra)
-
-/* Free command pvitem. pvExtra is unused. */
-{
-  struct Command *psCommand = (struct Command*)pvItem;
-  DynArray_free(psCommand->oArguments);
-  free(psCommand->command_name);
-  free(psCommand);
+   struct Token *psToken = (struct Token*)pvItem;
+   free(psToken->pcValue);
+   free(psToken);
 }
 
 /*--------------------------------------------------------------------*/
 
 static struct Token *makeToken(enum TokenType eTokenType,
-			       char *pcValue)
+   char *pcValue)
 
 /* Create and return a Token whose type is eTokenType and whose
    value consists of string pcValue.  Return NULL if insufficient
    memory is available.  The caller owns the Token. */
 
 {
-  struct Token *psToken;
+   struct Token *psToken;
 
-  psToken = (struct Token*)malloc(sizeof(struct Token));
-  if (psToken == NULL)
-    return NULL;
+   psToken = (struct Token*)malloc(sizeof(struct Token));
+   if (psToken == NULL)
+      return NULL;
 
-  psToken->eType = eTokenType;
+   psToken->eType = eTokenType;
 
-  psToken->pcValue = (char*)malloc(strlen(pcValue) + 1);
-  if (psToken->pcValue == NULL)
-    {
+   psToken->pcValue = (char*)malloc(strlen(pcValue) + 1);
+   if (psToken->pcValue == NULL)
+   {
       free(psToken);
       return NULL;
-    }
+   }
 
-  strcpy(psToken->pcValue, pcValue);
+   strcpy(psToken->pcValue, pcValue);
 
-  return psToken;
-}
-
-/*--------------------------------------------------------------------*/
-
-static struct Command *makeCommand(char *command_name, DynArray_T oArguments)
-
-/*
-  Create and return a Command whose command name is command_name and
-  whose oArguments consists of dynamic array oArguments. Return NULL if 
-  insufficient memory is available.  The caller owns the Command.
-*/
-  
-{
-  struct Command *psCommand;
-  psCommand = (struct Command*)malloc(sizeof(struct Command));
-  if (psCommand == NULL)
-    return NULL;
-  psCommand->command_name = (char*)malloc(strlen(command_name) +1);
-  if(psCommand->command_name == NULL)
-    {
-      free(psCommand);
-      return NULL;
-    }
-  strcpy(psCommand->command_name, command_name);
-  psCommand->oArguments = oArguments;
-  return psCommand;
-}
-
-/*--------------------------------------------------------------------*/
-
-
-static int synLine(DynArray_T oTokens, DynArray_T oCommands)
-
-/* Syntatically analyze dynarray oTokens.  Populate oCommands with the
-   commands that oTokens contains.  Return 1 (TRUE) if successful, or
-   0 (FALSE) otherwise.  In the latter case, oCommands may contain
-   commands that were discovered before the error. The caller owns the
-   commands placed in oCommands. */
-  
-{
-  enum SynState {STATE_COMMAND, STATE_ARGUMENT, STATE_SPECIAL};
-  enum SynState eState = STATE_COMMAND;
-
-  DynArray_T psArguments, oArguments;
-  struct Command *psCommand;
-  struct Token *psToken;
-  char* c;
-  int num, i, p = 0, tmp;
-  int j;
-  int k;
-
-  while(DynArray_getLength(oTokens) != 0){
-    psArguments = DynArray_new(0);
-    num = DynArray_getLength(oTokens);
-    psToken = DynArray_get(oTokens, 0);
-    //check if first token is |
-    if (psToken->eType == TOKEN_SPECIAL)
-      {
-	fprintf(stderr,
-	    "./ish: Pipe or redirection destination not specified\n");
-	return FALSE;
-      }
-    //check if last token is |
-    psToken = DynArray_get(oTokens, num-1);
-    if(psToken->eType == TOKEN_SPECIAL)
-      {
-	fprintf(stderr,
-	    "./ish: Pipe or redirection destination not specified\n");
-	return FALSE;
-      }
-    //check if there is no command between two |
-    //p is 0 when the i-1th token is normal
-    //p is 1 when the i-1th token is |
-    for (i=0; i<num; i++)
-      {
-	psToken = DynArray_get(oTokens, i);
-	if(psToken->eType == TOKEN_SPECIAL)
-	  {
-	    if(p==1)
-	      {
-		fprintf(stderr,
-	    "./ish: Pipe or redirection destination not specified\n");
-		return FALSE;
-	      }
-	    p = 1;
-	  }
-	else
-	  p = 0;
-      }
-    
-    //since there is no pipe error, make oCommands
-    for(i=0 ; i<num; i++)
-      {
-	psToken = DynArray_get(oTokens, i);
-	switch(eState)
-	  {
-	    /*
-	      When it is the first token, initialize psCommand
-	      and add the pcValue of token in psArguments
-	      change eState to State_Argument
-	    */
-	  case STATE_COMMAND:
-	    c = psToken->pcValue;
-	    psCommand = makeCommand(c, psArguments);
-	    DynArray_add(psArguments, c);
-	    eState = STATE_ARGUMENT;
-	    break;
-
-	    /*
-	      When it is the token that might be an argument, check if
-	      the token is special or not. If token is special, change
-	      eState to STATE_SPECIAL. Else, add the token's pcValue to
-	      psArguments
-	    */
-	  case STATE_ARGUMENT:
-	    if(psToken->eType == TOKEN_SPECIAL)
-	      eState = STATE_SPECIAL;
-	    else
-	      DynArray_add(psArguments, psToken->pcValue);
-	    break;
-
-	    /*
-	      When token was | in the last loop, add null to psArguments
-	      and make a Command. Then, add the Command to oCommands.
-	      Since the token in the current loop is the command name,
-	      initialize psArguments and psCommand. Then change eState
-	      to STATE_ARGUMENT
-	    */
-	  case STATE_SPECIAL:
-	    DynArray_add(psArguments, '\0');
-	    psCommand = makeCommand(c, psArguments);
-	    if (! DynArray_add(oCommands, psCommand))
-	      {
-		fprintf(stderr,
-		"./ish: Cannot allocate memory in syntatic analysis\n");
-		return FALSE;
-	      }
-	    psArguments = DynArray_new(0);
-	    c = psToken->pcValue;
-	    DynArray_add(psArguments, c);
-	    psCommand = makeCommand(c, psArguments);
-	    eState = STATE_ARGUMENT;
-	    break;
-	    
-	  default:
-	    assert(FALSE);
-	  }
-      }
-
-    /*
-      The loop above does not make Command for the last command.
-      This part of the code makes a Command for last command.
-    */
-    DynArray_add(psArguments, '\0');
-    psCommand = makeCommand(c, psArguments);
-    if (! DynArray_add(oCommands, psCommand))
-      {
-	fprintf(stderr,
-	     "./ish: Cannot allocate memory in syntatic analysis\n");
-	return FALSE;
-      }
-
-    return TRUE;
-  }
+   return psToken;
 }
 
 /*--------------------------------------------------------------------*/
@@ -282,393 +107,506 @@ static int lexLine(const char *pcLine, DynArray_T oTokens)
    pcLine. */
 
 {
-  enum LexState {STATE_START, STATE_IN_NORMAL, STATE_IN_SPECIAL};
+   enum LexState {STATE_START, STATE_WORD, STATE_QUOTE};
 
-  enum LexState eState = STATE_START;
+   enum LexState eState = STATE_START;
 
-  int iLineIndex = 0;
-  int iValueIndex = 0;
-  int numofquo = 0;
-  char c;
-  char acValue[MAX_LINE_SIZE];
-  struct Token *psToken;
+   int iLineIndex = 0;
+   int iValueIndex = 0;
+   char c;
+   char acValue[MAX_LINE_SIZE]={0,};
+   struct Token *psToken;
 
-  assert(pcLine != NULL);
-  assert(oTokens != NULL);
+   assert(pcLine != NULL);
+   assert(oTokens != NULL);
 
-  for (;;)
-    {
+   for (;;)
+   {
       /* "Read" the next character from pcLine. */
       c = pcLine[iLineIndex++];
 
-      //if the quotation is paired
-      if(numofquo % 2 == 0)
-	{
-	  switch (eState)
-	    {
-	    case STATE_START:
-	      if ((c == '\n') || (c == '\0'))
-		return TRUE;
-	      else if (c == '"')
-		{
-		  eState = STATE_START;
-		  numofquo ++;
-		}
-	      else if (c == '|')
-		{
-		  acValue[iValueIndex++] = c;
-		  eState = STATE_IN_SPECIAL;
-		}
-	      else if (c != '|')
-		{
-		  if ((c == ' ') || (c == '\t'))
-		    eState = STATE_START;
-		  else
-		    {
-		      acValue[iValueIndex++] = c;
-		      eState = STATE_IN_NORMAL;
-		    }
-		}
-		  break;
-	    
-	    case STATE_IN_NORMAL:
-	      if(c == '"')
-		  numofquo++;
-	      else if ((c == '\n') || (c == '\0'))
-		{
-		  /* Create a normal token. */
-		  acValue[iValueIndex] = '\0';
-		  psToken = makeToken(TOKEN_NORMAL, acValue);
-		  if (psToken == NULL)
-		    {
-		      fprintf(stderr,
-	      "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  if (! DynArray_add(oTokens, psToken))
-		    {
-		      fprintf(stderr,
-	      "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  iValueIndex = 0;
-		  return TRUE;
-		}
-	      else if ((c == ' ') || (c == '\t'))
-		{
-		  /* Create a normal token. */
-		  acValue[iValueIndex] = '\0';
-		  psToken = makeToken(TOKEN_NORMAL, acValue);
-		  if (psToken == NULL)
-		    {
-		      fprintf(stderr,
-     "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  if (! DynArray_add(oTokens, psToken))
-		    {
-		      fprintf(stderr,
-		"./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  iValueIndex = 0;
-		  
-		  eState = STATE_START;
-		}
-	      else if (c == '|')
-		{
-		  acValue[iValueIndex] = '\0';
-		  psToken = makeToken(TOKEN_NORMAL, acValue);
-		  if (psToken == NULL)
-		    {
-		      fprintf(stderr,
-		  "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  if (! DynArray_add(oTokens, psToken))
-		    {
-		      fprintf(stderr,
-		 "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  iValueIndex = 0;
-		  
-		  acValue[iValueIndex++] = c;
-		  eState = STATE_IN_SPECIAL;
-		}
-	      else
-		{
-		  acValue[iValueIndex++] = c;
-		  eState = STATE_IN_NORMAL;
-		}
-	      break;
-	      
-	    case STATE_IN_SPECIAL:
-	      if ((c == '\n') || (c == '\0'))
-		{
-		  /* Create a special token. */
-		  acValue[iValueIndex] = '\0';
-		  psToken = makeToken(TOKEN_SPECIAL, acValue);
-		  if (psToken == NULL)
-		    {
-		      fprintf(stderr,
-	       "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  if (! DynArray_add(oTokens, psToken))
-		    {
-		      fprintf(stderr,
-	       "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  iValueIndex = 0;
-		  
-		  return TRUE;
-		}
-	      else
-		{
-		  /* Create a special token. */
-		  acValue[iValueIndex] = '\0';
-		  psToken = makeToken(TOKEN_SPECIAL, acValue);
-		  if (psToken == NULL)
-		    {
-		      fprintf(stderr,
-	       "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  if (! DynArray_add(oTokens, psToken))
-		    {
-		      fprintf(stderr,
-	       "./ish: Cannot allocate memory in lexical analysis\n");
-		      return FALSE;
-		    }
-		  iValueIndex = 0;
-		  
-		  if ((c == ' ') || (c == '\t'))
-		    eState = STATE_START;
-		  else if (c == '|')
-		    {
-		      acValue[iValueIndex++] = c;
-		      eState = STATE_IN_SPECIAL;
-		    }
-		  else if (c == '"')
-		    {
-		      numofquo ++;
-		      eState = STATE_START;
-		    }
-		  else
-		    {
-		      acValue[iValueIndex++] = c;
-		      eState = STATE_IN_NORMAL;
-		    }
-		}
-	      break;
-	      
-	    default:
-	      assert(FALSE);
-	    }
-	}
+      switch (eState)
+      {
+         case STATE_START:
+            if ((c == '\n') || (c == '\0'))
+               return TRUE;
+            else if (!isspace(c)&&c!='|'&&c!='"')
+            {
+               acValue[iValueIndex++] = c;
+               eState = STATE_WORD;
+            }
+            else if ((c == ' ') || (c == '\t'))
+               eState = STATE_START;
+            else if (c=='|')
+            {
+                /* Create a pipe token. */
+                acValue[iValueIndex++]=c;
+                acValue[iValueIndex]='\0';
+                psToken=makeToken(TOKEN_PIPE,acValue);
+                if (psToken == NULL)
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               if (! DynArray_add(oTokens, psToken))
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               iValueIndex=0;
+               eState=STATE_START;
+            }
+            else if (c=='"')
+            {
+                eState=STATE_QUOTE;
+            }
+
+            else
+            {
+               fprintf(stderr, "Invalid line\n");
+               return FALSE;
+            }
+            break;
+
+         case STATE_WORD:
+            if ((c == '\n') || (c == '\0'))
+            {
+               /* Create a word token. */
+               acValue[iValueIndex] = '\0';
+               psToken = makeToken(TOKEN_WORD, acValue);
+               if (psToken == NULL)
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               if (! DynArray_add(oTokens, psToken))
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               iValueIndex = 0;
+
+               return TRUE;
+            }
+            else if (!isspace(c)&&c!='|'&&c!='"')
+            {
+               acValue[iValueIndex++] = c;
+               eState = STATE_WORD;
+            }
+            else if ((c == ' ') || (c == '\t'))
+            {
+               /* Create a word token. */
+               acValue[iValueIndex] = '\0';
+               psToken = makeToken(TOKEN_WORD, acValue);
+               if (psToken == NULL)
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               if (! DynArray_add(oTokens, psToken))
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               iValueIndex = 0;
+
+               eState = STATE_START;
+            }
+            else if (c=='|')
+            {
+                //First, create word token
+                acValue[iValueIndex]='\0';
+                psToken = makeToken(TOKEN_WORD, acValue);
+               if (psToken == NULL)
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               if (! DynArray_add(oTokens, psToken))
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               iValueIndex = 0;
+
+               //Next, create pipe token
+               acValue[iValueIndex++]=c;
+               acValue[iValueIndex]='\0';
+               psToken = makeToken(TOKEN_PIPE, acValue);
+               if (psToken == NULL)
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               if (! DynArray_add(oTokens, psToken))
+               {
+                  fprintf(stderr, "Cannot allocate memory\n");
+                  return FALSE;
+               }
+               iValueIndex = 0;
+               eState=STATE_START;
+            }
+            else if (c=='"')
+            {
+                eState=STATE_QUOTE;
+            }
+            else
+            {
+               fprintf(stderr, "Invalid line\n");
+               return FALSE;
+            }
+            break;
+
+         case STATE_QUOTE:
+            if((c == '\n') || (c == '\0'))
+            {
+                fprintf(stderr,"./ish: Could not find quote pair");
+                return FALSE;
+            }
+            else if (c=='"')
+            {
+                eState=STATE_WORD;
+            }
+            else
+            {
+                acValue[iValueIndex++]=c;
+            }
+            break;
+
+         default:
+            assert(FALSE);
+      }
+   }
+}
+
+/*--------------------------------------------------------------------*/
+
+static int synLine(DynArray_T oTokens)
+
+/* Syntatically analyze oTokens.
+   Return the number of pipe if successful,(-1) otherwise.  */
+{
+    enum SynState {STATE_START, STATE_WORD, STATE_PIPE};
+
+    enum SynState eState = STATE_START;
+
+    assert(oTokens != NULL);
+
+    struct Token *Token;
     
-  
-      //if quotation is not paired
-      else
-	{
-	  switch (eState)
-	    {
-	    case STATE_START:
-	      if ((c == '\n') || (c == '\0'))
-		return TRUE;
-	      else if (c == '"')
-		{
-		  eState = STATE_START;
-		  numofquo ++;
-		}
-	      else if ((c == ' ') || (c == '\t'))
-		eState = STATE_START;
-	      else
-		{
-		  acValue[iValueIndex++] = c;
-		  eState = STATE_IN_NORMAL;
-		}
-	      break;
+    enum TokenType type;
 
-	    case STATE_IN_NORMAL:
-	      if ((c == '\n') || (c == '\0'))
-		{
-		  /* Create a normal token. */
-
-		  fprintf(stderr, "./ish: Could not find quote pair\n");
-		  return FALSE;
-		}
-	      else if (c == '"')
-		{
-		  numofquo ++;
-		  eState = STATE_IN_NORMAL;
-		}
-	      else
-		{
-		  acValue[iValueIndex++] = c;
-		  eState = STATE_IN_NORMAL;
-		}
-	      break;
-
-	    default:
-	      assert(FALSE);
-	    }
-	}
-    }
-}
-
-/*--------------------------------------------------------------------*/
-
-static void SignalHandler1 (int iSignal)
-{
-  exit(0);
-}
-
-/*--------------------------------------------------------------------*/
-
-static void SignalHandler2 (int iSignal)
-{
-  void (*tmp) (int);
-  printf("\nType Ctrl-\\ again within 5 seconds to exit.\n");
-  alarm(5);
-  tmp = signal(SIGQUIT, SignalHandler1);
-  assert(tmp != SIG_ERR);
-
-}
-
-/*--------------------------------------------------------------------*/
-
-static void SignalHandler3 (int iSignal)
-{
-  void (*tmp) (int);
-  tmp = signal(SIGQUIT, SignalHandler2);
-  assert (tmp != SIG_ERR);
-}
-
-/*--------------------------------------------------------------------*/
-
-static int Execution(DynArray_T oCommands)
-//In execution, we execute the commands in oCommands.
-{
-  int num;
-  int status;
-  int i;
-  int j;
-  pid_t pid;
-  char* oArguments[1024];
-  num = DynArray_getLength(oCommands);
-  struct Command *psCommand;
-  char *arg;
-  int fds[num-1][2];
-  int tmp[2];
-  // void (*pfRet1) (int);
-  //  void (*pfRet2) (int);
-
-
-  for (i = 0; i < num; i++)
+    int i=0, count=0; 
+    for (;;)
     {
-      psCommand = (struct Command *)DynArray_get(oCommands, i);
+   
+        Token=(struct Token *)DynArray_get(oTokens,i);
+        if(NULL==Token) type=END;
+        else type=Token->eType;
 
-      //if the command_name is built in command, execute the commands
-      //else, fork a child process and use execvp.
-      if (strcmp(psCommand->command_name, "setenv") == 0)
-	{
-	  //check if setenv takes one or two parameters
-	  j = DynArray_getLength(psCommand->oArguments);
-	  if(j < 3 || j > 4)
-	    {
-	      fprintf(stderr, "./ish: setenv takes one or two parameters\n");
-	      return FALSE;
-	    }
-	  setenv((char *)DynArray_get(psCommand->oArguments, 1), (char *)DynArray_get(psCommand->oArguments, 2), 1);
+        switch(eState)
+        {
+            case STATE_START:
+                if(type==TOKEN_WORD)
+                {
+                    eState=STATE_WORD;
+                }
+                else if(type==TOKEN_PIPE)
+                //error
+                {
+                    fprintf(stderr,"./ish: Missing command name\n");
+                    return (-1);
+                }
+                else  
+                {
+                    return count;
+                }
+                break;
 
-	}
-      else if (strcmp(psCommand->command_name, "unsetenv") == 0)
-	{
-	  //check if unsetenv takes one parameter
-	  j = DynArray_getLength(psCommand->oArguments);
-	  if(j != 3)
-	    {
-	      fprintf(stderr, "./ish: unsetenv takes one parameter\n");
-	      return FALSE;
-	    }
-	  unsetenv((char *)DynArray_get(psCommand->oArguments, 1));
+            case STATE_WORD:
+                if(type==TOKEN_WORD)
+                {
+                    eState=STATE_WORD;
+                }
+                else if(type==TOKEN_PIPE)
+                {
+                    count++;
+                    eState=STATE_PIPE;
+                }
+                else 
+                {
+                    return count;
+                }
+                break;
 
-	}
-      else if (strcmp(psCommand->command_name, "cd") == 0)
-	{
-	  j = DynArray_getLength(psCommand->oArguments);
-	  if(j != 2 && j != 3)
-	    {
-	      //check if cd takes one or no parameter
-	      fprintf(stderr, "./ish: cd takes one parameter\n");
-	      return FALSE;
-	    }
-	  arg = (char *)DynArray_get(psCommand->oArguments, 1);
-	  if(arg == NULL)
-	    chdir(getpwuid(getuid())->pw_dir);
-	  chdir(arg);
+            case STATE_PIPE:
+                if(type==TOKEN_WORD) 
+                {
+                    eState=STATE_WORD;
+                }
+                else 
+                {
+                    fprintf(stderr,"./ish: Pipe or redirection destination not specified\n");
+                    return (-1);
+                }
+                break;
 
-	}
-      else if (strcmp(psCommand->command_name, "exit") == 0)
-	{
-	  //check if exit takes no parameter
-	  j = DynArray_getLength(psCommand->oArguments);
-	  if(j != 2)
-	    {
-	      //check if cd takes one parameter
-	      fprintf(stderr, "./ish: cd takes one parameter\n");
-	      return FALSE;
-	    }	  
-	  exit(0);
-	}
-      else //external commands
-	{
-	  //if not last command, create a pipe
-	  if(i!=num-1)
-	    if(pipe(fds[i]) == -1)
-	      exit(-1);
-	  fflush(NULL);
-	  pid = fork();
-	  if (pid == 0) //child
-	    {
-	      //in child, handle SIGINT with SignalHandler1
-	      signal(SIGINT, SignalHandler1);
-
-	      // handle previous pipe
-	      if (i > 0) // unless it is the first command,
-		{
-		  dup2(fds[i-1][0], 0);
-		  close(fds[i-1][0]);
-		  close(fds[i-1][1]);
-		}
-	      
-	      // handle next pipe
-	      if (i != num-1) // unless it is the last command
-		dup2(fds[i][1], 1);
-
-	      DynArray_toArray(psCommand->oArguments, (void**) oArguments);
-	      execvp(psCommand->command_name, oArguments);
-	      fprintf(stderr, "%s: No such file or directory\n", psCommand->command_name);
-	      exit(EXIT_FAILURE);
-	    }
-	  else{  //parent
-	    if(i>0)
-	      {
-		close(fds[i-1][0]);
-		close(fds[i-1][1]);
-	      }
-	    pid = wait(&status);
-	  }
-	}
+            default:
+                assert(FALSE);
+        }  
+        i++;
     }
-  return TRUE;
 }
 
+/*--------------------------------------------------------------------*/
 
+char *** make_Cmd(DynArray_T oTokens,int num_pipe)
+/*
+  Return triple pointer 'Cmd' if successful, which indicates commands which were
+  separated based on pipe tokens. Otherwise return NULL. 
+*/
+{
+   char ***cmds=(char ***)calloc(num_pipe+1,sizeof(char **));
+   if(cmds==NULL){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return NULL;
+      }
+   int i,k,j=0;
+   struct Token *Token;
 
+   for(i=0;i<=num_pipe;i++){  // the number of commands=num_pipe+1
+      cmds[i]=(char **)calloc(1024,sizeof(char *)); 
+      if(cmds[i]==NULL){
+         fprintf(stderr,"Memory allocation error!!\n");
+         return NULL;
+      }
+      k=0;
+      while(1){
+         Token=(struct Token *)DynArray_get(oTokens,j++);
+         if(NULL==Token||Token->eType==TOKEN_PIPE) {
+            if(k==0){
+               free(cmds[0]); free(cmds);
+               return NULL; // if input is either '\n' or '\0'
+            }
+            break;  
+         }
+         cmds[i][k]=Token->pcValue;
+         k++;
+      }
+   }
+   return cmds;
+}
+
+/*--------------------------------------------------------------------*/
+
+static void quitHandler(int isig)
+/* signal handler of SIGQUIT */
+{  
+   printf("Type Ctrl-\\ again within 5 seconds to exit.\n");
+   alarm(5);
+   signal(SIGQUIT,SIG_DFL);
+}
+
+/*--------------------------------------------------------------------*/
+
+static void alarmHandler(int isig)
+/* signal handler of SIGALRM */
+{
+   signal(SIGQUIT,quitHandler);
+}
+
+/*--------------------------------------------------------------------*/
+
+int exc1_Line(char ***cmds)
+/*
+  Execute when there is no pipe redirection. 
+  Return True if it is successful, otherwise False.
+*/
+{
+   if(NULL==cmds) return TRUE;
+
+   char *name=cmds[0][0];
+   int result;
+
+   /* check whether it is built-in command */
+   //1)sentenv
+   if(strcmp(name,"setenv")==0){
+      if(cmds[0][3]!=NULL){
+         fprintf(stderr,"./ish: setenv takes one or two parameters\n");
+         return FALSE;
+      }
+      else if(cmds[0][1]==NULL){
+         fprintf(stderr,"./ish: setenv takes one or two parameters\n");
+         return FALSE;
+      }
+      else if(cmds[0][2]==NULL){
+         result=setenv(cmds[0][1],"",1);
+         if(result==-1){
+            fprintf(stderr,"./ish: setenv failed\n");
+            return FALSE;
+         }
+      }
+      else{
+         if(setenv(cmds[0][1],cmds[0][2],1)==-1){
+            fprintf(stderr,"./ish: setenv failed\n");
+            return FALSE;
+         }
+         return TRUE;
+      }
+   }
+   //2)unsentenv
+   else if(strcmp(name,"unsetenv")==0){
+      if(cmds[0][2]!=NULL){
+         fprintf(stderr,"./ish: unsetenv takes one parameter\n");
+         return FALSE;
+      }
+      else if(cmds[0][1]==NULL){
+         fprintf(stderr,"./ish: unsetenv takes one parameter\n");
+         return FALSE;
+      }
+      else{
+         if(unsetenv(cmds[0][1])==-1){
+            fprintf(stderr,"./ish: unsetenv failed\n");
+            return FALSE;
+         }
+         return TRUE;
+      }
+   }
+   //3)cd
+   else if(strcmp(name,"cd")==0){
+      if(cmds[0][2]!=NULL){
+         fprintf(stderr,"./ish: cd takes one parameter\n");
+         return FALSE;
+      }
+      
+      else if(cmds[0][1]==NULL){
+         struct passwd *pw = getpwuid(getuid());
+         const char *homedir = pw->pw_dir;
+         if(chdir(homedir)<0){
+            fprintf(stderr,"cd failed\n");
+            return FALSE;
+         }
+         return TRUE;
+      }
+      
+      else{
+         if(chdir(cmds[0][1])<0){
+            /* cd failed */
+            fprintf(stderr,"./ish: No such file or directory\n");
+            return FALSE;
+         }
+         return TRUE;
+      }
+   }
+   //4)exit
+   else if(strcmp(name,"exit")==0){
+      if(cmds[0][1]!=NULL){
+         fprintf(stderr,"./ish: exit does not take any parameters\n");
+         return FALSE;
+      }
+      exit(0);
+   }
+
+   /* Not Built-in command */
+   else{
+      fflush(NULL);
+
+      int pid=fork(),status;
+      if(pid==0){
+         /* in child */
+         signal(SIGQUIT,SIG_DFL);
+
+         execvp(cmds[0][0],cmds[0]);
+         fprintf(stderr, "%s: No such file or directory\n",cmds[0][0]);
+         exit(EXIT_FAILURE);
+      }
+      /* in parent */
+      pid = wait(&status);
+   }
+   return TRUE;
+}
+
+/*--------------------------------------------------------------------*/
+
+int exc2_Line(char ***cmds,int num_pipe)
+/*
+  Execute when there are at least one pipe redirection. 
+  Return True if it is successful, otherwise False.
+*/
+{
+   /* check whether there is file redirection with built-in command */
+   char *name=cmds[0][0];
+   if(!strcmp(name,"setenv")||!strcmp(name,"unsetenv")||!strcmp(name,"cd")||!strcmp(name,"exit"))
+   {
+      fprintf(stderr,"./ish: buit-in command redirection error\n");
+      return FALSE;
+   }
+
+   /* not built-in command */
+   int i;
+   int **p=(int **)calloc(num_pipe+1,sizeof(int *));
+   if(NULL==p){
+      fprintf(stderr,"./ish: Memory allocation error!!\n");
+      return FALSE;
+   }
+
+   for(i=0;i<num_pipe+1;i++){
+      p[i]=(int *)calloc(2,sizeof(int));
+      if(NULL==p[i]){
+         fprintf(stderr,"./ish: Memory allocation error!!\n");
+         return FALSE;
+      }
+   }
+
+   for(i=0;i<num_pipe+1;i++){
+      int pid,status;
+
+      if(i<num_pipe){
+         if (pipe(p[i]) == -1) exit(1);
+      }
+      fflush(NULL);
+      pid=fork();
+      
+      if(pid<0){ 
+         fprintf(stderr,"./ish: fork failed\n");
+      }
+      else if(pid==0){ /* child process */
+         signal(SIGQUIT,SIG_DFL);
+
+         if(i>0){ 
+            close(p[i-1][1]);
+            dup2(p[i-1][0],0);
+            close(p[i-1][0]); 
+         }
+         if(i!=num_pipe){
+            dup2(p[i][1],1);
+         }
+         execvp(cmds[i][0],cmds[i]);
+         fprintf(stderr, "exec failed\n");
+         exit(EXIT_FAILURE);
+      }
+
+      else{ /* parent process */   
+         if(i>0){
+            close(p[i-1][0]);
+            close(p[i-1][1]);
+         }
+         pid = wait(&status);
+      }
+   }
+   for(i=0;i<num_pipe+1;i++) free(p[i]);
+   free(p);
+   return TRUE;
+}
+/*--------------------------------------------------------------------*/
+
+void surpress_unusedVariableError(void (*pfret)(int))
+/* 
+  I set this function to prevent error coming from unused variable: pfret.
+  Pfret is declared at main function.
+*/
+{
+}
 /*--------------------------------------------------------------------*/
 
 int main(void)
@@ -677,57 +615,91 @@ int main(void)
    that it contains.  Repeat until EOF.  Return 0 iff successful. */
 
 {
-  char acLine[MAX_LINE_SIZE];
-  DynArray_T oCommands;
-  DynArray_T oTokens;
-  int iSuccessful;
-  void (*pfRet1) (int);
-  void (*pfRet2) (int);
-  void (*pfRet3) (int);
-  sigset_t set;
+   char acLine[MAX_LINE_SIZE];
+   DynArray_T oTokens;
+   int num_pipe;
 
-  sigaddset(&set, SIGINT);
-  sigaddset(&set, SIGQUIT);
-  sigaddset(&set, SIGALRM);
-  sigprocmask(SIG_UNBLOCK, &set, NULL);
+   /* make sure signals are not blocked */
+   sigset_t sSet;
+   sigemptyset(&sSet);
+   sigaddset(&sSet, SIGINT);
+   sigaddset(&sSet, SIGQUIT);
+   sigaddset(&sSet, SIGALRM);
+   sigprocmask(SIG_UNBLOCK, &sSet, NULL);
 
-  pfRet1 = signal(SIGINT, SIG_IGN);
-  pfRet2 = signal(SIGQUIT, SignalHandler2);
-  pfRet3 = signal(SIGALRM, SignalHandler3);
-  assert(pfRet1 != SIG_ERR);
-  assert(pfRet2 != SIG_ERR);
-  assert(pfRet3 != SIG_ERR);
+   char ***cmds;
+   void (*pfret)(int);
 
-  printf("%% ");
-  //read from stdin till eof
-  while (fgets(acLine, MAX_LINE_SIZE, stdin) != NULL)
-    {
-      //initialize oTokens and oCommands
-      oTokens = DynArray_new(0);
-      oCommands = DynArray_new(0);
-      if (oTokens == NULL)
-	{
-	  fprintf(stderr,
-		  "./ish: Cannot allocate memory in lexical analysis\n");
-	  exit(EXIT_FAILURE);
-	}
+   /* handle signals */
+   pfret=signal(SIGINT, SIG_IGN);  
+   assert(pfret!=SIG_ERR);   
+   pfret=signal(SIGQUIT, quitHandler);
+   assert(pfret!=SIG_ERR);
+   pfret=signal(SIGALRM, alarmHandler);
+   assert(pfret!=SIG_ERR);
 
+   surpress_unusedVariableError(pfret);
+   
+   /* operate with commands from ./ishrc */
 
-      iSuccessful = lexLine(acLine, oTokens);
-      if (iSuccessful) //if lexline success
-	{
-	  synLine(oTokens, oCommands);
-	  Execution(oCommands);
-	}
+   char *pathname=getenv("HOME");
+   strcat(pathname,"/.ishrc");
+   
+   FILE *fp=fopen(pathname,"r");
 
+   while (fgets(acLine, MAX_LINE_SIZE, fp)!=NULL)
+   {
       printf("%% ");
+      //if(fgets(acLine, MAX_LINE_SIZE, fp) == NULL) break;
+      printf("%s",acLine);
+      oTokens = DynArray_new(0);
+      if (oTokens == NULL)
+      {
+         fprintf(stderr, "Cannot allocate memory\n");
+         exit(EXIT_FAILURE);
+      }
+      lexLine(acLine, oTokens);
+   
+      num_pipe = synLine(oTokens);
+      if(num_pipe>=0) 
+      {
+         cmds=make_Cmd(oTokens,num_pipe);
+         if(num_pipe==0) exc1_Line(cmds);
+         else exc2_Line(cmds,num_pipe);
+      }
 
-      //free all memory
       DynArray_map(oTokens, freeToken, NULL);
       DynArray_free(oTokens);
-      DynArray_map(oCommands, freeCommand, NULL);
-      DynArray_free(oCommands);
-    }
+   }
 
-  return 0;
+   /*--------------------------------------------------------------------*/
+
+   /* operate with commands from stdin */
+   while (1)
+   {
+      printf("%% ");
+      if(fgets(acLine, MAX_LINE_SIZE, stdin) == NULL) break;
+
+      oTokens = DynArray_new(0);
+      if (oTokens == NULL)
+      {
+         fprintf(stderr, "Cannot allocate memory\n");
+         exit(EXIT_FAILURE);
+      }
+
+      lexLine(acLine, oTokens);
+      
+      num_pipe = synLine(oTokens);
+      if(num_pipe>=0) 
+      {
+         cmds=make_Cmd(oTokens,num_pipe);
+         if(num_pipe==0) exc1_Line(cmds);
+         else exc2_Line(cmds,num_pipe);
+      }
+
+      DynArray_map(oTokens, freeToken, NULL);
+      DynArray_free(oTokens);
+   }
+
+   return 0;
 }
